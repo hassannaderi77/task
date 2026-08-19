@@ -21,7 +21,7 @@ function Gallery({ cameraRef, galleryRef, check, setImages }) {
       <div
         className="
         rounded-3xl border border-slate-800
-        bg-gradient-to-br from-slate-900 to-slate-950
+        bg-linear-to-br from-slate-900 to-slate-950
         p-5 shadow-xl
         "
       >
