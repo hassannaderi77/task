@@ -4,37 +4,47 @@ import GuestRoute from "./GuestRoute";
 import PublicLayout from "../layouts/PublicLayout";
 import PrivateLayout from "../layouts/PrivateLayout";
 import ProtectedRoute from "./ProtectedRoute";
+import PageLoading from "../components/ui/PageLoading";
 
-import LandingPage from "../pages/LandingPage";
-import Home from "../pages/Home";
-import Login from "../pages/login";
-import AboutUs from "../pages/AboutUs";
+import { lazy, Suspense } from "react";
 
-import Dashboard from "../pages/Dashboard";
-import SettingPage from "../pages/SettingPage";
+const LandingPage = lazy(() => import("../pages/LandingPage"));
+const Home = lazy(() => import("../pages/Home"));
+const Login = lazy(() => import("../pages/auth/Login"));
+const Register = lazy(() => import("../pages/auth/Register"));
+const AboutUs = lazy(() => import("../pages/AboutUs"));
+const Dashboard = lazy(() => import("../pages/Dashboard"));
+const SettingPage = lazy(() => import("../pages/SettingPage"));
 
 function AppRoutes() {
   return (
-    <Routes>
-      {/* Public Routes */}
-      <Route element={<PublicLayout />}>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/aboutus" element={<AboutUs />} />
-      </Route>
+    <Suspense fallback={<PageLoading />}>
+      <Routes>
+        {/* Public Routes */}
 
-      <Route element={<GuestRoute />}>
-        <Route path="/login" element={<Login />} />
-      </Route>
-
-      {/* Private Routes */}
-      <Route element={<ProtectedRoute />}>
-        <Route element={<PrivateLayout />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/setting" element={<SettingPage />} />
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/aboutus" element={<AboutUs />} />
         </Route>
-      </Route>
-    </Routes>
+
+        {/* Guest Routes */}
+
+        <Route element={<GuestRoute />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Route>
+
+        {/* Private Routes */}
+
+        <Route element={<ProtectedRoute />}>
+          <Route element={<PrivateLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/setting" element={<SettingPage />} />
+          </Route>
+        </Route>
+      </Routes>
+    </Suspense>
   );
 }
 

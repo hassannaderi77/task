@@ -1,11 +1,37 @@
-import React, { useContext } from "react";
-import { AuthContext } from "../context/authContext";
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useUsers } from "../hooks/useUsers";
+
+import { useAuth } from "../hooks/useAuth";
+
+import Loading from "../components/ui/Loading";
+import ErrorMessage from "../components/ui/ErrorMessage";
+import EmptyState from "../components/ui/EmptyState";
 
 function Dashboard() {
-  const { user, logout } = useContext(AuthContext);
+  const { user, logout } = useAuth();
+  console.log("Dashboard user:", user);
 
   const navigate = useNavigate();
+
+  const {
+  data: users,
+  isLoading,
+  isError,
+  error,
+} = useUsers();
+
+if (isLoading) {
+  return <Loading text="در حال دریافت کاربران..." />;
+}
+
+if (isError) {
+  return <ErrorMessage message={error.message} />;
+}
+
+if (!users || users.length === 0) {
+  return <EmptyState message="کاربری پیدا نشد." />;
+}
 
   const infoItems = [
     {
@@ -30,6 +56,8 @@ function Dashboard() {
     },
   ];
 
+  console.log("Users:", users);
+
   return (
     <div
       dir="rtl"
@@ -44,6 +72,18 @@ function Dashboard() {
       text-white
       "
     >
+
+      {isLoading && (
+  <p className="mb-4 text-center text-slate-400">
+    در حال دریافت کاربران...
+  </p>
+)}
+
+{isError && (
+  <p className="mb-4 text-center text-red-400">
+    خطا در دریافت کاربران: {error.message}
+  </p>
+)}
       <div className="mx-auto max-w-4xl">
         {/* Header /}
         <div className="mb-10 text-center">

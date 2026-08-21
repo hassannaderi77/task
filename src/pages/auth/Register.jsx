@@ -1,8 +1,8 @@
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "../context/authContext";
+import { AuthContext } from "../../context/authContext";
 
-function Login() {
+function Register() {
   const { login } = useContext(AuthContext);
 
   const [loginInfo, setLoginInfo] = useState({
@@ -24,18 +24,17 @@ function Login() {
   };
 
   const clickHandler = (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (
-    loginInfo.name &&
-    loginInfo.family &&
-    loginInfo.phone &&
-    loginInfo.email
-  ) {
-    login(loginInfo);
-    navigate("/dashboard");
-  }
-};
+    if (
+      loginInfo.name &&
+      loginInfo.family &&
+      loginInfo.phone &&
+      loginInfo.email
+    ) {
+      navigate("/login");
+    }
+  };
 
   const inputClass =
     "w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-3.5 text-sm text-white placeholder:text-slate-400 outline-none backdrop-blur-md transition duration-300 focus:border-blue-400 focus:bg-white/10 focus:ring-4 focus:ring-blue-500/20 sm:text-base";
@@ -167,29 +166,13 @@ function Login() {
         </div>
 
         <Link
-          to="/home"
-          className="
-          block
-          rounded-2xl
-          border
-          border-white/10
-          bg-white/5
-          px-6
-          py-3.5
-          text-center
-          font-semibold
-          t
-
-ext-white
-          transition
-          hover:bg-white/10
-          active:scale-95
-          "
-        >
-          ورود به حساب
-        </Link>
+  to="/login"
+  className="block rounded-2xl border border-white/10 bg-white/5 px-6 py-3.5 text-center font-semibold text-white transition hover:bg-white/10 active:scale-95"
+>
+  ورود به حساب
+</Link>
       </div>
     </div>
   );
 }
-export default Login;
+export default Register;

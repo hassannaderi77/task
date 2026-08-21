@@ -1,10 +1,9 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { useContext } from "react";
 
-import { AuthContext } from "../context/authContext";
+import { useAuth } from "../hooks/useAuth";
 
 function ProtectedRoute() {
-  const { isAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated } = useAuth();
   const location = useLocation();
 
   if (!isAuthenticated) {
