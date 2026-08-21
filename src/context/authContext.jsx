@@ -7,6 +7,8 @@ export function AuthProvider({ children }) {
 
   const isAuthenticated = Boolean(user);
 
+  const [pass] = useState("123456");
+
   const login = (userData) => {
     setUser(userData);
   };
@@ -22,6 +24,7 @@ export function AuthProvider({ children }) {
         isAuthenticated,
         login,
         logout,
+        pass
       }}
     >
       {children}
