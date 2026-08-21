@@ -1,9 +1,16 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/authContext";
 
 function Login() {
-  const { loginInfo, setLoginInfo } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
+
+  const [loginInfo, setLoginInfo] = useState({
+    name: "",
+    family: "",
+    phone: "",
+    email: "",
+  });
 
   const navigate = useNavigate();
 
@@ -17,22 +24,21 @@ function Login() {
   };
 
   const clickHandler = (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (
-      loginInfo.name &&
-      loginInfo.family &&
-      loginInfo.phone &&
-      loginInfo.email
-    ) {
-      navigate("/dashboard");
-    }
-  };
-
+  if (
+    loginInfo.name &&
+    loginInfo.family &&
+    loginInfo.phone &&
+    loginInfo.email
+  ) {
+    login(loginInfo);
+    navigate("/dashboard");
+  }
+};
 
   const inputClass =
     "w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-3.5 text-sm text-white placeholder:text-slate-400 outline-none backdrop-blur-md transition duration-300 focus:border-blue-400 focus:bg-white/10 focus:ring-4 focus:ring-blue-500/20 sm:text-base";
-
 
   return (
     <div
@@ -49,8 +55,6 @@ function Login() {
       px-4
       "
     >
-
-
       <div
         className="
         w-full 
@@ -65,10 +69,7 @@ function Login() {
         sm:p-10
         "
       >
-
-
         <div className="mb-8 text-center">
-
           <div
             className="
             mx-auto 
@@ -86,7 +87,6 @@ function Login() {
             👤
           </div>
 
-
           <h1 className="text-3xl font-black text-white sm:text-4xl">
             ایجاد حساب کاربری
           </h1>
@@ -94,17 +94,9 @@ function Login() {
           <p className="mt-3 text-sm text-slate-400">
             اطلاعات خود را برای ثبت نام وارد کنید
           </p>
-
         </div>
 
-
-
-        <form
-          onSubmit={clickHandler}
-          className="flex flex-col gap-4"
-        >
-
-
+        <form onSubmit={clickHandler} className="flex flex-col gap-4">
           <input
             type="text"
             name="name"
@@ -113,7 +105,6 @@ function Login() {
             placeholder="نام"
             className={inputClass}
           />
-
 
           <input
             type="text"
@@ -124,7 +115,6 @@ function Login() {
             className={inputClass}
           />
 
-
           <input
             type="text"
             name="phone"
@@ -134,7 +124,6 @@ function Login() {
             className={inputClass}
           />
 
-
           <input
             type="email"
             name="email"
@@ -143,8 +132,6 @@ function Login() {
             placeholder="ایمیل"
             className={inputClass}
           />
-
-
 
           <button
             type="submit"
@@ -169,25 +156,15 @@ function Login() {
           >
             ثبت نام
           </button>
-
-
         </form>
 
-
-
         <div className="my-6 flex items-center gap-3">
-
           <div className="h-px flex-1 bg-white/10"></div>
 
-          <span className="text-xs text-slate-500">
-            یا
-          </span>
+          <span className="text-xs text-slate-500">یا</span>
 
           <div className="h-px flex-1 bg-white/10"></div>
-
         </div>
-
-
 
         <Link
           to="/home"
@@ -211,13 +188,8 @@ ext-white
         >
           ورود به حساب
         </Link>
-
-
       </div>
-
-
     </div>
   );
 }
-
 export default Login;

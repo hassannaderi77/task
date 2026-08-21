@@ -1,33 +1,34 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../context/authContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Dashboard() {
-  const { loginInfo } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
+
+  const navigate = useNavigate();
 
   const infoItems = [
     {
       title: "نام",
-      value: loginInfo.name,
+      value: user.name,
       icon: "👤",
     },
     {
       title: "نام خانوادگی",
-      value: loginInfo.family,
+      value: user.family,
       icon: "📝",
     },
     {
       title: "شماره همراه",
-      value: loginInfo.phone,
+      value: user.phone,
       icon: "📱",
     },
     {
       title: "ایمیل",
-      value: loginInfo.email,
+      value: user.email,
       icon: "✉️",
     },
   ];
-
 
   return (
     <div
@@ -43,11 +44,7 @@ function Dashboard() {
       text-white
       "
     >
-
-
       <div className="mx-auto max-w-4xl">
-
-
         {/* Header /}
         <div className="mb-10 text-center">
 
@@ -102,8 +99,6 @@ function Dashboard() {
           sm:p-10
           "
         >
-
-
           <h2
             className="
             mb-8
@@ -116,7 +111,15 @@ function Dashboard() {
             اطلاعات کاربر
           </h2>
 
-
+          <button
+            onClick={() => {
+              logout();
+              navigate("/login");
+            }}
+            className="rounded-xl bg-red-500 px-4 py-2 text-white"
+          >
+            خروج
+          </button>
 
           <div
             className="
@@ -126,8 +129,7 @@ function Dashboard() {
             sm:grid-cols-2
             "
           >
-
-            {infoItems.map((item)=>(
+            {infoItems.map((item) => (
               <div
                 key={item.title}
                 className="
@@ -140,7 +142,6 @@ function Dashboard() {
                 hover:bg-white/10
                 "
               >
-
                 <div
                   className="
                   mb-3
@@ -150,17 +151,10 @@ function Dashboard() {
                   text-slate-400
                   "
                 >
+                  <span className="text-2xl">{item.icon}</span>
 
-                  <span className="text-2xl">
-                    {item.icon}
-                  </span>
-
-                  <span>
-                    {item.title}
-                  </span>
-
+                  <span>{item.title}</span>
                 </div>
-
 
                 <p
                   className="
@@ -172,16 +166,9 @@ function Dashboard() {
                 >
                   {item.value || "-"}
                 </p>
-
-
               </div>
             ))}
-
-
           </div>
-
-
-
 
           <Link
             to="/setting"
@@ -207,15 +194,8 @@ function Dashboard() {
           >
             رفتن به تنظیمات
           </Link>
-
-
-
         </div>
-
-
       </div>
-
-
     </div>
   );
 }

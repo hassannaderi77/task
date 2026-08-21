@@ -55,18 +55,7 @@ function Navbar() {
 
 
 
-        <Link
-          to="/dashboard"
-          className="
-          text-xl
-          font-black
-          text-white
-          transition
-          hover:text-blue-400
-          "
-        >
-          Modernio
-        </Link>
+        
         
 
 
