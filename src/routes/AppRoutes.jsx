@@ -5,6 +5,7 @@ import PublicLayout from "../layouts/PublicLayout";
 import PrivateLayout from "../layouts/PrivateLayout";
 import ProtectedRoute from "./ProtectedRoute";
 import PageLoading from "../components/ui/PageLoading";
+import RoleRoute from "./RoleRoute";
 
 import { lazy, Suspense } from "react";
 

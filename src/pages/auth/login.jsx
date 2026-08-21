@@ -1,24 +1,28 @@
 import { useContext } from "react";
+
 import { Link, useNavigate } from "react-router-dom";
 
 import { AuthContext } from "../../context/authContext";
 
 function Login() {
   const { login } = useContext(AuthContext);
+
   const navigate = useNavigate();
 
   const handleLogin = (e) => {
     e.preventDefault();
 
-    // موقتاً برای تست Auth
+    // موقتاً برای تست Auth و Role
     const user = {
       name: "Hassan",
       family: "Naderi",
       phone: "09120000000",
       email: "hassan@example.com",
+      role: "user",
     };
 
     login(user);
+
     navigate("/dashboard");
   };
 
