@@ -45,7 +45,7 @@ function Demo() {
       return;
     }
 
-    console.log("✅ Demo login successful:", {
+    console.log(" Demo login successful:", {
       phone,
       role: "demo",
     });

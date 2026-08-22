@@ -1,5 +1,75 @@
-import avalaiClient from "../avalaiClient";
+// import avalaiClient from "../avalaiClient";
 
+// export const editImage = async ({
+//   images,
+//   firstSelect,
+//   secondSelect,
+//   device,
+//   request,
+//   brand,
+//   description,
+// }) => {
+//   const formData = new FormData();
+
+//   formData.append("model", import.meta.env.VITE_AVALAI_MODEL);
+
+//   const prompt = `
+// Edit the provided image(s) according to the following requirements:
+
+// Image type:
+// ${brand}
+
+// Primary editing target:
+// ${device}
+
+// Editing operation:
+// ${firstSelect}
+
+// Change intensity:
+// ${secondSelect}
+
+// Editing style:
+// ${request}
+
+// Additional instructions:
+// ${description || "No additional instructions."}
+// `;
+
+//   formData.append("prompt", prompt);
+
+//   formData.append("size", "1024x1024");
+
+//   formData.append("n", "1");
+
+//   // تمام تصاویر را در یک request ارسال می‌کنیم
+//   images.forEach((image) => {
+//     formData.append("image", image);
+//   });
+
+//   // لاگ قبل از ارسال
+//   console.log(" Sending image edit request");
+
+//   console.log({
+//     endpoint: "/images/edits",
+//     model: import.meta.env.VITE_AVALAI_MODEL,
+//     imageCount: images.length,
+//     imageNames: images.map((image) => image.name),
+//     prompt,
+//   });
+
+//   // API request
+//   const response = await avalaiClient.post(
+//     "/images/edits",
+//     formData
+//   );
+
+//   // لاگ پاسخ
+//   console.log(" Image edit response received", response.data);
+
+//   return response.data;
+// };
+
+import avalaiClient from "../avalaiClient";
 export const editImage = async ({
   images,
   firstSelect,
@@ -9,59 +79,58 @@ export const editImage = async ({
   brand,
   description,
 }) => {
-  const formData = new FormData();
+  const editSingleImage = async (image) => {
+    const formData = new FormData();
 
-  formData.append("model", import.meta.env.VITE_AVALAI_MODEL);
+    formData.append("model", import.meta.env.VITE_AVALAI_MODEL);
 
-  const prompt = `
-Edit the provided images according to these requirements:
+    const prompt = `
+Edit the provided image according to the following requirements:
 
-First option: ${firstSelect}
+Image type:
+${brand}
 
-Second option: ${secondSelect}
+Primary editing target:
+${device}
 
-Device: ${device}
+Editing operation:
+${firstSelect}
 
-Request: ${request}
+Change intensity:
+${secondSelect}
 
-Brand: ${brand}
+Editing style:
+${request}
 
 Additional instructions:
 ${description || "No additional instructions."}
 
-Preserve the original subject, structure, and important details of each image unless the request explicitly requires changing them.
+Preserve the original subject, structure, proportions, and important details of the image unless the requested edit explicitly requires changing them.
+
+Apply only the requested modifications and keep the result visually natural and consistent with the original image.
 `;
 
-  formData.append("prompt", prompt);
+    formData.append("prompt", prompt);
+    formData.append("size", "1024x1024");
+    formData.append("n", "1");
 
-  formData.append("size", "1024x1024");
-
-  formData.append("n", "1");
-
-  // تمام تصاویر را در یک request ارسال می‌کنیم
-  images.forEach((image) => {
+    // فقط همین عکس
     formData.append("image", image);
-  });
 
-  // لاگ قبل از ارسال
-  console.log("🚀 Sending image edit request");
+    const response = await avalaiClient.post(
+      "/images/edits",
+      formData
+    );
 
-  console.log({
-    endpoint: "/images/edits",
-    model: import.meta.env.VITE_AVALAI_MODEL,
-    imageCount: images.length,
-    imageNames: images.map((image) => image.name),
-    prompt,
-  });
+    return {
+      before: image,
+      after: response.data?.data?.[0]?.url,
+    };
+  };
 
-  // API request
-  const response = await avalaiClient.post(
-    "/images/edits",
-    formData
+  const results = await Promise.all(
+    images.map((image) => editSingleImage(image))
   );
 
-  // لاگ پاسخ
-  console.log("✅ Image edit response received", response.data);
-
-  return response.data;
+  return results;
 };

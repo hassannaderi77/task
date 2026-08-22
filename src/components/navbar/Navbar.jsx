@@ -22,11 +22,6 @@ function Navbar() {
       path: "/login",
       icon: "🔐",
     },
-    {
-      title: "درباره ما",
-      path: "/aboutus",
-      icon: "ℹ️",
-    },
   ];
 
   const privateLinks = [

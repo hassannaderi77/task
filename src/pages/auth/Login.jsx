@@ -103,6 +103,7 @@ function Login() {
               onChange={(e) => setPhone(e.target.value)}
               placeholder="شماره همراه"
               className="
+              text-center direction-ltr
                 w-full
                 rounded-2xl
                 border
@@ -127,6 +128,7 @@ function Login() {
               maxLength={6}
               placeholder="کد تایید"
               className="
+              text-center direction-ltr
                 w-full
                 rounded-2xl
                 border

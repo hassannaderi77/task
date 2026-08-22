@@ -8,7 +8,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import PageLoading from "../components/ui/PageLoading";
 import RoleRoute from "./RoleRoute";
 import LandingPage from "../pages/LandingPage";
-
+import NotFound from "../pages/NotFound";
 
 // const LandingPage = lazy(() => import("../pages/LandingPage"));
 const Home = lazy(() => import("../pages/Home"));
@@ -45,6 +45,7 @@ function AppRoutes() {
             <Route path="/setting" element={<SettingPage />} />
           </Route>
         </Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
   );

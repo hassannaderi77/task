@@ -1,5 +1,6 @@
 import React, { useContext, useRef, useState } from "react";
 import { AuthContext } from "../context/authContext";
+import { getApiErrorMessage } from "../api/errorHandler";
 
 import Numberone from "../components/filter/Numberone";
 import Numbertwo from "../components/filter/Numbertwo";
@@ -9,6 +10,7 @@ import Brand from "../components/filter/Brand";
 import Gallery from "../components/filter/Gallery";
 import { useImageEdit } from "../hooks/useImageEdit";
 import Description from "../components/filter/Description";
+import ErrorMessage from "../components/ui/ErrorMessage";
 
 function SettingPage() {
   const [firstSelect, setFirstSelect] = useState("");
@@ -34,64 +36,68 @@ function SettingPage() {
   const check = firstSelect && secondSelect && device && request && brand;
 
   const clickHnadler = async () => {
+    
 
-     if (images.length === 0) {
-    setError("لطفاً حداقل یک عکس انتخاب کنید");
-    return;
-  }
+    if (
+      !firstSelect ||
+      !secondSelect ||
+      !device ||
+      !request ||
+      !brand ||
+      images.length === 0
+    ) {
+      setError("لطفاً تمام موارد را تکمیل کنید");
+      return;
+    }
 
-  setError("");
+    try {
+      setError("");
+      setApiError("");
+      setEditedImages([]);
 
-  const testResults = images.map((image) => ({
-    before: image,
-    after: image,
-  }));
+      const result = await editImage({
+  images,
+  firstSelect,
+  secondSelect,
+  device,
+  request,
+  brand,
+  description,
+});
+console.log("Edited images result:", result);
+if (!result || result.length === 0) {
+  throw new Error("تصاویر ویرایش شده از API دریافت نشد");
+}
 
-  setEditedImages(testResults);
-    // if (
-    //   !firstSelect ||
-    //   !secondSelect ||
-    //   !device ||
-    //   !request ||
-    //   !brand ||
-    //   images.length === 0
-    // ) {
-    //   setError("لطفاً تمام موارد را تکمیل کنید");
-    //   return;
-    // }
+setEditedImages(result);
 
-    // try {
-    //   setError("");
-    //   setApiError("");
-    //   setEditedImage(null);
+//       const result = await editImage({
+//         images,
+//         firstSelect,
+//         secondSelect,
+//         device,
+//         request,
+//         brand,
+//         description,
+//       });
 
-    //   const result = await editImage({
-    //     images,
-    //     firstSelect,
-    //     secondSelect,
-    //     device,
-    //     request,
-    //     brand,
-    //     description,
-    //   });
+//       const imageUrl = result?.data?.[0]?.url;
 
-    //   const imageBase64 = result?.data?.[0]?.b64_json;
+// if (!imageUrl) {
+//   throw new Error("تصویر ویرایش شده از API دریافت نشد");
+// }
 
-    //   if (!imageBase64) {
-    //     throw new Error("تصویر ویرایش شده از API دریافت نشد");
-    //   }
+// setEditedImages([
+//   {
+//     before: images[0],
+//     after: imageUrl,
+//   },
+// ]);
+    } catch (error) {
+      console.error("Image edit error:", error);
 
-    //   setEditedImage(`data:image/png;base64,${imageBase64}`);
-
-    // } catch (error) {
-    //   console.error("Image edit error:", error);
-
-    //   setApiError(
-    //     error.response?.data?.error?.message ||
-    //       error.message ||
-    //       "خطا در ویرایش تصویر"
-    //   );
-    // }
+  setApiError(getApiErrorMessage(error));
+    }
   };
   const removeImage = (indexToRemove) => {
     setImages((prevImages) =>
@@ -254,11 +260,15 @@ function SettingPage() {
           )}
 
           <button
-            onClick={clickHnadler}
-            disabled={isPending}
-            className="
+  onClick={clickHnadler}
+  disabled={isPending}
+  className="
     mt-8
+    flex
     w-full
+    items-center
+    justify-center
+    gap-3
     rounded-2xl
     bg-blue-600
     py-4
@@ -268,83 +278,96 @@ function SettingPage() {
     hover:bg-blue-500
     active:scale-95
     disabled:cursor-not-allowed
-    disabled:opacity-50
+    disabled:opacity-90
   "
-          >
-            {isPending ? "در حال ویرایش تصویر..." : "ارسال درخواست"}
-          </button>
+>
+  {isPending ? (
+    <>
+      <div className="relative flex h-6 w-6 items-center justify-center">
+        <span className="absolute h-6 w-6 animate-ping rounded-full bg-white/20" />
+        <span className="absolute h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+        <span className="h-1.5 w-1.5 rounded-full bg-white" />
+      </div>
+
+      <span>لطفا صبر کنید</span>
+    </>
+  ) : (
+    <>
+      <span>ارسال درخواست</span>
+      <span className="text-lg">✦</span>
+    </>
+  )}
+</button>
         </div>
 
         {apiError && (
           <div className="mt-8 rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-center text-red-400">
-            {apiError}
+            <ErrorMessage message={apiError} />
           </div>
         )}
 
         {editedImages.length > 0 && (
-  <div className="mt-10">
-    <h2 className="mb-6 text-center text-2xl font-black">
-      نتیجه ویرایش تصاویر
-    </h2>
+          <div className="mt-10">
+            <h2 className="mb-6 text-center text-2xl font-black">
+              نتیجه ویرایش تصاویر
+            </h2>
 
-    <div className="space-y-6">
-      {editedImages.map((item, index) => (
-        <div
-          key={index}
-          className="
+            <div className="space-y-6">
+              {editedImages.map((item, index) => (
+                <div
+                  key={index}
+                  className="
             rounded-3xl
             border
             border-slate-800
             bg-slate-900
             p-5
           "
-        >
-          <h3 className="mb-5 text-center text-lg font-bold">
-            تصویر {index + 1}
-          </h3>
+                >
+                  <h3 className="mb-5 text-center text-lg font-bold">
+                    تصویر {index + 1}
+                  </h3>
 
-          <div className="grid gap-5 md:grid-cols-2">
-            
-            {/* Before */}
-            <div>
-              <h4 className="mb-3 text-center font-bold text-slate-300">
-                Before
-              </h4>
+                  <div className="grid gap-5 md:grid-cols-2">
+                    {/* Before */}
+                    <div>
+                      <h4 className="mb-3 text-center font-bold text-slate-300">
+                        Before
+                      </h4>
 
-              <img
-                src={URL.createObjectURL(item.before)}
-                alt={`Before ${index + 1}`}
-                className="
+                      <img
+                        src={URL.createObjectURL(item.before)}
+                        alt={`Before ${index + 1}`}
+                        className="
                   w-full
                   rounded-2xl
                   object-cover
                 "
-              />
+                      />
+                    </div>
+
+                    {/* After */}
+                    <div>
+                      <h4 className="mb-3 text-center font-bold text-slate-300">
+                        After
+                      </h4>
+
+                      <img
+                        src={item.after}
+                        alt={`After ${index + 1}`}
+                        className="
+    w-full
+    rounded-2xl
+    object-cover
+  "
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-
-            {/* After */}
-            <div>
-              <h4 className="mb-3 text-center font-bold text-slate-300">
-                After
-              </h4>
-
-              <img
-                src={URL.createObjectURL(item.after)}
-                alt={`After ${index + 1}`}
-                className="
-                  w-full
-                  rounded-2xl
-                  object-cover
-                "
-              />
-            </div>
-
           </div>
-        </div>
-      ))}
-    </div>
-  </div>
-)}
+        )}
 
         {info && (
           <div
