@@ -1,20 +1,22 @@
 import React, { useContext, useRef, useState } from "react";
 import { AuthContext } from "../context/authContext";
 
-import Numberone from "../components/choose/Numberone";
-import Numbertwo from "../components/choose/Numbertwo";
-import Device from "../components/choose/Device";
-import Request from "../components/choose/Request";
-import Brand from "../components/choose/Brand";
-import Gallery from "../components/choose/Gallery";
+import Numberone from "../components/filter/Numberone";
+import Numbertwo from "../components/filter/Numbertwo";
+import Device from "../components/filter/Device";
+import Request from "../components/filter/Request";
+import Brand from "../components/filter/Brand";
+import Gallery from "../components/filter/Gallery";
+import { useImageEdit } from "../hooks/useImageEdit";
+import Description from "../components/filter/Description";
 
 function SettingPage() {
   const [firstSelect, setFirstSelect] = useState("");
   const [secondSelect, setSecondSelect] = useState("");
-
   const [device, setDevice] = useState("");
   const [request, setRequest] = useState("");
   const [brand, setBrand] = useState("");
+  const [description, setDescription] = useState("");
 
   const [images, setImages] = useState([]);
   const [error, setError] = useState("");
@@ -24,45 +26,72 @@ function SettingPage() {
   const galleryRef = useRef(null);
   const cameraRef = useRef(null);
 
+  const { mutateAsync: editImage, isPending } = useImageEdit();
+
+  const [editedImage, setEditedImage] = useState(null);
+  const [apiError, setApiError] = useState("");
+
   const check = firstSelect && secondSelect && device && request && brand;
 
-  const clickHnadler = () => {
-    if (
-      firstSelect &&
-      secondSelect &&
-      device &&
-      request &&
-      brand &&
-      images.length > 0
-    ) {
-      setError("");
+  const clickHnadler = async () => {
 
-      setInfo({
-        firstSelect,
-        secondSelect,
-        device,
-        request,
-        brand,
-        images,
-      });
-
-      setFirstSelect("");
-      setSecondSelect("");
-      setDevice("");
-      setRequest("");
-      setBrand("");
-      setImages([]);
-
-      if (galleryRef.current) {
-        galleryRef.current.value = "";
-      }
-
-      if (cameraRef.current) {
-        cameraRef.current.value = "";
-      }
-    } else {
-      setError("لطفاً تمام موارد را تکمیل کنید");
+    if (images.length === 0) {
+      setError("لطفاً یک عکس انتخاب کنید");
+      return;
     }
+
+    setError("");
+    setEditedImage(URL.createObjectURL(images[0]));
+    // if (
+    //   !firstSelect ||
+    //   !secondSelect ||
+    //   !device ||
+    //   !request ||
+    //   !brand ||
+    //   images.length === 0
+    // ) {
+    //   setError("لطفاً تمام موارد را تکمیل کنید");
+    //   return;
+    // }
+
+    // try {
+    //   setError("");
+    //   setApiError("");
+    //   setEditedImage(null);
+
+    //   const result = await editImage({
+    //     images,
+    //     firstSelect,
+    //     secondSelect,
+    //     device,
+    //     request,
+    //     brand,
+    //     description,
+    //   });
+
+    //   const imageBase64 = result?.data?.[0]?.b64_json;
+
+    //   if (!imageBase64) {
+    //     throw new Error("تصویر ویرایش شده از API دریافت نشد");
+    //   }
+
+    //   setEditedImage(`data:image/png;base64,${imageBase64}`);
+
+    // } catch (error) {
+    //   console.error("Image edit error:", error);
+
+    //   setApiError(
+    //     error.response?.data?.error?.message ||
+    //       error.message ||
+    //       "خطا در ویرایش تصویر"
+    //   );
+    // }
+  };
+
+  const removeImage = (indexToRemove) => {
+    setImages((prevImages) =>
+      prevImages.filter((_, index) => index !== indexToRemove),
+    );
   };
 
   return (
@@ -137,6 +166,13 @@ function SettingPage() {
             <Brand brand={brand} setBrand={setBrand} />
           </div>
 
+          <div>
+            <Description
+              description={description}
+              setDescription={setDescription}
+            />
+          </div>
+
           {error && (
             <div
               className="
@@ -162,39 +198,51 @@ function SettingPage() {
           />
 
           {images.length > 0 && (
-            <div
-              className="
-              mt-8
-              rounded-3xl
-              border border-slate-800
-              bg-slate-900
-              p-6
-              "
-            >
-              <h3
-                className="
-                mb-5
-                text-lg
-                font-bold
-                "
-              >
-                تصاویر انتخاب شده
-              </h3>
+            <div className="mt-8 rounded-3xl border border-slate-800 bg-slate-900 p-6">
+              <h3 className="mb-5 text-lg font-bold">تصاویر انتخاب شده</h3>
 
               <div className="flex flex-wrap gap-4">
                 {images.map((image, index) => (
-                  <img
-                    key={index}
-                    src={URL.createObjectURL(image)}
-                    alt={image.name}
-                    className="
-                        h-28 w-28
-                        rounded-2xl
-                        object-cover
-                        ring-2
-                        ring-slate-700
-                        "
-                  />
+                  <div key={index} className="relative">
+                    <img
+                      src={URL.createObjectURL(image)}
+                      alt={image.name}
+                      className="
+              h-28 w-28
+              rounded-2xl
+              object-cover
+              ring-2
+              ring-slate-700
+            "
+                    />
+
+                    <button
+                      type="button"
+                      onClick={() => removeImage(index)}
+                      className="
+    absolute
+    -right-2
+    -top-2
+    flex
+    h-7
+    w-7
+    items-center
+    justify-center
+    rounded-full
+    bg-red-600
+    p-0
+    text-lg
+    font-bold
+    leading-none
+    text-white
+    shadow-lg
+    transition
+    hover:bg-red-500
+  "
+                    >
+                      <span className="mb-px">×</span>
+                    </button>
+                  </div>
                 ))}
               </div>
             </div>
@@ -202,80 +250,113 @@ function SettingPage() {
 
           <button
             onClick={clickHnadler}
+            disabled={isPending}
             className="
-            mt-8
-            w-full
-            rounded-2xl
-            bg-blue-600
-            py-4
-            font-bold
-            text-white
-            transition-all
-            hover:bg-blue-500
-            active:scale-95
-            "
+    mt-8
+    w-full
+    rounded-2xl
+    bg-blue-600
+    py-4
+    font-bold
+    text-white
+    transition-all
+    hover:bg-blue-500
+    active:scale-95
+    disabled:cursor-not-allowed
+    disabled:opacity-50
+  "
           >
-            ارسال درخواست
+            {isPending ? "در حال ویرایش تصویر..." : "ارسال درخواست"}
           </button>
         </div>
 
+        {apiError && (
+          <div className="mt-8 rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-center text-red-400">
+            {apiError}
+          </div>
+        )}
+
+        {editedImage && images.length > 0 && (
+          <div className="mt-10">
+            <h2 className="mb-6 text-center text-2xl font-black">
+              نتیجه ویرایش تصویر
+            </h2>
+
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="rounded-3xl border border-slate-800 bg-slate-900 p-4">
+                <h3 className="mb-4 text-center text-lg font-bold">Before</h3>
+
+                <img
+                  src={URL.createObjectURL(images[0])}
+                  alt="Before"
+                  className="w-full rounded-2xl object-cover"
+                />
+              </div>
+
+              <div className="rounded-3xl border border-slate-800 bg-slate-900 p-4">
+                <h3 className="mb-4 text-center text-lg font-bold">After</h3>
+
+                <img
+                  src={editedImage}
+                  alt="After"
+                  className="w-full rounded-2xl object-cover"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
         {info && (
-  <div
-    className="
+          <div
+            className="
     mt-10
     rounded-3xl
     border border-slate-800
     bg-slate-900
     p-6
     "
-  >
-    <h2
-      className="
+          >
+            <h2
+              className="
       mb-6
       text-xl
       font-bold
       "
-    >
-      اطلاعات ثبت شده
-    </h2>
+            >
+              اطلاعات ثبت شده
+            </h2>
 
-    <div
-      className="
+            <div
+              className="
       grid
       gap-4
       sm:grid-cols-2
       "
-    >
-      <Info title="گزینه اول" value={info.firstSelect} />
-      <Info title="گزینه دوم" value={info.secondSelect} />
-      <Info title="دستگاه" value={info.device} />
-      <Info title="درخواست" value={info.request} />
-      <Info title="برند" value={info.brand} />
-    </div>
+            >
+              <Info title="گزینه اول" value={info.firstSelect} />
+              <Info title="گزینه دوم" value={info.secondSelect} />
+              <Info title="دستگاه" value={info.device} />
+              <Info title="درخواست" value={info.request} />
+              <Info title="برند" value={info.brand} />
+            </div>
 
+            {info.images && info.images.length > 0 && (
+              <div className="mt-8">
+                <h3 className="mb-4 text-lg font-bold">تصاویر</h3>
 
-    {info.images && info.images.length > 0 && (
-      <div className="mt-8">
-
-        <h3 className="mb-4 text-lg font-bold">
-          تصاویر
-        </h3>
-
-
-        <div
-          className="
+                <div
+                  className="
           flex
           flex-wrap
           gap-4
           "
-        >
-
-          {info.images.map((image, index) => (
-            <img
-              key={index}
-              src={URL.createObjectURL(image)}
-              alt={image.name}
-              className="
+                >
+                  {info.images.map((image, index) => (
+                    <img
+                      key={index}
+                      src={URL.createObjectURL(image)}
+                      alt={image.name}
+                      className="
               h-32
               w-32
               rounded-2xl
@@ -283,16 +364,13 @@ function SettingPage() {
               border
               border-slate-700
               "
-            />
-          ))}
-
-        </div>
-
-      </div>
-    )}
-
-  </div>
-)}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

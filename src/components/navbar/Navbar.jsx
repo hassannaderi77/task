@@ -73,46 +73,48 @@ function Navbar() {
         <div className="flex items-center gap-2 sm:gap-4">
           {links.map((link) => (
             <Link
-              key={link.path}
-              to={link.path}
-              className="
-                rounded-xl
-                px-3
-                py-2
-                text-sm
-                font-bold
-                text-slate-300
-                transition
-                hover:bg-white/10
-                hover:text-white
-              "
-            >
-              <span className="ml-1">
-                {link.icon}
-              </span>
+  key={link.path}
+  to={link.path}
+  className="
+    rounded-xl
+    px-3
+    py-2
+    text-sm
+    font-bold
+    text-slate-300
+    transition
+    hover:bg-white/10
+    hover:text-white
+  "
+>
+  <span className="sm:ml-1">
+    {link.icon}
+  </span>
 
-              {link.title}
-            </Link>
+  <span className="hidden sm:inline">
+    {link.title}
+  </span>
+</Link>
           ))}
 
           {isAuthenticated && (
-            <button
-              onClick={handleLogout}
-              className="
-                rounded-xl
-                px-3
-                py-2
-                text-sm
-                font-bold
-                text-red-400
-                transition
-                hover:bg-red-500/10
-                hover:text-red-300
-              "
-            >
-              🚪 خروج
-            </button>
-          )}
+  <button
+    onClick={handleLogout}
+    className="
+      rounded-xl
+      px-3
+      py-2
+      text-sm
+      font-bold
+      text-red-400
+      transition
+      hover:bg-red-500/10
+      hover:text-red-300
+    "
+  >
+    🚪 <span className="hidden sm:inline">خروج</span>
+  </button>
+)}
         </div>
       </div>
     </nav>

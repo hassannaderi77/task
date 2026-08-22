@@ -35,7 +35,7 @@ function Login() {
 
     login(user);
 
-    navigate("/dashboard");
+    navigate("/setting");
   };
 
   return (
@@ -43,7 +43,7 @@ function Login() {
       dir="rtl"
       className="
         min-h-screen
-        bg-gradient-to-br
+        bg-linear-to-br
         from-slate-950
         via-slate-900
         to-blue-950
