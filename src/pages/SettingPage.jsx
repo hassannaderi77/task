@@ -28,20 +28,26 @@ function SettingPage() {
 
   const { mutateAsync: editImage, isPending } = useImageEdit();
 
-  const [editedImage, setEditedImage] = useState(null);
+  const [editedImages, setEditedImages] = useState([]);
   const [apiError, setApiError] = useState("");
 
   const check = firstSelect && secondSelect && device && request && brand;
 
   const clickHnadler = async () => {
 
-    if (images.length === 0) {
-      setError("لطفاً یک عکس انتخاب کنید");
-      return;
-    }
+     if (images.length === 0) {
+    setError("لطفاً حداقل یک عکس انتخاب کنید");
+    return;
+  }
 
-    setError("");
-    setEditedImage(URL.createObjectURL(images[0]));
+  setError("");
+
+  const testResults = images.map((image) => ({
+    before: image,
+    after: image,
+  }));
+
+  setEditedImages(testResults);
     // if (
     //   !firstSelect ||
     //   !secondSelect ||
@@ -87,7 +93,6 @@ function SettingPage() {
     //   );
     // }
   };
-
   const removeImage = (indexToRemove) => {
     setImages((prevImages) =>
       prevImages.filter((_, index) => index !== indexToRemove),
@@ -276,35 +281,70 @@ function SettingPage() {
           </div>
         )}
 
-        {editedImage && images.length > 0 && (
-          <div className="mt-10">
-            <h2 className="mb-6 text-center text-2xl font-black">
-              نتیجه ویرایش تصویر
-            </h2>
+        {editedImages.length > 0 && (
+  <div className="mt-10">
+    <h2 className="mb-6 text-center text-2xl font-black">
+      نتیجه ویرایش تصاویر
+    </h2>
 
-            <div className="grid gap-6 md:grid-cols-2">
-              <div className="rounded-3xl border border-slate-800 bg-slate-900 p-4">
-                <h3 className="mb-4 text-center text-lg font-bold">Before</h3>
+    <div className="space-y-6">
+      {editedImages.map((item, index) => (
+        <div
+          key={index}
+          className="
+            rounded-3xl
+            border
+            border-slate-800
+            bg-slate-900
+            p-5
+          "
+        >
+          <h3 className="mb-5 text-center text-lg font-bold">
+            تصویر {index + 1}
+          </h3>
 
-                <img
-                  src={URL.createObjectURL(images[0])}
-                  alt="Before"
-                  className="w-full rounded-2xl object-cover"
-                />
-              </div>
+          <div className="grid gap-5 md:grid-cols-2">
+            
+            {/* Before */}
+            <div>
+              <h4 className="mb-3 text-center font-bold text-slate-300">
+                Before
+              </h4>
 
-              <div className="rounded-3xl border border-slate-800 bg-slate-900 p-4">
-                <h3 className="mb-4 text-center text-lg font-bold">After</h3>
-
-                <img
-                  src={editedImage}
-                  alt="After"
-                  className="w-full rounded-2xl object-cover"
-                />
-              </div>
+              <img
+                src={URL.createObjectURL(item.before)}
+                alt={`Before ${index + 1}`}
+                className="
+                  w-full
+                  rounded-2xl
+                  object-cover
+                "
+              />
             </div>
+
+            {/* After */}
+            <div>
+              <h4 className="mb-3 text-center font-bold text-slate-300">
+                After
+              </h4>
+
+              <img
+                src={URL.createObjectURL(item.after)}
+                alt={`After ${index + 1}`}
+                className="
+                  w-full
+                  rounded-2xl
+                  object-cover
+                "
+              />
+            </div>
+
           </div>
-        )}
+        </div>
+      ))}
+    </div>
+  </div>
+)}
 
         {info && (
           <div

@@ -14,7 +14,7 @@ export const editImage = async ({
   formData.append("model", import.meta.env.VITE_AVALAI_MODEL);
 
   const prompt = `
-Edit the provided image according to these requirements:
+Edit the provided images according to these requirements:
 
 First option: ${firstSelect}
 
@@ -26,30 +26,41 @@ Request: ${request}
 
 Brand: ${brand}
 
-Additional instructions: ${description || "No additional instructions."}
+Additional instructions:
+${description || "No additional instructions."}
 
-Preserve the original subject and important details unless the request explicitly requires changing them.
+Preserve the original subject, structure, and important details of each image unless the request explicitly requires changing them.
 `;
 
   formData.append("prompt", prompt);
+
   formData.append("size", "1024x1024");
 
-  //  یک عکس برای تست
-  formData.append("image", images[0]);
+  formData.append("n", "1");
 
-  // لاگ قبل از ارسال درخواست
-  console.log("🚀 Sending image edit request", {
+  // تمام تصاویر را در یک request ارسال می‌کنیم
+  images.forEach((image) => {
+    formData.append("image", image);
+  });
+
+  // لاگ قبل از ارسال
+  console.log("🚀 Sending image edit request");
+
+  console.log({
     endpoint: "/images/edits",
     model: import.meta.env.VITE_AVALAI_MODEL,
     imageCount: images.length,
-    imageName: images[0]?.name,
+    imageNames: images.map((image) => image.name),
     prompt,
   });
 
-  // تنها درخواست API
-  const response = await avalaiClient.post("/images/edits", formData);
+  // API request
+  const response = await avalaiClient.post(
+    "/images/edits",
+    formData
+  );
 
-  // لاگ پاسخ API
+  // لاگ پاسخ
   console.log("✅ Image edit response received", response.data);
 
   return response.data;

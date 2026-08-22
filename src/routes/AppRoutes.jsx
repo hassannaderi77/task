@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import { lazy, Suspense } from "react";
 import GuestRoute from "./GuestRoute";
 
 import PublicLayout from "../layouts/PublicLayout";
@@ -6,14 +7,14 @@ import PrivateLayout from "../layouts/PrivateLayout";
 import ProtectedRoute from "./ProtectedRoute";
 import PageLoading from "../components/ui/PageLoading";
 import RoleRoute from "./RoleRoute";
+import LandingPage from "../pages/LandingPage";
 
-import { lazy, Suspense } from "react";
 
 // const LandingPage = lazy(() => import("../pages/LandingPage"));
 const Home = lazy(() => import("../pages/Home"));
 const Login = lazy(() => import("../pages/auth/Login"));
 const Register = lazy(() => import("../pages/auth/Register"));
-const AboutUs = lazy(() => import("../pages/AboutUs"));
+const Demo = lazy(() => import("../pages/Demo"));
 const Dashboard = lazy(() => import("../pages/Dashboard"));
 const SettingPage = lazy(() => import("../pages/SettingPage"));
 
@@ -26,7 +27,7 @@ function AppRoutes() {
         <Route element={<PublicLayout />}>
           <Route path="/" element={<Home />} />
           {/* <Route path="/landing" element={<LandingPage />} /> */}
-          <Route path="/aboutus" element={<AboutUs />} />
+          <Route path="/demo" element={<Demo />} />
         </Route>
 
         {/* Guest Routes */}

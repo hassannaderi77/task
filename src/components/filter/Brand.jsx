@@ -3,36 +3,36 @@ import React from "react";
 function Brand({ brand, setBrand }) {
   const brands = [
     {
-      value: "samsung",
-      title: "Samsung",
-      icon: "📱",
-      description: "سامسونگ",
+      value: "product",
+      title: "محصول",
+      icon: "📦",
+      description: "تصویر یک محصول یا کالا",
     },
     {
-      value: "xiaomi",
-      title: "Xiaomi",
-      icon: "📲",
-      description: "شیائومی",
+      value: "person",
+      title: "شخص",
+      icon: "👤",
+      description: "تصویر شخص یا پرتره",
     },
     {
-      value: "nokia",
-      title: "Nokia",
-      icon: "📞",
-      description: "نوکیا",
+      value: "object",
+      title: "شیء",
+      icon: "🔹",
+      description: "تصویر یک شیء یا وسیله",
     },
   ];
 
   return (
     <div
       className="
-      rounded-3xl border border-slate-800
-      bg-gradient-to-br from-slate-900 to-slate-950
-      p-5 shadow-2xl shadow-black/20
+        rounded-3xl border border-slate-800
+        bg-gradient-to-br from-slate-900 to-slate-950
+        p-5 shadow-2xl shadow-black/20
       "
       dir="rtl"
     >
       <h3 className="mb-5 text-right text-lg font-bold text-white">
-        برند دستگاه
+        نوع تصویر
       </h3>
 
       <div className="flex flex-col gap-3">
@@ -40,39 +40,36 @@ function Brand({ brand, setBrand }) {
           <label
             key={item.value}
             className={`
-            flex cursor-pointer items-center gap-4
-            rounded-2xl border p-4
-            transition-all duration-300
-
-            ${
-              brand === item.value
-                ? "border-blue-500 bg-blue-500/10 shadow-lg shadow-blue-500/10"
-                : "border-slate-700 bg-slate-800/50 hover:border-slate-500"
-            }
+              flex cursor-pointer items-center gap-4
+              rounded-2xl border p-4
+              transition-all duration-300
+              ${
+                brand === item.value
+                  ? "border-blue-500 bg-blue-500/10 shadow-lg shadow-blue-500/10"
+                  : "border-slate-700 bg-slate-800/50 hover:border-slate-500"
+              }
             `}
           >
             <input
               className="hidden"
               type="radio"
-              name="brand"
+              name="imageType"
               value={item.value}
               checked={brand === item.value}
               onChange={(e) => setBrand(e.target.value)}
             />
 
-            <span className="text-2xl">
-              {item.icon}
-            </span>
+            <span className="text-2xl">{item.icon}</span>
 
             <div className="flex flex-col">
               <span
                 className={`
-                text-sm font-semibold
-                ${
-                  brand === item.value
-                    ? "text-blue-400"
-                    : "text-slate-200"
-                }
+                  text-sm font-semibold
+                  ${
+                    brand === item.value
+                      ? "text-blue-400"
+                      : "text-slate-200"
+                  }
                 `}
               >
                 {item.title}
@@ -84,9 +81,7 @@ function Brand({ brand, setBrand }) {
             </div>
 
             {brand === item.value && (
-              <span className="mr-auto text-blue-400">
-                ✓
-              </span>
+              <span className="mr-auto text-blue-400">✓</span>
             )}
           </label>
         ))}

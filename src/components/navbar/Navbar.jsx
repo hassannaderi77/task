@@ -45,11 +45,6 @@ function Navbar() {
       path: "/setting",
       icon: "⚙️",
     },
-    {
-      title: "درباره ما",
-      path: "/aboutus",
-      icon: "ℹ️",
-    },
   ];
 
   const links = isAuthenticated ? privateLinks : guestLinks;
@@ -87,11 +82,11 @@ function Navbar() {
     hover:text-white
   "
 >
-  <span className="sm:ml-1">
+  <span className="hidden sm:inline">
     {link.icon}
   </span>
 
-  <span className="hidden sm:inline">
+  <span className="sm:inline">
     {link.title}
   </span>
 </Link>
@@ -112,7 +107,7 @@ function Navbar() {
       hover:text-red-300
     "
   >
-    🚪 <span className="hidden sm:inline">خروج</span>
+    خروج <span className="hidden sm:inline">🚪</span>
   </button>
 )}
         </div>
