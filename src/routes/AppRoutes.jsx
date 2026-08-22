@@ -9,7 +9,7 @@ import RoleRoute from "./RoleRoute";
 
 import { lazy, Suspense } from "react";
 
-const LandingPage = lazy(() => import("../pages/LandingPage"));
+// const LandingPage = lazy(() => import("../pages/LandingPage"));
 const Home = lazy(() => import("../pages/Home"));
 const Login = lazy(() => import("../pages/auth/Login"));
 const Register = lazy(() => import("../pages/auth/Register"));
@@ -24,8 +24,8 @@ function AppRoutes() {
         {/* Public Routes */}
 
         <Route element={<PublicLayout />}>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/" element={<Home />} />
+          {/* <Route path="/landing" element={<LandingPage />} /> */}
           <Route path="/aboutus" element={<AboutUs />} />
         </Route>
 
@@ -54,8 +54,8 @@ export default AppRoutes;
 // AppRoutes
 // │
 // ├── PublicLayout
+// │     ├── /landingPage
 // │     ├── /
-// │     ├── /home
 // │     ├── /login
 // │     └── /aboutus
 // │
