@@ -3,10 +3,61 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 import User from "./models/User.js";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
+import ImageHistory from "./models/ImageHistory.js";
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const beforeUploadDir = path.join(
+  __dirname,
+  "uploads",
+  "before"
+);
+
+const afterUploadDir = path.join(
+  __dirname,
+  "uploads",
+  "after"
+);
+
+fs.mkdirSync(beforeUploadDir, { recursive: true });
+fs.mkdirSync(afterUploadDir, { recursive: true });
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, beforeUploadDir);
+  },
+
+  filename: (req, file, cb) => {
+    const extension = path.extname(file.originalname);
+
+    const filename = `${Date.now()}-${Math.round(
+      Math.random() * 1e9
+    )}${extension}`;
+
+    cb(null, filename);
+  },
+});
+
+const upload = multer({
+  storage,
+  limits: {
+    fileSize: 10 * 1024 * 1024,
+  },
+});
 
 dotenv.config();
 
 const app = express();
+app.use(
+  "/uploads",
+  express.static(path.join(__dirname, "uploads"))
+);
 
 app.use(cors());
 app.use(express.json());
@@ -18,6 +69,73 @@ app.get("/api/test", (req, res) => {
     success: true,
     message: "API is working",
   });
+});
+
+app.post(
+  "/api/history",
+  upload.single("beforeImage"),
+  async (req, res) => {
+    try {
+      const {
+        userId,
+        afterImage,
+        firstSelect,
+        secondSelect,
+        device,
+        request,
+        brand,
+        description,
+      } = req.body;
+
+      if (!userId || !req.file || !afterImage) {
+        return res.status(400).json({
+          message: "اطلاعات تاریخچه ناقص است",
+        });
+      }
+
+      const beforeImageUrl =
+        `/uploads/before/${req.file.filename}`;
+
+      const history = await ImageHistory.create({
+        userId,
+        beforeImage: beforeImageUrl,
+        afterImage,
+        firstSelect,
+        secondSelect,
+        device,
+        request,
+        brand,
+        description,
+      });
+
+      res.status(201).json(history);
+    } catch (error) {
+      console.error("Create history error:", error);
+
+      res.status(500).json({
+        message: "خطا در ذخیره تاریخچه",
+      });
+    }
+  }
+);
+
+
+app.get("/api/history/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const history = await ImageHistory.find({
+      userId,
+    }).sort({ createdAt: -1 });
+
+    res.status(200).json(history);
+  } catch (error) {
+    console.error("Get history error:", error);
+
+    res.status(500).json({
+      message: "خطا در دریافت تاریخچه",
+    });
+  }
 });
 
 

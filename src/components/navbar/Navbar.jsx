@@ -38,6 +38,12 @@ function Navbar() {
     },
 
     {
+      title: "تاریخچه",
+      path: "/history",
+      icon: "🏠",
+    },
+
+    {
       title: "تنظیمات",
       path: "/setting",
       icon: "⚙️",

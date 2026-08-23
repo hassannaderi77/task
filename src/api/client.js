@@ -1,12 +1,8 @@
 import axios from "axios";
-
 import { getApiErrorMessage } from "./errorHandler";
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
   timeout: 10000,
 });
 
@@ -16,6 +12,11 @@ apiClient.interceptors.request.use(
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    // فقط برای درخواست‌های معمولی JSON
+    if (!(config.data instanceof FormData)) {
+      config.headers["Content-Type"] = "application/json";
     }
 
     return config;

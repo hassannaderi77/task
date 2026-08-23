@@ -1,4 +1,5 @@
 import React, { useContext, useRef, useState } from "react";
+
 import { AuthContext } from "../context/authContext";
 import { getApiErrorMessage } from "../api/errorHandler";
 
@@ -8,9 +9,12 @@ import Device from "../components/filter/Device";
 import Request from "../components/filter/Request";
 import Brand from "../components/filter/Brand";
 import Gallery from "../components/filter/Gallery";
-import { useImageEdit } from "../hooks/useImageEdit";
 import Description from "../components/filter/Description";
+
 import ErrorMessage from "../components/ui/ErrorMessage";
+
+import { useImageEdit } from "../hooks/useImageEdit";
+import { createHistory } from "../api/services/historyService";
 
 function SettingPage() {
   const [firstSelect, setFirstSelect] = useState("");
@@ -19,67 +23,118 @@ function SettingPage() {
   const [request, setRequest] = useState("");
   const [brand, setBrand] = useState("");
   const [description, setDescription] = useState("");
-
   const [images, setImages] = useState([]);
-  const [error, setError] = useState("");
 
-  const { info, setInfo } = useContext(AuthContext);
+  const [error, setError] = useState("");
+  const [apiError, setApiError] = useState("");
+  const [editedImages, setEditedImages] = useState([]);
+
+  const { user } = useContext(AuthContext);
 
   const galleryRef = useRef(null);
   const cameraRef = useRef(null);
 
   const { mutateAsync: editImage, isPending } = useImageEdit();
 
-  const [editedImages, setEditedImages] = useState([]);
-  const [apiError, setApiError] = useState("");
-
-  const check = firstSelect && secondSelect && device && request && brand;
+  const check =
+    firstSelect &&
+    secondSelect &&
+    device &&
+    request &&
+    brand;
 
   const clickHnadler = async () => {
-    if (
-      !firstSelect ||
-      !secondSelect ||
-      !device ||
-      !request ||
-      !brand ||
-      images.length === 0
-    ) {
-      setError("لطفاً تمام موارد را تکمیل کنید");
+  if (
+    !firstSelect ||
+    !secondSelect ||
+    !device ||
+    !request ||
+    !brand ||
+    images.length === 0
+  ) {
+    setError("لطفاً تمام موارد را تکمیل کنید");
+    return;
+  }
+
+  try {
+    setError("");
+    setApiError("");
+    setEditedImages([]);
+
+    // ارسال عکس‌ها برای ویرایش
+    const result = await editImage({
+      images,
+      firstSelect,
+      secondSelect,
+      device,
+      request,
+      brand,
+      description,
+    });
+
+    console.log("Edited images result:", result);
+
+    if (!result || result.length === 0) {
+      throw new Error("تصاویر ویرایش شده از API دریافت نشد");
+    }
+
+    setEditedImages(result);
+
+    // بررسی کاربر لاگین شده
+    console.log("USER FROM AUTH:", user);
+    console.log("USER ID:", user?.id);
+    console.log("RESULT FOR HISTORY:", result);
+
+    if (!user?.id) {
+      console.error("User ID not found. History was not saved.");
       return;
     }
 
+    // ذخیره تاریخچه هر تصویر
     try {
-      setError("");
-      setApiError("");
-      setEditedImages([]);
+      await Promise.all(
+        result.map((item, index) => {
+          console.log("========== HISTORY DEBUG ==========");
+          console.log("Image index:", index);
+          console.log("History item:", item);
+          console.log("Before:", item.before);
+          console.log("Before type:", typeof item.before);
+          console.log("Before is File:", item.before instanceof File);
+          console.log("After:", item.after);
+          console.log("After type:", typeof item.after);
+          console.log("User ID:", user.id);
+          console.log("===================================");
 
-      const result = await editImage({
-        images,
-        firstSelect,
-        secondSelect,
-        device,
-        request,
-        brand,
-        description,
-      });
+          return createHistory({
+            userId: user.id,
+            beforeImage: item.before,
+            afterImage: item.after,
+            firstSelect,
+            secondSelect,
+            device,
+            request,
+            brand,
+            description,
+          });
+        })
+      );
 
-      console.log("Edited images result:", result);
-
-      if (!result || result.length === 0) {
-        throw new Error("تصاویر ویرایش شده از API دریافت نشد");
-      }
-
-      setEditedImages(result);
-    } catch (error) {
-      console.error("Image edit error:", error);
-
-      setApiError(getApiErrorMessage(error));
+      console.log("Image history saved successfully");
+    } catch (historyError) {
+      console.error("History save error:", historyError);
     }
-  };
+  } catch (error) {
+    console.error("Image edit error:", error);
+
+    setApiError(getApiErrorMessage(error));
+  }
+};
 
   const removeImage = (indexToRemove) => {
     setImages((prevImages) =>
-      prevImages.filter((_, index) => index !== indexToRemove),
+      prevImages.filter(
+        (_, index) => index !== indexToRemove
+      )
     );
   };
 
@@ -99,6 +154,7 @@ function SettingPage() {
       "
     >
       {/* Background glows */}
+
       <div
         className="
           pointer-events-none absolute
@@ -122,8 +178,11 @@ function SettingPage() {
       />
 
       <div className="relative mx-auto max-w-5xl">
+
         {/* Header */}
+
         <div className="mb-10 text-center">
+
           <div
             className="
               mx-auto mb-5
@@ -169,7 +228,7 @@ function SettingPage() {
               sm:text-base
             "
           >
-            اطلاعات دستگاه و درخواست خود را وارد کنید
+            اطلاعات تکمیل و درخواست خود را وارد کنید
           </p>
 
           <div
@@ -186,6 +245,7 @@ function SettingPage() {
         </div>
 
         {/* Main Form Card */}
+
         <div
           className="
             relative overflow-hidden
@@ -202,7 +262,9 @@ function SettingPage() {
             sm:p-8
           "
         >
+
           {/* Top gradient */}
+
           <div
             className="
               absolute left-0 right-0 top-0
@@ -215,6 +277,9 @@ function SettingPage() {
           />
 
           <div className="relative">
+
+            {/* Selects */}
+
             <Numberone
               firstSelect={firstSelect}
               setFirstSelect={setFirstSelect}
@@ -224,6 +289,8 @@ function SettingPage() {
               secondSelect={secondSelect}
               setSecondSelect={setSecondSelect}
             />
+
+            {/* Device / Request / Brand */}
 
             <div
               className="
@@ -249,6 +316,8 @@ function SettingPage() {
               />
             </div>
 
+            {/* Description */}
+
             <div>
               <Description
                 description={description}
@@ -257,6 +326,7 @@ function SettingPage() {
             </div>
 
             {/* Validation Error */}
+
             {error && (
               <div
                 className="
@@ -275,10 +345,15 @@ function SettingPage() {
                   shadow-red-950/10
                 "
               >
-                <span className="mr-1">⚠️</span>
+                <span className="mr-1">
+                  ⚠️
+                </span>
+
                 {error}
               </div>
             )}
+
+            {/* Gallery */}
 
             <Gallery
               check={check}
@@ -288,6 +363,7 @@ function SettingPage() {
             />
 
             {/* Selected Images */}
+
             {images.length > 0 && (
               <div
                 className="
@@ -305,6 +381,7 @@ function SettingPage() {
                 "
               >
                 <div className="mb-5 flex items-center gap-3">
+
                   <div
                     className="
                       flex h-10 w-10
@@ -321,9 +398,11 @@ function SettingPage() {
                   <h3 className="text-lg font-bold text-purple-100">
                     تصاویر انتخاب شده
                   </h3>
+
                 </div>
 
                 <div className="flex flex-wrap gap-5">
+
                   {images.map((image, index) => (
                     <div
                       key={index}
@@ -332,6 +411,7 @@ function SettingPage() {
                         overflow-visible
                       "
                     >
+
                       <img
                         src={URL.createObjectURL(image)}
                         alt={image.name}
@@ -352,7 +432,9 @@ function SettingPage() {
 
                       <button
                         type="button"
-                        onClick={() => removeImage(index)}
+                        onClick={() =>
+                          removeImage(index)
+                        }
                         className="
                           absolute
                           -right-2
@@ -380,15 +462,20 @@ function SettingPage() {
                           active:scale-90
                         "
                       >
-                        <span className="mb-px">×</span>
+                        <span className="mb-px">
+                          ×
+                        </span>
                       </button>
+
                     </div>
                   ))}
+
                 </div>
               </div>
             )}
 
             {/* Submit */}
+
             <button
               onClick={clickHnadler}
               disabled={isPending}
@@ -410,16 +497,15 @@ function SettingPage() {
                 shadow-xl
                 shadow-purple-600/30
                 transition-all duration-300
-
                 hover:-translate-y-0.5
                 hover:shadow-2xl
                 hover:shadow-purple-500/40
                 active:scale-[0.98]
-
                 disabled:cursor-not-allowed
                 disabled:opacity-90
               "
             >
+
               <span
                 className="
                   pointer-events-none absolute
@@ -438,12 +524,28 @@ function SettingPage() {
 
               {isPending ? (
                 <>
-                  <div className="relative flex h-6 w-6 items-center justify-center">
-                    <span className="absolute h-6 w-6 animate-ping rounded-full bg-white/20" />
+                  <div
+                    className="
+                      relative flex
+                      h-6 w-6
+                      items-center
+                      justify-center
+                    "
+                  >
+                    <span
+                      className="
+                        absolute
+                        h-6 w-6
+                        animate-ping
+                        rounded-full
+                        bg-white/20
+                      "
+                    />
 
                     <span
                       className="
-                        absolute h-4 w-4
+                        absolute
+                        h-4 w-4
                         animate-spin
                         rounded-full
                         border-2
@@ -452,7 +554,13 @@ function SettingPage() {
                       "
                     />
 
-                    <span className="h-1.5 w-1.5 rounded-full bg-white" />
+                    <span
+                      className="
+                        h-1.5 w-1.5
+                        rounded-full
+                        bg-white
+                      "
+                    />
                   </div>
 
                   <span className="relative">
@@ -465,15 +573,25 @@ function SettingPage() {
                     ارسال درخواست
                   </span>
 
-                  <span className="relative text-lg transition-transform duration-300 group-hover:rotate-12">
+                  <span
+                    className="
+                      relative text-lg
+                      transition-transform
+                      duration-300
+                      group-hover:rotate-12
+                    "
+                  >
                     ✦
                   </span>
                 </>
               )}
+
             </button>
+
           </div>
 
           {/* Bottom gradient */}
+
           <div
             className="
               absolute bottom-0 left-1/2
@@ -486,9 +604,11 @@ function SettingPage() {
               to-transparent
             "
           />
+
         </div>
 
         {/* API Error */}
+
         {apiError && (
           <div
             className="
@@ -510,9 +630,12 @@ function SettingPage() {
         )}
 
         {/* Edited Images */}
+
         {editedImages.length > 0 && (
           <div className="mt-10">
+
             <div className="mb-6 text-center">
+
               <div
                 className="
                   mx-auto mb-4
@@ -543,9 +666,11 @@ function SettingPage() {
               >
                 نتیجه ویرایش تصاویر
               </h2>
+
             </div>
 
             <div className="space-y-6">
+
               {editedImages.map((item, index) => (
                 <div
                   key={index}
@@ -564,6 +689,7 @@ function SettingPage() {
                     sm:p-6
                   "
                 >
+
                   <div
                     className="
                       absolute left-0 right-0 top-0
@@ -578,7 +704,8 @@ function SettingPage() {
                   <h3
                     className="
                       relative mb-6
-                      text-center text-lg font-bold
+                      text-center
+                      text-lg font-bold
                       text-purple-100
                     "
                   >
@@ -586,7 +713,9 @@ function SettingPage() {
                   </h3>
 
                   <div className="grid gap-6 md:grid-cols-2">
+
                     {/* Before */}
+
                     <div
                       className="
                         overflow-hidden
@@ -596,7 +725,15 @@ function SettingPage() {
                         p-3
                       "
                     >
-                      <h4 className="mb-3 text-center font-bold text-slate-300">
+
+                      <h4
+                        className="
+                          mb-3
+                          text-center
+                          font-bold
+                          text-slate-300
+                        "
+                      >
                         Before
                       </h4>
 
@@ -607,13 +744,16 @@ function SettingPage() {
                           w-full
                           rounded-xl
                           object-cover
-                          transition-transform duration-500
+                          transition-transform
+                          duration-500
                           hover:scale-[1.02]
                         "
                       />
+
                     </div>
 
                     {/* After */}
+
                     <div
                       className="
                         overflow-hidden
@@ -627,9 +767,11 @@ function SettingPage() {
                         shadow-purple-950/20
                       "
                     >
+
                       <h4
                         className="
-                          mb-3 text-center
+                          mb-3
+                          text-center
                           font-bold
                           text-purple-200
                         "
@@ -644,138 +786,25 @@ function SettingPage() {
                           w-full
                           rounded-xl
                           object-cover
-                          transition-transform duration-500
+                          transition-transform
+                          duration-500
                           hover:scale-[1.02]
                         "
                       />
+
                     </div>
+
                   </div>
+
                 </div>
               ))}
+
             </div>
+
           </div>
         )}
 
-        {/* Saved Info */}
-        {info && (
-          <div
-            className="
-              relative mt-10
-              overflow-hidden
-              rounded-[2rem]
-              border border-purple-500/20
-              bg-gradient-to-br
-              from-[#160d2b]/90
-              via-[#1d1038]/80
-              to-[#0d0718]/90
-              p-6
-              shadow-2xl
-              shadow-purple-950/30
-              backdrop-blur-xl
-            "
-          >
-            <div
-              className="
-                absolute left-0 right-0 top-0
-                h-[2px]
-                bg-gradient-to-r
-                from-transparent
-                via-purple-500
-                to-fuchsia-500
-              "
-            />
-
-            <h2
-              className="
-                relative mb-6
-                text-xl font-bold
-                text-transparent
-                bg-gradient-to-r
-                from-purple-200
-                to-fuchsia-300
-                bg-clip-text
-              "
-            >
-              اطلاعات ثبت شده
-            </h2>
-
-            <div
-              className="
-                grid gap-4
-                sm:grid-cols-2
-              "
-            >
-              <Info title="گزینه اول" value={info.firstSelect} />
-              <Info title="گزینه دوم" value={info.secondSelect} />
-              <Info title="دستگاه" value={info.device} />
-              <Info title="درخواست" value={info.request} />
-              <Info title="برند" value={info.brand} />
-            </div>
-
-            {info.images && info.images.length > 0 && (
-              <div className="mt-8">
-                <h3
-                  className="
-                    mb-4 text-lg font-bold
-                    text-purple-100
-                  "
-                >
-                  تصاویر
-                </h3>
-
-                <div className="flex flex-wrap gap-4">
-                  {info.images.map((image, index) => (
-                    <img
-                      key={index}
-                      src={URL.createObjectURL(image)}
-                      alt={image.name}
-                      className="
-                        h-32 w-32
-                        rounded-2xl
-                        border border-purple-500/20
-                        object-cover
-                        shadow-lg
-                        shadow-purple-950/20
-                        transition-all duration-300
-                        hover:scale-105
-                        hover:border-purple-400/40
-                      "
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
       </div>
-    </div>
-  );
-}
-
-function Info({ title, value }) {
-  return (
-    <div
-      className="
-        group
-        rounded-2xl
-        border border-purple-500/10
-        bg-gradient-to-br
-        from-white/[0.04]
-        to-purple-500/[0.03]
-        p-4
-        transition-all duration-300
-        hover:-translate-y-0.5
-        hover:border-purple-400/20
-        hover:bg-purple-500/[0.06]
-      "
-    >
-      <span className="text-sm text-slate-400">
-        {title}
-      </span>
-
-      <p className="mt-2 font-bold text-purple-50">
-        {value}
-      </p>
     </div>
   );
 }

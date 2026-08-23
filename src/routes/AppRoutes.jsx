@@ -9,6 +9,7 @@ import PageLoading from "../components/ui/PageLoading";
 import RoleRoute from "./RoleRoute";
 
 import NotFound from "../pages/NotFound";
+import HistoryPage from "../pages/HistoryPage";
 
 
 const Home = lazy(() => import("../pages/Home"));
@@ -45,6 +46,7 @@ function AppRoutes() {
           <Route element={<PrivateLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/setting" element={<SettingPage />} />
+            <Route path="/history" element={<HistoryPage />} />
           </Route>
         </Route>
 

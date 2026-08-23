@@ -85,24 +85,24 @@ function Numbertwo({ secondSelect, setSecondSelect }) {
           onChange={(e) => setSecondSelect(e.target.value)}
         >
           <option value="" disabled className="bg-[#160d2b] text-slate-400">
-  میزان تغییر را انتخاب کنید
-</option>
+            میزان تغییر را انتخاب کنید
+          </option>
 
-<option value="minimal" className="bg-[#160d2b] text-white">
-  تغییر جزئی
-</option>
+          <option value="minimal" className="bg-[#160d2b] text-white">
+            تغییر جزئی
+          </option>
 
-<option value="moderate" className="bg-[#160d2b] text-white">
-  تغییر متوسط
-</option>
+          <option value="moderate" className="bg-[#160d2b] text-white">
+            تغییر متوسط
+          </option>
 
-<option value="strong" className="bg-[#160d2b] text-white">
-  تغییر قابل توجه
-</option>
+          <option value="strong" className="bg-[#160d2b] text-white">
+            تغییر قابل توجه
+          </option>
 
-<option value="creative" className="bg-[#160d2b] text-white">
-  ویرایش خلاقانه
-</option>
+          <option value="creative" className="bg-[#160d2b] text-white">
+            ویرایش خلاقانه
+          </option>
         </select>
 
         <span
