@@ -8,7 +8,7 @@ function Demo() {
   const [step, setStep] = useState(1);
   const [error, setError] = useState("");
 
-  const { pass, login } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handlePhoneSubmit = (e) => {
@@ -30,33 +30,32 @@ function Demo() {
   };
 
   const handleCodeSubmit = (e) => {
-    e.preventDefault();
+  e.preventDefault();
+  setError("");
 
-    setError("");
+  if (!code.trim()) {
+    setError("لطفاً کد تایید را وارد کنید");
+    return;
+  }
 
-    if (!code.trim()) {
-      setError("لطفاً کد تایید را وارد کنید");
-      return;
-    }
+  if (code !== "123456") {
+    setError("کد تایید اشتباه است");
+    return;
+  }
 
-    if (code !== pass) {
-      setError("کد تایید اشتباه است");
-      return;
-    }
+  console.log("Demo login successful:", {
+    phone,
+    role: "demo",
+  });
 
-    console.log(" Demo login successful:", {
-      phone,
-      role: "demo",
-    });
+  login({
+    phone,
+    role: "demo",
+    isDemo: true,
+  });
 
-    login({
-      phone,
-      role: "demo",
-      isDemo: true,
-    });
-
-    navigate("/setting");
-  };
+  navigate("/setting");
+};
 
   return (
     <div

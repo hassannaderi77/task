@@ -202,7 +202,22 @@ function SettingPage() {
               hover:rotate-2
             "
           >
-            ✨
+             <img
+    src="/logo.jpg"
+    alt="AI Image Editor"
+    className="
+      h-20 w-20
+      rounded-3xl
+      border border-purple-400/20
+      object-contain
+      p-2
+      shadow-xl
+      shadow-purple-950/30
+      transition-all duration-500
+      hover:scale-110
+      hover:rotate-2
+    "
+  />
           </div>
 
           <h1

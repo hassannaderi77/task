@@ -1,9 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
+
 import { AuthContext } from "../../context/authContext";
 
 function Navbar() {
   const { user, isAuthenticated, logout } = useContext(AuthContext);
+
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -30,18 +32,21 @@ function Navbar() {
       path: "/",
       icon: "🏠",
     },
-
     {
       title: user?.role === "admin" ? "پنل مدیریت" : "داشبورد",
       path: user?.role === "admin" ? "/admin" : "/dashboard",
       icon: user?.role === "admin" ? "🛠️" : "📊",
     },
 
-    {
-      title: "تاریخچه",
-      path: "/history",
-      icon: "🏠",
-    },
+    ...(user?.role !== "admin"
+      ? [
+          {
+            title: "تاریخچه",
+            path: "/history",
+            icon: "🖼️",
+          }
+        ]
+      : []),
 
     {
       title: "تنظیمات",
@@ -57,15 +62,18 @@ function Navbar() {
       dir="rtl"
       className="
         sticky top-0 z-50
+        w-full
+        overflow-x-hidden
         border-b border-purple-500/20
         bg-gradient-to-r
         from-[#0d0718]/95
         via-[#160d2b]/95
         to-[#0d0718]/95
-        px-4 py-3
+        px-2 py-2
         text-white
         shadow-xl shadow-purple-950/20
         backdrop-blur-xl
+        sm:px-4 sm:py-3
       "
     >
       {/* Top gradient line */}
@@ -80,69 +88,98 @@ function Navbar() {
         "
       />
 
-      <div className="mx-auto flex max-w-6xl items-center justify-between">
+      <div
+        className="
+          mx-auto
+          flex
+          w-full
+          max-w-6xl
+          flex-wrap
+          items-center
+          justify-between
+          gap-2
+        "
+      >
         {/* Logo / Brand */}
         <Link
           to="/"
           className="
-            group flex items-center gap-2
-            rounded-2xl
-            px-2 py-1
-            transition-all duration-300
-            hover:-translate-y-0.5
-          "
+    group
+    flex
+    shrink-0
+    items-center
+    gap-2
+    rounded-2xl
+    px-1.5 py-1
+    transition-all duration-300
+    hover:-translate-y-0.5
+    sm:px-2
+  "
         >
-          <span
+          <img
+            src="/logo.jpg"
+            alt="AI Image Editor"
             className="
-              flex h-10 w-10
-              items-center justify-center
-              rounded-xl
-              bg-gradient-to-br
-              from-purple-500
-              to-fuchsia-600
-              text-lg
-              shadow-lg
-              shadow-purple-500/25
-              transition-all duration-300
-              group-hover:scale-105
-              group-hover:rotate-2
-            "
-          >
-            ✨
-          </span>
+      h-9 w-9
+      shrink-0
+      rounded-xl
+      object-cover
+      transition-all duration-300
+      group-hover:scale-105
+      group-hover:rotate-2
+      sm:h-10 sm:w-10
+    "
+          />
 
           <span
             className="
-              hidden text-sm font-black
-              text-transparent
-              bg-gradient-to-r
-              from-purple-300
-              via-fuchsia-300
-              to-purple-400
-              bg-clip-text
-              sm:block
-            "
+      hidden
+      text-sm
+      font-black
+      text-transparent
+      bg-gradient-to-r
+      from-purple-300
+      via-fuchsia-300
+      to-purple-400
+      bg-clip-text
+      sm:block
+    "
           >
-            AI Image Editor
+            Modernio
           </span>
         </Link>
 
         {/* Navigation */}
-        <div className="flex items-center gap-1 sm:gap-2">
+        <div
+          className="
+            flex
+            min-w-0
+            flex-1
+            flex-wrap
+            items-center
+            justify-end
+            gap-1
+            sm:gap-2
+          "
+        >
           {links.map((link) => (
             <Link
               key={link.path}
               to={link.path}
               className="
-                group relative
-                flex items-center gap-1.5
+                group
+                relative
+                flex
+                shrink-0
+                items-center
+                gap-1
                 rounded-xl
-                px-3 py-2.5
-                text-sm font-bold
+                px-2
+                py-2
+                text-xs
+                font-bold
                 text-slate-300
-
                 transition-all duration-300
-
                 hover:-translate-y-0.5
                 hover:bg-gradient-to-r
                 hover:from-purple-500/10
@@ -150,30 +187,34 @@ function Navbar() {
                 hover:text-purple-200
                 hover:shadow-lg
                 hover:shadow-purple-950/20
-
-                sm:px-4
+                sm:gap-1.5
+                sm:px-3
+                sm:py-2.5
+                sm:text-sm
+                lg:px-4
               "
             >
               <span
                 className="
-                  text-base
+                  text-sm
                   transition-transform duration-300
                   group-hover:scale-110
+                  sm:text-base
                 "
               >
                 {link.icon}
               </span>
 
-              <span>
-                {link.title}
-              </span>
+              <span>{link.title}</span>
 
               {/* Hover underline */}
               <span
                 className="
-                  absolute bottom-0
+                  absolute
+                  bottom-0
                   left-1/2
-                  h-[2px] w-0
+                  h-[2px]
+                  w-0
                   -translate-x-1/2
                   rounded-full
                   bg-gradient-to-r
@@ -186,19 +227,25 @@ function Navbar() {
             </Link>
           ))}
 
+          {/* Logout */}
           {isAuthenticated && (
             <button
+              type="button"
               onClick={handleLogout}
               className="
-                group relative
-                flex items-center gap-1.5
+                group
+                relative
+                flex
+                shrink-0
+                items-center
+                gap-1
                 rounded-xl
-                px-3 py-2.5
-                text-sm font-bold
+                px-2
+                py-2
+                text-xs
+                font-bold
                 text-red-400
-
                 transition-all duration-300
-
                 hover:-translate-y-0.5
                 hover:bg-gradient-to-r
                 hover:from-red-500/10
@@ -206,31 +253,35 @@ function Navbar() {
                 hover:text-red-300
                 hover:shadow-lg
                 hover:shadow-red-950/20
-
-                sm:px-4
+                sm:gap-1.5
+                sm:px-3
+                sm:py-2.5
+                sm:text-sm
+                lg:px-4
               "
             >
               <span
                 className="
-                  text-base
+                  text-sm
                   transition-transform duration-300
                   group-hover:scale-110
                   group-hover:-rotate-6
+                  sm:text-base
                 "
               >
                 🚪
               </span>
 
-              <span>
-                خروج
-              </span>
+              <span>خروج</span>
 
               {/* Hover underline */}
               <span
                 className="
-                  absolute bottom-0
+                  absolute
+                  bottom-0
                   left-1/2
-                  h-[2px] w-0
+                  h-[2px]
+                  w-0
                   -translate-x-1/2
                   rounded-full
                   bg-gradient-to-r
