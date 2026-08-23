@@ -2,6 +2,16 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
+import {
+  FiArrowLeft,
+  FiCheckCircle,
+  FiEdit3,
+  FiLock,
+  FiMessageSquare,
+  FiPhone,
+  FiSend,
+} from "react-icons/fi";
+
 function Demo() {
   const [phone, setPhone] = useState("");
   const [code, setCode] = useState("");
@@ -13,7 +23,6 @@ function Demo() {
 
   const handlePhoneSubmit = (e) => {
     e.preventDefault();
-
     setError("");
 
     if (!phone.trim()) {
@@ -30,32 +39,32 @@ function Demo() {
   };
 
   const handleCodeSubmit = (e) => {
-  e.preventDefault();
-  setError("");
+    e.preventDefault();
+    setError("");
 
-  if (!code.trim()) {
-    setError("لطفاً کد تایید را وارد کنید");
-    return;
-  }
+    if (!code.trim()) {
+      setError("لطفاً کد تایید را وارد کنید");
+      return;
+    }
 
-  if (code !== "123456") {
-    setError("کد تایید اشتباه است");
-    return;
-  }
+    if (code !== "123456") {
+      setError("کد تایید اشتباه است");
+      return;
+    }
 
-  console.log("Demo login successful:", {
-    phone,
-    role: "demo",
-  });
+    console.log("Demo login successful:", {
+      phone,
+      role: "demo",
+    });
 
-  login({
-    phone,
-    role: "demo",
-    isDemo: true,
-  });
+    login({
+      phone,
+      role: "demo",
+      isDemo: true,
+    });
 
-  navigate("/setting");
-};
+    navigate("/setting");
+  };
 
   return (
     <div
@@ -97,7 +106,17 @@ function Demo() {
         "
       />
 
-      <div className="relative mx-auto flex min-h-[80vh] max-w-md items-center justify-center">
+      {/* Main */}
+      <div
+        className="
+          relative mx-auto
+          flex min-h-[80vh]
+          max-w-md
+          items-center
+          justify-center
+        "
+      >
+        {/* Card */}
         <div
           className="
             group relative w-full
@@ -155,7 +174,7 @@ function Demo() {
                   from-purple-500/20
                   via-purple-500/10
                   to-fuchsia-500/10
-                  text-5xl
+                  text-purple-200
                   shadow-xl
                   shadow-purple-950/30
                   transition-all duration-500
@@ -163,18 +182,26 @@ function Demo() {
                   hover:-rotate-2
                 "
               >
-                🚀
+                <FiSend
+                  className="
+                    text-4xl
+                    transition-transform
+                    duration-500
+                    group-hover:-translate-y-1
+                  "
+                />
               </div>
 
               <h1
                 className="
-                  text-3xl font-black
-                  text-transparent
                   bg-gradient-to-r
                   from-purple-200
                   via-fuchsia-300
                   to-purple-300
                   bg-clip-text
+                  text-3xl
+                  font-black
+                  text-transparent
                 "
               >
                 نسخه دمو
@@ -184,7 +211,7 @@ function Demo() {
                 برای ورود به نسخه دمو شماره موبایل خود را وارد کنید
               </p>
 
-              {/* Step indicator */}
+              {/* Step Indicator */}
               <div className="mt-6 flex items-center justify-center gap-2">
                 <span
                   className={`
@@ -210,6 +237,7 @@ function Demo() {
               </div>
             </div>
 
+            {/* Step 1 */}
             {step === 1 && (
               <form onSubmit={handlePhoneSubmit}>
                 <label className="mb-2 block text-sm font-bold text-purple-100">
@@ -217,16 +245,16 @@ function Demo() {
                 </label>
 
                 <div className="relative">
-                  <span
+                  <FiPhone
                     className="
-                      pointer-events-none absolute
+                      pointer-events-none
+                      absolute
                       right-4 top-1/2
                       -translate-y-1/2
                       text-lg
+                      text-purple-300
                     "
-                  >
-                    📱
-                  </span>
+                  />
 
                   <input
                     type="tel"
@@ -234,16 +262,17 @@ function Demo() {
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="09123456789"
                     className="
-                      w-full rounded-2xl
+                      w-full
+                      rounded-2xl
                       border border-purple-500/15
                       bg-white/[0.04]
                       px-12 py-4
-                      text-left text-white
+                      text-left
+                      text-white
                       placeholder:text-slate-600
                       outline-none
                       backdrop-blur-md
                       transition-all duration-300
-
                       focus:border-purple-400/60
                       focus:bg-purple-500/[0.06]
                       focus:ring-4
@@ -255,27 +284,35 @@ function Demo() {
                   />
                 </div>
 
+                {/* Error */}
                 {error && (
-                  <p
+                  <div
                     className="
-                      mt-3 rounded-2xl
+                      mt-3
+                      flex items-center
+                      justify-center
+                      gap-2
+                      rounded-2xl
                       border border-red-500/15
                       bg-gradient-to-r
                       from-red-500/10
                       to-purple-500/[0.05]
                       p-3
-                      text-center text-sm
+                      text-center
+                      text-sm
                       text-red-300
                     "
                   >
-                    ⚠️ {error}
-                  </p>
+                    <FiMessageSquare className="shrink-0" />
+                    <span>{error}</span>
+                  </div>
                 )}
 
+                {/* Submit */}
                 <button
                   type="submit"
                   className="
-                    group relative mt-5 w-full
+                    group/button relative mt-5 w-full
                     overflow-hidden
                     rounded-2xl
                     bg-gradient-to-r
@@ -288,13 +325,13 @@ function Demo() {
                     shadow-lg
                     shadow-purple-600/30
                     transition-all duration-300
-
                     hover:-translate-y-0.5
                     hover:shadow-xl
                     hover:shadow-purple-500/40
                     active:scale-95
                   "
                 >
+                  {/* Shine */}
                   <span
                     className="
                       absolute inset-y-0 -left-full
@@ -305,36 +342,63 @@ function Demo() {
                       via-white/20
                       to-transparent
                       transition-all duration-700
-                      group-hover:left-[130%]
+                      group-hover/button:left-[130%]
                     "
                   />
 
-                  <span className="relative">
-                    دریافت کد تایید
+                  <span
+                    className="
+                      relative
+                      flex
+                      items-center
+                      justify-center
+                      gap-2
+                    "
+                  >
+                    <FiMessageSquare />
+
+                    <span>دریافت کد تایید</span>
+
+                    <FiArrowLeft
+                      className="
+                        transition-transform
+                        duration-300
+                        group-hover/button:-translate-x-1
+                      "
+                    />
                   </span>
                 </button>
               </form>
             )}
 
+            {/* Step 2 */}
             {step === 2 && (
               <form onSubmit={handleCodeSubmit}>
+                {/* Phone info */}
                 <div
                   className="
-                    mb-5 rounded-2xl
+                    mb-5
+                    rounded-2xl
                     border border-purple-500/15
                     bg-gradient-to-r
                     from-purple-500/[0.08]
                     to-fuchsia-500/[0.05]
-                    p-4 text-center
+                    p-4
+                    text-center
                   "
                 >
-                  <p className="text-sm text-slate-400">
-                    کد تایید برای شماره
-                  </p>
+                  <div className="mb-2 flex items-center justify-center gap-2">
+                    <FiCheckCircle className="text-purple-300" />
+
+                    <p className="text-sm text-slate-400">
+                      کد تایید برای شماره
+                    </p>
+                  </div>
 
                   <p
                     className="
-                      mt-2 font-bold
+                      mt-2
+                      font-bold
                       text-purple-200
                     "
                     dir="ltr"
@@ -347,56 +411,99 @@ function Demo() {
                   کد تایید
                 </label>
 
-                <input
-                  type="text"
-                  value={code}
-                  onChange={(e) => setCode(e.target.value)}
-                  placeholder="- - - - - -"
-                  maxLength={6}
-                  className="
-                    w-full rounded-2xl
-                    border border-purple-500/15
-                    bg-white/[0.04]
-                    px-4 py-4
-                    text-center text-xl
-                    tracking-[0.5em]
-                    text-white
-                    placeholder:text-slate-600
-                    outline-none
-                    backdrop-blur-md
-                    transition-all duration-300
-
-                    focus:border-fuchsia-400/60
-                    focus:bg-purple-500/[0.06]
-                    focus:ring-4
-                    focus:ring-purple-500/15
-                    focus:shadow-lg
-                    focus:shadow-purple-950/20
-                  "
-                  dir="ltr"
-                />
-
-                {error && (
-                  <p
+                <div className="relative">
+                  <FiLock
                     className="
-                      mt-3 rounded-2xl
+                      pointer-events-none
+                      absolute
+                      right-4 top-1/2
+                      -translate-y-1/2
+                      text-lg
+                      text-fuchsia-300
+                    "
+                  />
+
+                  <input
+                    type="text"
+                    value={code}
+                    onChange={(e) => setCode(e.target.value)}
+                    placeholder="- - - - - -"
+                    maxLength={6}
+                    className="
+                      w-full
+                      rounded-2xl
+                      border border-purple-500/15
+                      bg-white/[0.04]
+                      px-12 py-4
+                      text-center
+                      text-xl
+                      tracking-[0.5em]
+                      text-white
+                      placeholder:text-slate-600
+                      outline-none
+                      backdrop-blur-md
+                      transition-all duration-300
+                      focus:border-fuchsia-400/60
+                      focus:bg-purple-500/[0.06]
+                      focus:ring-4
+                      focus:ring-purple-500/15
+                      focus:shadow-lg
+                      focus:shadow-purple-950/20
+                    "
+                    dir="ltr"
+                  />
+                </div>
+
+                {/* Demo code hint */}
+                <div
+                  className="
+                    mt-3
+                    flex items-center
+                    justify-center
+                    gap-2
+                    text-xs
+                    text-slate-500
+                  "
+                >
+                  <FiCheckCircle className="text-purple-400" />
+
+                  <span>
+                    کد ورود دمو:
+                    <span className="mr-1 font-bold text-purple-300">
+                      123456
+                    </span>
+                  </span>
+                </div>
+
+                {/* Error */}
+                {error && (
+                  <div
+                    className="
+                      mt-3
+                      flex items-center
+                      justify-center
+                      gap-2
+                      rounded-2xl
                       border border-red-500/15
                       bg-gradient-to-r
                       from-red-500/10
                       to-purple-500/[0.05]
                       p-3
-                      text-center text-sm
+                      text-center
+                      text-sm
                       text-red-300
                     "
                   >
-                    ⚠️ {error}
-                  </p>
+                    <FiMessageSquare className="shrink-0" />
+                    <span>{error}</span>
+                  </div>
                 )}
 
+                {/* Login button */}
                 <button
                   type="submit"
                   className="
-                    group relative mt-5 w-full
+                    group/button relative mt-5 w-full
                     overflow-hidden
                     rounded-2xl
                     bg-gradient-to-r
@@ -409,13 +516,13 @@ function Demo() {
                     shadow-lg
                     shadow-purple-600/30
                     transition-all duration-300
-
                     hover:-translate-y-0.5
                     hover:shadow-xl
                     hover:shadow-purple-500/40
                     active:scale-95
                   "
                 >
+                  {/* Shine */}
                   <span
                     className="
                       absolute inset-y-0 -left-full
@@ -426,15 +533,34 @@ function Demo() {
                       via-white/20
                       to-transparent
                       transition-all duration-700
-                      group-hover:left-[130%]
+                      group-hover/button:left-[130%]
                     "
                   />
 
-                  <span className="relative">
-                    ورود به نسخه دمو
+                  <span
+                    className="
+                      relative
+                      flex
+                      items-center
+                      justify-center
+                      gap-2
+                    "
+                  >
+                    <FiSend />
+
+                    <span>ورود به نسخه دمو</span>
+
+                    <FiArrowLeft
+                      className="
+                        transition-transform
+                        duration-300
+                        group-hover/button:-translate-x-1
+                      "
+                    />
                   </span>
                 </button>
 
+                {/* Change phone */}
                 <button
                   type="button"
                   onClick={() => {
@@ -443,7 +569,11 @@ function Demo() {
                     setError("");
                   }}
                   className="
-                    mt-3 w-full
+                    mt-3
+                    flex w-full
+                    items-center
+                    justify-center
+                    gap-2
                     rounded-2xl
                     border border-transparent
                     py-3
@@ -455,7 +585,9 @@ function Demo() {
                     hover:text-purple-200
                   "
                 >
-                  تغییر شماره موبایل
+                  <FiEdit3 />
+
+                  <span>تغییر شماره موبایل</span>
                 </button>
               </form>
             )}

@@ -1,9 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 
+import {
+  FiDownload,
+  FiClock,
+  FiImage,
+} from "react-icons/fi";
+
 import { AuthContext } from "../context/authContext";
 
 import Loading from "../components/ui/Loading";
-
 import ErrorMessage from "../components/ui/ErrorMessage";
 
 import { getHistory } from "../api/services/historyService";
@@ -141,7 +146,7 @@ function HistoryPage() {
               hover:scale-105
             "
           >
-            🕘
+            <FiClock className="text-purple-200" size={30} />
           </div>
 
           <h1
@@ -208,7 +213,7 @@ function HistoryPage() {
                 text-3xl
               "
             >
-              🖼️
+              <FiImage className="text-purple-200" size={30} />
             </div>
 
             <h2 className="text-xl font-bold text-purple-100 sm:text-2xl">
@@ -284,7 +289,10 @@ function HistoryPage() {
 
                   <span
                     className="
+                      flex
                       w-fit
+                      items-center
+                      gap-1.5
                       rounded-lg
                       border border-purple-500/20
                       bg-gradient-to-r
@@ -295,6 +303,7 @@ function HistoryPage() {
                       text-purple-200
                     "
                   >
+                    <FiClock size={13} />
                     {new Date(item.createdAt).toLocaleString("fa-IR")}
                   </span>
                 </div>
@@ -323,17 +332,44 @@ function HistoryPage() {
                       p-2
                     "
                   >
-                    <h3
-                      className="
-                        mb-2
-                        text-center
-                        text-sm
-                        font-bold
-                        text-slate-300
-                      "
-                    >
-                      تصویر اولیه
-                    </h3>
+                    <div className="mb-2 flex items-center justify-between gap-2">
+                      <h3
+                        className="
+                          text-sm
+                          font-bold
+                          text-slate-300
+                        "
+                      >
+                        تصویر اولیه
+                      </h3>
+
+                      <a
+                        href={`http://localhost:5000${item.beforeImage}`}
+                        download={`before-image-${index + 1}.png`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="
+                          inline-flex
+                          items-center
+                          gap-1.5
+                          rounded-lg
+                          border border-purple-400/20
+                          bg-purple-500/10
+                          px-2.5 py-1.5
+                          text-[11px]
+                          font-semibold
+                          text-purple-200
+                          transition-all
+                          duration-300
+                          hover:bg-purple-500/20
+                          hover:text-white
+                          active:scale-95
+                        "
+                      >
+                        <FiDownload className="text-sm" />
+                        دانلود
+                      </a>
+                    </div>
 
                     <img
                       src={`http://localhost:5000${item.beforeImage}`}
@@ -365,17 +401,44 @@ function HistoryPage() {
                       shadow-purple-950/20
                     "
                   >
-                    <h3
-                      className="
-                        mb-2
-                        text-center
-                        text-sm
-                        font-bold
-                        text-purple-200
-                      "
-                    >
-                      نتیجه ویرایش
-                    </h3>
+                    <div className="mb-2 flex items-center justify-between gap-2">
+                      <h3
+                        className="
+                          text-sm
+                          font-bold
+                          text-purple-200
+                        "
+                      >
+                        نتیجه ویرایش
+                      </h3>
+
+                      <a
+                        href={item.afterImage}
+                        download={`after-image-${index + 1}.png`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="
+                          inline-flex
+                          items-center
+                          gap-1.5
+                          rounded-lg
+                          border border-fuchsia-400/20
+                          bg-fuchsia-500/10
+                          px-2.5 py-1.5
+                          text-[11px]
+                          font-semibold
+                          text-fuchsia-200
+                          transition-all
+                          duration-300
+                          hover:bg-fuchsia-500/20
+                          hover:text-white
+                          active:scale-95
+                        "
+                      >
+                        <FiDownload className="text-sm" />
+                        دانلود
+                      </a>
+                    </div>
 
                     <img
                       src={item.afterImage}
@@ -462,7 +525,15 @@ function Info({ title, value }) {
         {title}
       </span>
 
-      <p className="mt-1.5 break-words text-sm font-bold text-purple-50">
+      <p
+        className="
+          mt-1.5
+          break-words
+          text-sm
+          font-bold
+          text-purple-50
+        "
+      >
         {value || "-"}
       </p>
     </div>

@@ -1,5 +1,11 @@
 import { useNavigate } from "react-router-dom";
 
+import {
+  FiSend,
+  FiShoppingBag,
+  FiPackage,
+} from "react-icons/fi";
+
 function Home() {
   const navigate = useNavigate();
 
@@ -61,7 +67,6 @@ function Home() {
               shadow-xl
               shadow-purple-600/30
               transition-all duration-300
-
               hover:-translate-y-1
               hover:shadow-2xl
               hover:shadow-purple-500/40
@@ -83,9 +88,25 @@ function Home() {
               "
             />
 
-            <span className="relative flex items-center gap-2">
-              <span className="text-lg">🚀</span>
-              نسخه دمو
+            <span
+              className="
+                relative
+                flex
+                items-center
+                gap-2
+              "
+            >
+              <FiSend
+                className="
+                  text-lg
+                  transition-transform
+                  duration-300
+                  group-hover:-translate-y-0.5
+                  group-hover:rotate-12
+                "
+              />
+
+              <span>نسخه دمو</span>
             </span>
           </button>
         </div>
@@ -103,7 +124,7 @@ function Home() {
               from-purple-500/20
               via-purple-500/10
               to-fuchsia-500/10
-              text-4xl
+              text-purple-200
               shadow-xl
               shadow-purple-950/30
               transition-all duration-500
@@ -111,18 +132,25 @@ function Home() {
               hover:rotate-2
             "
           >
-            🛍️
+            <FiShoppingBag
+              className="
+                text-4xl
+                transition-transform
+                duration-500
+              "
+            />
           </div>
 
           <h1
             className="
-              text-4xl font-black
-              text-transparent
               bg-gradient-to-r
               from-purple-200
               via-fuchsia-300
               to-purple-300
               bg-clip-text
+              text-4xl
+              font-black
+              text-transparent
               sm:text-5xl
             "
           >
@@ -202,7 +230,7 @@ function Home() {
                 bg-gradient-to-br
                 from-purple-500/15
                 to-fuchsia-500/10
-                text-5xl
+                text-purple-200
                 shadow-xl
                 shadow-purple-950/30
                 transition-all duration-500
@@ -210,23 +238,37 @@ function Home() {
                 group-hover:-rotate-2
               "
             >
-              📦
+              <FiPackage
+                className="
+                  text-5xl
+                  transition-transform
+                  duration-500
+                "
+              />
             </div>
 
             <h2
               className="
-                text-2xl font-black
-                text-transparent
                 bg-gradient-to-r
                 from-purple-200
                 to-fuchsia-300
                 bg-clip-text
+                text-2xl
+                font-black
+                text-transparent
               "
             >
               محصولی موجود نمی‌باشد
             </h2>
 
-            <p className="mt-3 text-sm leading-7 text-slate-400">
+            <p
+              className="
+                mt-3
+                text-sm
+                leading-7
+                text-slate-400
+              "
+            >
               در حال حاضر محصولی برای نمایش وجود ندارد.
             </p>
           </div>

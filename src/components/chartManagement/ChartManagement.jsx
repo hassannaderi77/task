@@ -9,6 +9,16 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts";
+import {
+  FiBarChart2,
+  FiX,
+  FiSend,
+  FiTrendingUp,
+  FiClock,
+  FiActivity,
+  FiAlertTriangle,
+} from "react-icons/fi";
+
 import Loading from "../ui/Loading";
 
 function ChartManagement({
@@ -137,11 +147,12 @@ function ChartManagement({
                 from-purple-500/20
                 to-fuchsia-500/10
                 text-2xl
+                text-purple-300
                 shadow-lg
                 shadow-purple-950/30
               "
             >
-              📊
+              <FiBarChart2 className="h-7 w-7" />
             </div>
 
             <div>
@@ -185,7 +196,10 @@ function ChartManagement({
               sm:self-auto
             "
           >
-            بستن ✕
+            <span className="flex items-center gap-2">
+              بستن
+              <FiX className="h-4 w-4" />
+            </span>
           </button>
         </div>
 
@@ -220,10 +234,10 @@ function ChartManagement({
                     items-center justify-center
                     rounded-xl
                     bg-purple-500/10
-                    text-sm
+                    text-purple-300
                   "
                 >
-                  🚀
+                  <FiSend className="h-4 w-4" />
                 </span>
               </div>
 
@@ -259,10 +273,10 @@ function ChartManagement({
                     items-center justify-center
                     rounded-xl
                     bg-fuchsia-500/10
-                    text-sm
+                    text-fuchsia-300
                   "
                 >
-                  🔥
+                  <FiTrendingUp className="h-4 w-4" />
                 </span>
               </div>
 
@@ -298,10 +312,10 @@ function ChartManagement({
                     items-center justify-center
                     rounded-xl
                     bg-violet-500/10
-                    text-sm
+                    text-violet-300
                   "
                 >
-                  ⏰
+                  <FiClock className="h-4 w-4" />
                 </span>
               </div>
 
@@ -337,10 +351,10 @@ function ChartManagement({
                     items-center justify-center
                     rounded-xl
                     bg-purple-500/10
-                    text-sm
+                    text-purple-300
                   "
                 >
-                  📈
+                  <FiActivity className="h-4 w-4" />
                 </span>
               </div>
 
@@ -385,7 +399,9 @@ function ChartManagement({
                 text-center
               "
             >
-              <div className="text-3xl">⚠️</div>
+              <div className="flex justify-center text-3xl text-red-400">
+                <FiAlertTriangle className="h-8 w-8" />
+              </div>
 
               <p className="mt-3 text-sm font-semibold text-red-300">
                 {requestsError}
@@ -540,10 +556,10 @@ function ChartManagement({
                   items-center justify-center
                   rounded-3xl
                   bg-purple-500/10
-                  text-4xl
+                  text-purple-300
                 "
               >
-                📊
+                <FiBarChart2 className="h-10 w-10" />
               </div>
 
               <p className="mt-5 font-bold text-slate-300">

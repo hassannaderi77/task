@@ -1,12 +1,18 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useContext } from "react";
+import {
+  FiArrowLeft,
+  FiKey,
+  FiLock,
+  FiPhone,
+  FiAlertCircle,
+} from "react-icons/fi";
+
 import { AuthContext } from "../../context/authContext";
 import { loginUser } from "../../api/services/authService";
 
 function Login() {
   const { login } = useContext(AuthContext);
-
   const navigate = useNavigate();
 
   const [phone, setPhone] = useState("");
@@ -22,13 +28,14 @@ function Login() {
     }
 
     try {
+      setError("");
+
       const response = await loginUser({
         phone,
         password: code,
       });
 
       login(response.user);
-
       navigate("/dashboard");
     } catch (error) {
       setError(
@@ -90,7 +97,16 @@ function Login() {
         "
       />
 
-      <div className="relative mx-auto flex min-h-[80vh] max-w-md items-center">
+      {/* Main container */}
+      <div
+        className="
+          relative mx-auto
+          flex min-h-[80vh]
+          max-w-md
+          items-center
+        "
+      >
+        {/* Card */}
         <div
           className="
             group relative w-full
@@ -159,7 +175,7 @@ function Login() {
                   from-purple-500/20
                   via-violet-500/10
                   to-fuchsia-500/10
-                  text-4xl
+                  text-purple-200
                   shadow-xl
                   shadow-purple-950/30
                   transition-all duration-500
@@ -167,20 +183,25 @@ function Login() {
                   hover:-rotate-3
                 "
               >
-                <span className="transition-transform duration-500 group-hover/icon:scale-110">
-                  🔐
-                </span>
+                <FiLock
+                  className="
+                    text-4xl
+                    transition-transform duration-500
+                    group-hover/icon:scale-110
+                  "
+                />
               </div>
 
               <h1
                 className="
-                  text-3xl font-black
-                  text-transparent
                   bg-gradient-to-r
                   from-purple-200
                   via-fuchsia-300
                   to-purple-300
                   bg-clip-text
+                  text-3xl
+                  font-black
+                  text-transparent
                   sm:text-4xl
                 "
               >
@@ -210,20 +231,27 @@ function Login() {
             >
               {/* Phone */}
               <div>
-                <label className="mb-2 block text-sm font-bold text-purple-100">
+                <label
+                  className="
+                    mb-2 block
+                    text-sm
+                    font-bold
+                    text-purple-100
+                  "
+                >
                   شماره همراه
                 </label>
 
                 <div className="relative">
                   <span
                     className="
-                      pointer-events-none absolute
-                      right-4 top-1/2
+                      pointer-events-none
+                      absolute right-4 top-1/2
                       -translate-y-1/2
-                      text-lg
+                      text-purple-300
                     "
                   >
-                    📱
+                    <FiPhone className="text-lg" />
                   </span>
 
                   <input
@@ -231,19 +259,20 @@ function Login() {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="شماره همراه"
+                    dir="ltr"
                     className="
                       w-full
                       rounded-2xl
                       border border-purple-500/15
                       bg-white/[0.04]
                       px-12 py-4
-                      text-center text-sm
+                      text-center
+                      text-sm
                       text-white
                       placeholder:text-slate-500
                       outline-none
                       backdrop-blur-md
                       transition-all duration-300
-
                       focus:border-purple-400/60
                       focus:bg-purple-500/[0.06]
                       focus:ring-4
@@ -251,27 +280,33 @@ function Login() {
                       focus:shadow-lg
                       focus:shadow-purple-950/20
                     "
-                    dir="ltr"
                   />
                 </div>
               </div>
 
               {/* Password / Code */}
               <div>
-                <label className="mb-2 block text-sm font-bold text-purple-100">
+                <label
+                  className="
+                    mb-2 block
+                    text-sm
+                    font-bold
+                    text-purple-100
+                  "
+                >
                   رمز ورود
                 </label>
 
                 <div className="relative">
                   <span
                     className="
-                      pointer-events-none absolute
-                      right-4 top-1/2
+                      pointer-events-none
+                      absolute right-4 top-1/2
                       -translate-y-1/2
-                      text-lg
+                      text-fuchsia-300
                     "
                   >
-                    🔑
+                    <FiKey className="text-lg" />
                   </span>
 
                   <input
@@ -279,19 +314,20 @@ function Login() {
                     value={code}
                     onChange={(e) => setCode(e.target.value)}
                     placeholder="رمز ورود"
+                    dir="ltr"
                     className="
                       w-full
                       rounded-2xl
                       border border-purple-500/15
                       bg-white/[0.04]
                       px-12 py-4
-                      text-center text-sm
+                      text-center
+                      text-sm
                       text-white
                       placeholder:text-slate-500
                       outline-none
                       backdrop-blur-md
                       transition-all duration-300
-
                       focus:border-fuchsia-400/60
                       focus:bg-purple-500/[0.06]
                       focus:ring-4
@@ -299,7 +335,6 @@ function Login() {
                       focus:shadow-lg
                       focus:shadow-purple-950/20
                     "
-                    dir="ltr"
                   />
                 </div>
               </div>
@@ -308,6 +343,9 @@ function Login() {
               {error && (
                 <div
                   className="
+                    flex items-center
+                    justify-center
+                    gap-2
                     rounded-2xl
                     border border-red-500/20
                     bg-gradient-to-r
@@ -322,8 +360,8 @@ function Login() {
                     shadow-red-950/10
                   "
                 >
-                  <span className="mr-1">⚠️</span>
-                  {error}
+                  <FiAlertCircle className="shrink-0 text-base" />
+                  <span>{error}</span>
                 </div>
               )}
 
@@ -345,7 +383,6 @@ function Login() {
                   shadow-xl
                   shadow-purple-600/30
                   transition-all duration-300
-
                   hover:-translate-y-0.5
                   hover:shadow-2xl
                   hover:shadow-purple-500/40
@@ -367,18 +404,38 @@ function Login() {
                   "
                 />
 
-                <span className="relative flex items-center justify-center gap-2">
+                <span
+                  className="
+                    relative
+                    flex
+                    items-center
+                    justify-center
+                    gap-2
+                  "
+                >
+                  
+
                   <span>ورود</span>
 
-                  <span className="transition-transform duration-300 group-hover/button:-translate-x-1">
-                    ←
-                  </span>
+                  <FiArrowLeft
+                    className="
+                      transition-transform duration-300
+                      group-hover/button:-translate-x-1
+                    "
+                  />
                 </span>
               </button>
             </form>
 
             {/* Register */}
-            <div className="mt-7 text-center text-sm text-slate-400">
+            <div
+              className="
+                mt-7
+                text-center
+                text-sm
+                text-slate-400
+              "
+            >
               حساب کاربری ندارید؟{" "}
 
               <Link

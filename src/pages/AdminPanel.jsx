@@ -1,12 +1,16 @@
 import React, { useState } from "react";
+import {
+  FiTool,
+  FiUsers,
+  FiBarChart2,
+  FiSettings,
+} from "react-icons/fi";
 
-import Loading from "../components/ui/Loading";
 import UsersManagement from "../components/sersManagement/UsersManagement";
 import ChartManagement from "../components/chartManagement/ChartManagement";
 
 function AdminPanel() {
   const [showUsers, setShowUsers] = useState(false);
-
   const [users, setUsers] = useState([]);
   const [isLoadingUsers, setIsLoadingUsers] = useState(false);
   const [usersError, setUsersError] = useState("");
@@ -27,15 +31,14 @@ function AdminPanel() {
       setRequestsError("");
 
       const response = await fetch(
-        "http://localhost:5000/api/history/stats/today",
-      );
+  `${import.meta.env.VITE_API_URL}/history/stats/today`
+);
 
       if (!response.ok) {
         throw new Error("Failed to fetch request stats");
       }
 
       const data = await response.json();
-
       setRequestStats(data.stats || []);
     } catch (error) {
       console.error("Get request stats error:", error);
@@ -50,14 +53,15 @@ function AdminPanel() {
       setIsLoadingUsers(true);
       setUsersError("");
 
-      const response = await fetch("http://localhost:5000/api/users");
+      const response = await fetch(
+  `${import.meta.env.VITE_API_URL}/users`
+);
 
       if (!response.ok) {
         throw new Error("Failed to fetch users");
       }
 
       const data = await response.json();
-
       setUsers(data.users || []);
     } catch (error) {
       console.error("Get users error:", error);
@@ -83,8 +87,8 @@ function AdminPanel() {
       setUserHistory([]);
 
       const response = await fetch(
-        `http://localhost:5000/api/history/${user._id}`,
-      );
+  `${import.meta.env.VITE_API_URL}/history/${user._id}`
+);
 
       if (!response.ok) {
         throw new Error("Failed to fetch user history");
@@ -92,7 +96,9 @@ function AdminPanel() {
 
       const data = await response.json();
 
-      setUserHistory(Array.isArray(data) ? data : data.history || []);
+      setUserHistory(
+        Array.isArray(data) ? data : data.history || []
+      );
     } catch (error) {
       console.error("Get user history error:", error);
       setHistoryError("دریافت تاریخچه کاربر با مشکل مواجه شد");
@@ -130,7 +136,6 @@ function AdminPanel() {
       "
     >
       {/* Background glow */}
-
       <div
         className="
           pointer-events-none absolute
@@ -154,8 +159,8 @@ function AdminPanel() {
       />
 
       <div className="relative mx-auto max-w-6xl">
-        {/* Header */}
 
+        {/* Header */}
         <div
           className="
             relative overflow-hidden
@@ -172,7 +177,6 @@ function AdminPanel() {
           "
         >
           {/* Header gradient line */}
-
           <div
             className="
               absolute left-0 right-0 top-0
@@ -194,6 +198,8 @@ function AdminPanel() {
           >
             <div>
               <div className="mb-3 flex items-center gap-3">
+
+                {/* Admin icon */}
                 <span
                   className="
                     flex h-12 w-12
@@ -207,7 +213,7 @@ function AdminPanel() {
                     shadow-purple-500/25
                   "
                 >
-                  🛠️
+                  <FiTool />
                 </span>
 
                 <div>
@@ -243,7 +249,6 @@ function AdminPanel() {
             </div>
 
             {/* System status */}
-
             <div
               className="
                 rounded-2xl
@@ -255,7 +260,9 @@ function AdminPanel() {
                 text-center
               "
             >
-              <p className="text-xs text-slate-500">وضعیت سیستم</p>
+              <p className="text-xs text-slate-500">
+                وضعیت سیستم
+              </p>
 
               <div className="mt-1 flex items-center justify-center gap-2">
                 <span
@@ -276,7 +283,6 @@ function AdminPanel() {
         </div>
 
         {/* Management Cards */}
-
         <div
           className="
             mt-6
@@ -285,8 +291,8 @@ function AdminPanel() {
             lg:grid-cols-3
           "
         >
-          {/* Users */}
 
+          {/* Users */}
           <button
             type="button"
             onClick={handleUsersClick}
@@ -320,10 +326,12 @@ function AdminPanel() {
                 text-xl
               "
             >
-              👥
+              <FiUsers />
             </div>
 
-            <p className="text-sm text-slate-400">کاربران</p>
+            <p className="text-sm text-slate-400">
+              کاربران
+            </p>
 
             <p className="mt-2 text-2xl font-black text-white">
               مدیریت کاربران
@@ -339,39 +347,41 @@ function AdminPanel() {
             type="button"
             onClick={handleRequestsClick}
             className="
-    group relative overflow-hidden
-    rounded-3xl
-    border border-purple-500/15
-    bg-gradient-to-br
-    from-fuchsia-500/[0.06]
-    via-[#1d1038]
-    to-[#0d0718]
-    p-6
-    text-right
-    shadow-xl
-    shadow-purple-950/20
-    transition-all duration-300
-    hover:-translate-y-1
-    hover:border-fuchsia-400/30
-    hover:shadow-2xl
-    hover:shadow-fuchsia-950/30
-  "
+              group relative overflow-hidden
+              rounded-3xl
+              border border-purple-500/15
+              bg-gradient-to-br
+              from-fuchsia-500/[0.06]
+              via-[#1d1038]
+              to-[#0d0718]
+              p-6
+              text-right
+              shadow-xl
+              shadow-purple-950/20
+              transition-all duration-300
+              hover:-translate-y-1
+              hover:border-fuchsia-400/30
+              hover:shadow-2xl
+              hover:shadow-fuchsia-950/30
+            "
           >
             <div
               className="
-      mb-5 flex h-12 w-12
-      items-center justify-center
-      rounded-2xl
-      bg-gradient-to-br
-      from-fuchsia-500/20
-      to-purple-500/10
-      text-xl
-    "
+                mb-5 flex h-12 w-12
+                items-center justify-center
+                rounded-2xl
+                bg-gradient-to-br
+                from-fuchsia-500/20
+                to-purple-500/10
+                text-xl
+              "
             >
-              📊
+              <FiBarChart2 />
             </div>
 
-            <p className="text-sm text-slate-400">آمار سیستم</p>
+            <p className="text-sm text-slate-400">
+              آمار سیستم
+            </p>
 
             <p className="mt-2 text-2xl font-black text-white">
               درخواست‌های امروز
@@ -383,7 +393,6 @@ function AdminPanel() {
           </button>
 
           {/* Settings */}
-
           <button
             type="button"
             className="
@@ -416,12 +425,16 @@ function AdminPanel() {
                 text-xl
               "
             >
-              ⚙️
+              <FiSettings />
             </div>
 
-            <p className="text-sm text-slate-400">تنظیمات</p>
+            <p className="text-sm text-slate-400">
+              تنظیمات
+            </p>
 
-            <p className="mt-2 text-2xl font-black text-white">تنظیمات سیستم</p>
+            <p className="mt-2 text-2xl font-black text-white">
+              تنظیمات سیستم
+            </p>
 
             <p className="mt-2 text-xs text-slate-500">
               مدیریت تنظیمات کلی سیستم
@@ -430,7 +443,6 @@ function AdminPanel() {
         </div>
 
         {/* Users Management */}
-
         {showUsers && (
           <UsersManagement
             users={users}
@@ -446,15 +458,14 @@ function AdminPanel() {
           />
         )}
 
-        {/* chart */}
-
+        {/* Chart */}
         {showRequests && (
-           <ChartManagement
-    requestStats={requestStats}
-    isLoadingRequests={isLoadingRequests}
-    requestsError={requestsError}
-    onClose={() => setShowRequests(false)}
-  />
+          <ChartManagement
+            requestStats={requestStats}
+            isLoadingRequests={isLoadingRequests}
+            requestsError={requestsError}
+            onClose={() => setShowRequests(false)}
+          />
         )}
       </div>
     </div>

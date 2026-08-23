@@ -1,11 +1,20 @@
-import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+
+import {
+  FiHome,
+  FiLogIn,
+  FiLogOut,
+  FiSettings,
+  FiImage,
+  FiGrid,
+  FiTool,
+} from "react-icons/fi";
 
 import { AuthContext } from "../../context/authContext";
 
 function Navbar() {
   const { user, isAuthenticated, logout } = useContext(AuthContext);
-
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -17,12 +26,12 @@ function Navbar() {
     {
       title: "خانه",
       path: "/",
-      icon: "🏠",
+      icon: FiHome,
     },
     {
       title: "ورود",
       path: "/login",
-      icon: "🔐",
+      icon: FiLogIn,
     },
   ];
 
@@ -30,12 +39,12 @@ function Navbar() {
     {
       title: "خانه",
       path: "/",
-      icon: "🏠",
+      icon: FiHome,
     },
     {
       title: user?.role === "admin" ? "پنل مدیریت" : "داشبورد",
       path: user?.role === "admin" ? "/admin" : "/dashboard",
-      icon: user?.role === "admin" ? "🛠️" : "📊",
+      icon: user?.role === "admin" ? FiTool : FiGrid,
     },
 
     ...(user?.role !== "admin"
@@ -43,15 +52,15 @@ function Navbar() {
           {
             title: "تاریخچه",
             path: "/history",
-            icon: "🖼️",
-          }
+            icon: FiImage,
+          },
         ]
       : []),
 
     {
       title: "تنظیمات",
       path: "/setting",
-      icon: "⚙️",
+      icon: FiSettings,
     },
   ];
 
@@ -104,46 +113,46 @@ function Navbar() {
         <Link
           to="/"
           className="
-    group
-    flex
-    shrink-0
-    items-center
-    gap-2
-    rounded-2xl
-    px-1.5 py-1
-    transition-all duration-300
-    hover:-translate-y-0.5
-    sm:px-2
-  "
+            group
+            flex
+            shrink-0
+            items-center
+            gap-2
+            rounded-2xl
+            px-1.5 py-1
+            transition-all duration-300
+            hover:-translate-y-0.5
+            sm:px-2
+          "
         >
           <img
             src="/logo.jpg"
             alt="AI Image Editor"
             className="
-      h-9 w-9
-      shrink-0
-      rounded-xl
-      object-cover
-      transition-all duration-300
-      group-hover:scale-105
-      group-hover:rotate-2
-      sm:h-10 sm:w-10
-    "
+              h-9 w-9
+              shrink-0
+              rounded-xl
+              object-cover
+              transition-all duration-300
+              group-hover:scale-105
+              group-hover:rotate-2
+              sm:h-10 sm:w-10
+            "
           />
 
           <span
             className="
-      hidden
-      text-sm
-      font-black
-      text-transparent
-      bg-gradient-to-r
-      from-purple-300
-      via-fuchsia-300
-      to-purple-400
-      bg-clip-text
-      sm:block
-    "
+              hidden
+              bg-gradient-to-r
+              from-purple-300
+              via-fuchsia-300
+              to-purple-400
+              bg-clip-text
+              text-sm
+              font-black
+              text-transparent
+              sm:block
+            "
           >
             Modernio
           </span>
@@ -162,70 +171,74 @@ function Navbar() {
             sm:gap-2
           "
         >
-          {links.map((link) => (
-            <Link
-              key={link.path}
-              to={link.path}
-              className="
-                group
-                relative
-                flex
-                shrink-0
-                items-center
-                gap-1
-                rounded-xl
-                px-2
-                py-2
-                text-xs
-                font-bold
-                text-slate-300
-                transition-all duration-300
-                hover:-translate-y-0.5
-                hover:bg-gradient-to-r
-                hover:from-purple-500/10
-                hover:to-fuchsia-500/10
-                hover:text-purple-200
-                hover:shadow-lg
-                hover:shadow-purple-950/20
-                sm:gap-1.5
-                sm:px-3
-                sm:py-2.5
-                sm:text-sm
-                lg:px-4
-              "
-            >
-              <span
+          {links.map((link) => {
+            const Icon = link.icon;
+
+            return (
+              <Link
+                key={link.path}
+                to={link.path}
                 className="
-                  text-sm
-                  transition-transform duration-300
-                  group-hover:scale-110
-                  sm:text-base
+                  group
+                  relative
+                  flex
+                  shrink-0
+                  items-center
+                  gap-1
+                  rounded-xl
+                  px-2
+                  py-2
+                  text-xs
+                  font-bold
+                  text-slate-300
+                  transition-all duration-300
+                  hover:-translate-y-0.5
+                  hover:bg-gradient-to-r
+                  hover:from-purple-500/10
+                  hover:to-fuchsia-500/10
+                  hover:text-purple-200
+                  hover:shadow-lg
+                  hover:shadow-purple-950/20
+                  sm:gap-1.5
+                  sm:px-3
+                  sm:py-2.5
+                  sm:text-sm
+                  lg:px-4
                 "
               >
-                {link.icon}
-              </span>
+                {/* Icon */}
+                <Icon
+                  className="
+                    text-sm
+                    transition-transform duration-300
+                    group-hover:scale-110
+                    sm:text-base
+                  "
+                />
 
-              <span>{link.title}</span>
+                {/* Title */}
+                <span>{link.title}</span>
 
-              {/* Hover underline */}
-              <span
-                className="
-                  absolute
-                  bottom-0
-                  left-1/2
-                  h-[2px]
-                  w-0
-                  -translate-x-1/2
-                  rounded-full
-                  bg-gradient-to-r
-                  from-purple-400
-                  to-fuchsia-500
-                  transition-all duration-300
-                  group-hover:w-2/3
-                "
-              />
-            </Link>
-          ))}
+                {/* Hover underline */}
+                <span
+                  className="
+                    absolute
+                    bottom-0
+                    left-1/2
+                    h-[2px]
+                    w-0
+                    -translate-x-1/2
+                    rounded-full
+                    bg-gradient-to-r
+                    from-purple-400
+                    to-fuchsia-500
+                    transition-all duration-300
+                    group-hover:w-2/3
+                  "
+                />
+              </Link>
+            );
+          })}
 
           {/* Logout */}
           {isAuthenticated && (
@@ -260,7 +273,8 @@ function Navbar() {
                 lg:px-4
               "
             >
-              <span
+              {/* Logout icon */}
+              <FiLogOut
                 className="
                   text-sm
                   transition-transform duration-300
@@ -268,9 +282,7 @@ function Navbar() {
                   group-hover:-rotate-6
                   sm:text-base
                 "
-              >
-                🚪
-              </span>
+              />
 
               <span>خروج</span>
 

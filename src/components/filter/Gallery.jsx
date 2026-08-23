@@ -1,4 +1,9 @@
 import React from "react";
+import {
+  FiImage,
+  FiCamera,
+  FiCheck,
+} from "react-icons/fi";
 
 function Gallery({ cameraRef, galleryRef, check, setImages }) {
   const handleImageChange = (e) => {
@@ -30,7 +35,10 @@ function Gallery({ cameraRef, galleryRef, check, setImages }) {
           group/card relative overflow-hidden
           rounded-3xl
           border border-purple-500/20
-          bg-gradient-to-br from-[#160d2b] via-[#1d1038] to-[#0d0718]
+          bg-gradient-to-br
+          from-[#160d2b]
+          via-[#1d1038]
+          to-[#0d0718]
           p-5
           shadow-xl shadow-purple-950/20
           transition-all duration-300
@@ -65,12 +73,14 @@ function Gallery({ cameraRef, galleryRef, check, setImages }) {
               className="
                 flex h-9 w-9 items-center justify-center
                 rounded-xl
-                bg-gradient-to-br from-purple-500 to-fuchsia-600
+                bg-gradient-to-br
+                from-purple-500
+                to-fuchsia-600
                 text-sm
                 shadow-lg shadow-purple-500/20
               "
             >
-              🖼️
+              <FiImage />
             </span>
 
             انتخاب از گالری
@@ -81,7 +91,6 @@ function Gallery({ cameraRef, galleryRef, check, setImages }) {
           className={`
             relative z-10
             ${boxStyle}
-
             ${
               check
                 ? `
@@ -89,7 +98,6 @@ function Gallery({ cameraRef, galleryRef, check, setImages }) {
                   bg-gradient-to-br
                   from-purple-500/[0.06]
                   to-fuchsia-500/[0.03]
-
                   hover:border-purple-400/70
                   hover:bg-purple-500/[0.10]
                   hover:shadow-lg
@@ -112,14 +120,15 @@ function Gallery({ cameraRef, galleryRef, check, setImages }) {
               bg-gradient-to-br
               from-purple-500/20
               to-fuchsia-500/10
-              text-5xl
+              text-4xl
+              text-purple-300
               shadow-inner
               transition-all duration-300
               group-hover:scale-110
               group-hover:rotate-2
             "
           >
-            🖼️
+            <FiImage />
           </span>
 
           <span
@@ -140,7 +149,8 @@ function Gallery({ cameraRef, galleryRef, check, setImages }) {
           {check && (
             <span
               className="
-                mt-4 rounded-full
+                mt-4 flex items-center gap-1.5
+                rounded-full
                 border border-purple-500/20
                 bg-gradient-to-r
                 from-purple-500/10
@@ -150,6 +160,7 @@ function Gallery({ cameraRef, galleryRef, check, setImages }) {
                 text-purple-300
               "
             >
+              <FiCheck />
               کلیک کنید
             </span>
           )}
@@ -172,7 +183,10 @@ function Gallery({ cameraRef, galleryRef, check, setImages }) {
           group/card relative overflow-hidden
           rounded-3xl
           border border-purple-500/20
-          bg-gradient-to-br from-[#160d2b] via-[#1d1038] to-[#0d0718]
+          bg-gradient-to-br
+          from-[#160d2b]
+          via-[#1d1038]
+          to-[#0d0718]
           p-5
           shadow-xl shadow-purple-950/20
           transition-all duration-300
@@ -207,12 +221,14 @@ function Gallery({ cameraRef, galleryRef, check, setImages }) {
               className="
                 flex h-9 w-9 items-center justify-center
                 rounded-xl
-                bg-gradient-to-br from-fuchsia-500 to-purple-600
+                bg-gradient-to-br
+                from-fuchsia-500
+                to-purple-600
                 text-sm
                 shadow-lg shadow-fuchsia-500/20
               "
             >
-              📷
+              <FiCamera />
             </span>
 
             دوربین
@@ -223,7 +239,6 @@ function Gallery({ cameraRef, galleryRef, check, setImages }) {
           className={`
             relative z-10
             ${boxStyle}
-
             ${
               check
                 ? `
@@ -231,7 +246,6 @@ function Gallery({ cameraRef, galleryRef, check, setImages }) {
                   bg-gradient-to-br
                   from-purple-500/[0.06]
                   to-fuchsia-500/[0.03]
-
                   hover:border-fuchsia-400/70
                   hover:bg-fuchsia-500/[0.08]
                   hover:shadow-lg
@@ -254,14 +268,15 @@ function Gallery({ cameraRef, galleryRef, check, setImages }) {
               bg-gradient-to-br
               from-fuchsia-500/20
               to-purple-500/10
-              text-5xl
+              text-4xl
+              text-fuchsia-300
               shadow-inner
               transition-all duration-300
               group-hover:scale-110
               group-hover:-rotate-2
             "
           >
-            📷
+            <FiCamera />
           </span>
 
           <span
@@ -282,7 +297,8 @@ function Gallery({ cameraRef, galleryRef, check, setImages }) {
           {check && (
             <span
               className="
-                mt-4 rounded-full
+                mt-4 flex items-center gap-1.5
+                rounded-full
                 border border-fuchsia-500/20
                 bg-gradient-to-r
                 from-fuchsia-500/10
@@ -292,6 +308,7 @@ function Gallery({ cameraRef, galleryRef, check, setImages }) {
                 text-fuchsia-300
               "
             >
+              <FiCamera />
               استفاده از دوربین
             </span>
           )}

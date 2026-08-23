@@ -1,29 +1,37 @@
 import React from "react";
+import {
+  FiImage,
+  FiZap,
+  FiDroplet,
+  FiTool,
+  FiTarget,
+  FiCheck,
+} from "react-icons/fi";
 
 function Device({ device, setDevice }) {
   const devices = [
     {
       value: "background",
       title: "پس‌زمینه",
-      icon: "🖼️",
+      icon: FiImage,
       description: "تغییر، حذف یا اصلاح پس‌زمینه",
     },
     {
       value: "quality",
       title: "کیفیت تصویر",
-      icon: "✨",
+      icon: FiZap,
       description: "افزایش کیفیت و وضوح تصویر",
     },
     {
       value: "appearance",
       title: "ظاهر تصویر",
-      icon: "🎨",
+      icon: FiDroplet,
       description: "تغییر رنگ، نور یا ظاهر کلی تصویر",
     },
     {
       value: "object",
       title: "جزئیات تصویر",
-      icon: "🔧",
+      icon: FiTool,
       description: "تغییر یا حذف عناصر موجود در تصویر",
     },
   ];
@@ -63,6 +71,7 @@ function Device({ device, setDevice }) {
         "
       />
 
+      {/* Title */}
       <h3
         className="
           relative mb-5
@@ -80,149 +89,159 @@ function Device({ device, setDevice }) {
             shadow-lg shadow-purple-500/20
           "
         >
-          🎯
+          <FiTarget />
         </span>
 
         هدف اصلی ویرایش
       </h3>
 
+      {/* Options */}
       <div className="relative flex flex-col gap-3">
-        {devices.map((item) => (
-          <label
-            key={item.value}
-            className={`
-              group relative
-              flex cursor-pointer items-center gap-4
-              overflow-hidden
-              rounded-2xl
-              border p-4
-              transition-all duration-300 ease-out
+        {devices.map((item) => {
+          const Icon = item.icon;
+          const isSelected = device === item.value;
 
-              ${
-                device === item.value
-                  ? `
-                    scale-[1.01]
-                    border-purple-400/70
-                    bg-gradient-to-r
-                    from-purple-600/20
-                    via-purple-500/10
-                    to-fuchsia-500/10
-                    shadow-lg
-                    shadow-purple-900/30
-                  `
-                  : `
-                    border-purple-500/10
-                    bg-white/[0.03]
-                    hover:-translate-y-0.5
-                    hover:border-purple-400/40
-                    hover:bg-purple-500/[0.07]
-                    hover:shadow-lg
-                    hover:shadow-purple-950/20
-                  `
-              }
-            `}
-          >
-            {/* Active indicator */}
-            {device === item.value && (
-              <span
-                className="
-                  absolute right-0 top-0
-                  h-full w-1
-                  bg-gradient-to-b
-                  from-purple-400
-                  via-fuchsia-500
-                  to-purple-700
-                "
-              />
-            )}
-
-            <input
-              className="hidden"
-              type="radio"
-              name="editTarget"
-              value={item.value}
-              checked={device === item.value}
-              onChange={(e) => setDevice(e.target.value)}
-            />
-
-            <span
+          return (
+            <label
+              key={item.value}
               className={`
-                flex h-12 w-12 shrink-0
-                items-center justify-center
+                group relative
+                flex cursor-pointer items-center gap-4
+                overflow-hidden
                 rounded-2xl
-                text-2xl
-                transition-all duration-300
-
+                border p-4
+                transition-all duration-300 ease-out
                 ${
-                  device === item.value
+                  isSelected
                     ? `
-                      bg-gradient-to-br
-                      from-purple-500/30
-                      to-fuchsia-500/20
+                      scale-[1.01]
+                      border-purple-400/70
+                      bg-gradient-to-r
+                      from-purple-600/20
+                      via-purple-500/10
+                      to-fuchsia-500/10
                       shadow-lg
-                      shadow-purple-500/20
-                      scale-105
+                      shadow-purple-900/30
                     `
                     : `
-                      bg-purple-500/5
-                      group-hover:bg-purple-500/10
-                      group-hover:scale-105
+                      border-purple-500/10
+                      bg-white/[0.03]
+                      hover:-translate-y-0.5
+                      hover:border-purple-400/40
+                      hover:bg-purple-500/[0.07]
+                      hover:shadow-lg
+                      hover:shadow-purple-950/20
                     `
                 }
               `}
             >
-              {item.icon}
-            </span>
+              {/* Active indicator */}
+              {isSelected && (
+                <span
+                  className="
+                    absolute right-0 top-0
+                    h-full w-1
+                    bg-gradient-to-b
+                    from-purple-400
+                    via-fuchsia-500
+                    to-purple-700
+                  "
+                />
+              )}
 
-            <div className="flex min-w-0 flex-1 flex-col">
+              {/* Radio input */}
+              <input
+                className="hidden"
+                type="radio"
+                name="editTarget"
+                value={item.value}
+                checked={isSelected}
+                onChange={(e) => setDevice(e.target.value)}
+              />
+
+              {/* Icon */}
               <span
                 className={`
-                  text-sm font-semibold
-                  transition-colors duration-300
-
+                  flex h-12 w-12 shrink-0
+                  items-center justify-center
+                  rounded-2xl
+                  text-2xl
+                  transition-all duration-300
                   ${
-                    device === item.value
-                      ? "text-purple-300"
-                      : "text-slate-200 group-hover:text-purple-200"
+                    isSelected
+                      ? `
+                        bg-gradient-to-br
+                        from-purple-500/30
+                        to-fuchsia-500/20
+                        text-purple-200
+                        shadow-lg
+                        shadow-purple-500/20
+                        scale-105
+                      `
+                      : `
+                        bg-purple-500/5
+                        text-slate-400
+                        group-hover:bg-purple-500/10
+                        group-hover:text-purple-300
+                        group-hover:scale-105
+                      `
                   }
                 `}
               >
-                {item.title}
+                <Icon />
               </span>
 
-              <span
-                className="
-                  mt-1
-                  text-xs leading-5
-                  text-slate-400
-                  transition-colors duration-300
-                  group-hover:text-slate-300
-                "
-              >
-                {item.description}
-              </span>
-            </div>
+              {/* Text */}
+              <div className="flex min-w-0 flex-1 flex-col">
+                <span
+                  className={`
+                    text-sm font-semibold
+                    transition-colors duration-300
+                    ${
+                      isSelected
+                        ? "text-purple-300"
+                        : "text-slate-200 group-hover:text-purple-200"
+                    }
+                  `}
+                >
+                  {item.title}
+                </span>
 
-            {device === item.value && (
-              <span
-                className="
-                  mr-auto
-                  flex h-7 w-7 shrink-0
-                  items-center justify-center
-                  rounded-full
-                  bg-gradient-to-br
-                  from-purple-500
-                  to-fuchsia-600
-                  text-sm font-bold text-white
-                  shadow-lg shadow-purple-500/30
-                  animate-[pulse_2s_ease-in-out_infinite]
-                "
-              >
-                ✓
-              </span>
-            )}
-          </label>
-        ))}
+                <span
+                  className="
+                    mt-1
+                    text-xs leading-5
+                    text-slate-400
+                    transition-colors duration-300
+                    group-hover:text-slate-300
+                  "
+                >
+                  {item.description}
+                </span>
+              </div>
+
+              {/* Selected check */}
+              {isSelected && (
+                <span
+                  className="
+                    mr-auto
+                    flex h-7 w-7 shrink-0
+                    items-center justify-center
+                    rounded-full
+                    bg-gradient-to-br
+                    from-purple-500
+                    to-fuchsia-600
+                    text-sm font-bold text-white
+                    shadow-lg shadow-purple-500/30
+                    animate-[pulse_2s_ease-in-out_infinite]
+                  "
+                >
+                  <FiCheck />
+                </span>
+              )}
+            </label>
+          );
+        })}
       </div>
     </div>
   );

@@ -17,6 +17,7 @@ function NotFound() {
       "
     >
       {/* Background glow */}
+
       <div
         className="
           pointer-events-none absolute
@@ -42,7 +43,9 @@ function NotFound() {
       />
 
       <div className="relative w-full max-w-2xl text-center">
+
         {/* 404 */}
+
         <div className="relative mb-8">
           <div
             className="
@@ -77,6 +80,7 @@ function NotFound() {
         </div>
 
         {/* Icon */}
+
         <div
           className="
             mx-auto mb-6
@@ -99,6 +103,7 @@ function NotFound() {
         </div>
 
         {/* Title */}
+
         <h2
           className="
             text-2xl font-black
@@ -114,12 +119,21 @@ function NotFound() {
           صفحه موردنظر پیدا نشد
         </h2>
 
-        <p className="mx-auto mt-4 max-w-md text-sm leading-7 text-slate-400">
+        <p
+          className="
+            mx-auto mt-4
+            max-w-md
+            text-sm
+            leading-7
+            text-slate-400
+          "
+        >
           متأسفانه صفحه‌ای که به دنبال آن هستید وجود ندارد یا ممکن است
           جابه‌جا شده باشد.
         </p>
 
         {/* Divider */}
+
         <div
           className="
             mx-auto mt-7
@@ -133,6 +147,7 @@ function NotFound() {
         />
 
         {/* Button */}
+
         <Link
           to="/"
           className="
@@ -152,7 +167,6 @@ function NotFound() {
             shadow-xl
             shadow-purple-600/30
             transition-all duration-300
-
             hover:-translate-y-1
             hover:shadow-2xl
             hover:shadow-purple-500/40
@@ -160,6 +174,7 @@ function NotFound() {
           "
         >
           {/* Shine */}
+
           <span
             className="
               absolute inset-y-0 -left-full
@@ -177,7 +192,13 @@ function NotFound() {
           <span className="relative flex items-center gap-2">
             <span>بازگشت به صفحه اصلی</span>
 
-            <span className="transition-transform duration-300 group-hover:-translate-x-1">
+            <span
+              className="
+                transition-transform
+                duration-300
+                group-hover:-translate-x-1
+              "
+            >
               ←
             </span>
           </span>
@@ -185,6 +206,7 @@ function NotFound() {
       </div>
 
       {/* Bottom gradient */}
+
       <div
         className="
           pointer-events-none absolute

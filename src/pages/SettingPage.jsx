@@ -1,7 +1,10 @@
 import React, { useContext, useRef, useState } from "react";
 
 import { AuthContext } from "../context/authContext";
+
 import { getApiErrorMessage } from "../api/errorHandler";
+
+import { FiDownload } from "react-icons/fi";
 
 import Numberone from "../components/filter/Numberone";
 import Numbertwo from "../components/filter/Numbertwo";
@@ -14,6 +17,7 @@ import Description from "../components/filter/Description";
 import ErrorMessage from "../components/ui/ErrorMessage";
 
 import { useImageEdit } from "../hooks/useImageEdit";
+
 import { createHistory } from "../api/services/historyService";
 
 function SettingPage() {
@@ -24,7 +28,6 @@ function SettingPage() {
   const [brand, setBrand] = useState("");
   const [description, setDescription] = useState("");
   const [images, setImages] = useState([]);
-
   const [error, setError] = useState("");
   const [apiError, setApiError] = useState("");
   const [editedImages, setEditedImages] = useState([]);
@@ -44,97 +47,94 @@ function SettingPage() {
     brand;
 
   const clickHnadler = async () => {
-  if (
-    !firstSelect ||
-    !secondSelect ||
-    !device ||
-    !request ||
-    !brand ||
-    images.length === 0
-  ) {
-    setError("لطفاً تمام موارد را تکمیل کنید");
-    return;
-  }
-
-  try {
-    setError("");
-    setApiError("");
-    setEditedImages([]);
-
-    // ارسال عکس‌ها برای ویرایش
-    const result = await editImage({
-      images,
-      firstSelect,
-      secondSelect,
-      device,
-      request,
-      brand,
-      description,
-    });
-
-    console.log("Edited images result:", result);
-
-    if (!result || result.length === 0) {
-      throw new Error("تصاویر ویرایش شده از API دریافت نشد");
-    }
-
-    setEditedImages(result);
-
-    // بررسی کاربر لاگین شده
-    console.log("USER FROM AUTH:", user);
-    console.log("USER ID:", user?.id);
-    console.log("RESULT FOR HISTORY:", result);
-
-    if (!user?.id) {
-      console.error("User ID not found. History was not saved.");
+    if (
+      !firstSelect ||
+      !secondSelect ||
+      !device ||
+      !request ||
+      !brand ||
+      images.length === 0
+    ) {
+      setError("لطفاً تمام موارد را تکمیل کنید");
       return;
     }
 
-    // ذخیره تاریخچه هر تصویر
     try {
-      await Promise.all(
-        result.map((item, index) => {
-          console.log("========== HISTORY DEBUG ==========");
-          console.log("Image index:", index);
-          console.log("History item:", item);
-          console.log("Before:", item.before);
-          console.log("Before type:", typeof item.before);
-          console.log("Before is File:", item.before instanceof File);
-          console.log("After:", item.after);
-          console.log("After type:", typeof item.after);
-          console.log("User ID:", user.id);
-          console.log("===================================");
+      setError("");
+      setApiError("");
+      setEditedImages([]);
 
-          return createHistory({
-            userId: user.id,
-            beforeImage: item.before,
-            afterImage: item.after,
-            firstSelect,
-            secondSelect,
-            device,
-            request,
-            brand,
-            description,
-          });
-        })
-      );
+      // ارسال عکس‌ها برای ویرایش
+      const result = await editImage({
+        images,
+        firstSelect,
+        secondSelect,
+        device,
+        request,
+        brand,
+        description,
+      });
 
-      console.log("Image history saved successfully");
-    } catch (historyError) {
-      console.error("History save error:", historyError);
+      console.log("Edited images result:", result);
+
+      if (!result || result.length === 0) {
+        throw new Error("تصاویر ویرایش شده از API دریافت نشد");
+      }
+
+      setEditedImages(result);
+
+      // بررسی کاربر لاگین شده
+      console.log("USER FROM AUTH:", user);
+      console.log("USER ID:", user?.id);
+      console.log("RESULT FOR HISTORY:", result);
+
+      if (!user?.id) {
+        console.error("User ID not found. History was not saved.");
+        return;
+      }
+
+      // ذخیره تاریخچه هر تصویر
+      try {
+        await Promise.all(
+          result.map((item, index) => {
+            console.log("========== HISTORY DEBUG ==========");
+            console.log("Image index:", index);
+            console.log("History item:", item);
+            console.log("Before:", item.before);
+            console.log("Before type:", typeof item.before);
+            console.log("Before is File:", item.before instanceof File);
+            console.log("After:", item.after);
+            console.log("After type:", typeof item.after);
+            console.log("User ID:", user.id);
+            console.log("===================================");
+
+            return createHistory({
+              userId: user.id,
+              beforeImage: item.before,
+              afterImage: item.after,
+              firstSelect,
+              secondSelect,
+              device,
+              request,
+              brand,
+              description,
+            });
+          }),
+        );
+
+        console.log("Image history saved successfully");
+      } catch (historyError) {
+        console.error("History save error:", historyError);
+      }
+    } catch (error) {
+      console.error("Image edit error:", error);
+      setApiError(getApiErrorMessage(error));
     }
-  } catch (error) {
-    console.error("Image edit error:", error);
-
-    setApiError(getApiErrorMessage(error));
-  }
-};
+  };
 
   const removeImage = (indexToRemove) => {
     setImages((prevImages) =>
-      prevImages.filter(
-        (_, index) => index !== indexToRemove
-      )
+      prevImages.filter((_, index) => index !== indexToRemove),
     );
   };
 
@@ -144,7 +144,7 @@ function SettingPage() {
       className="
         relative min-h-screen
         overflow-hidden
-        bg-gradient-to-br
+        bg-linear-to-br
         from-[#08040f]
         via-[#160d2b]
         to-[#0d0718]
@@ -182,7 +182,6 @@ function SettingPage() {
         {/* Header */}
 
         <div className="mb-10 text-center">
-
           <div
             className="
               mx-auto mb-5
@@ -190,7 +189,7 @@ function SettingPage() {
               items-center justify-center
               rounded-3xl
               border border-purple-400/20
-              bg-gradient-to-br
+              bg-linear-to-br
               from-purple-500/20
               via-violet-500/10
               to-fuchsia-500/10
@@ -202,22 +201,22 @@ function SettingPage() {
               hover:rotate-2
             "
           >
-             <img
-    src="/logo.jpg"
-    alt="AI Image Editor"
-    className="
-      h-20 w-20
-      rounded-3xl
-      border border-purple-400/20
-      object-contain
-      p-2
-      shadow-xl
-      shadow-purple-950/30
-      transition-all duration-500
-      hover:scale-110
-      hover:rotate-2
-    "
-  />
+            <img
+              src="/logo.jpg"
+              alt="AI Image Editor"
+              className="
+                h-20 w-20
+                rounded-3xl
+                border border-purple-400/20
+                object-contain
+                p-2
+                shadow-xl
+                shadow-purple-950/30
+                transition-all duration-500
+                hover:scale-110
+                hover:rotate-2
+              "
+            />
           </div>
 
           <h1
@@ -251,7 +250,7 @@ function SettingPage() {
               mx-auto mt-5
               h-1 w-24
               rounded-full
-              bg-gradient-to-r
+              bg-linear-to-r
               from-purple-500
               via-fuchsia-500
               to-purple-500
@@ -264,9 +263,9 @@ function SettingPage() {
         <div
           className="
             relative overflow-hidden
-            rounded-[2rem]
+            rounded-4xl
             border border-purple-500/20
-            bg-gradient-to-br
+            bg-linear-to-br
             from-[#160d2b]/90
             via-[#1d1038]/80
             to-[#0d0718]/90
@@ -277,14 +276,13 @@ function SettingPage() {
             sm:p-8
           "
         >
-
           {/* Top gradient */}
 
           <div
             className="
               absolute left-0 right-0 top-0
-              h-[2px]
-              bg-gradient-to-r
+              h-0.5
+              bg-linear-to-r
               from-transparent
               via-purple-500
               to-fuchsia-500
@@ -360,10 +358,7 @@ function SettingPage() {
                   shadow-red-950/10
                 "
               >
-                <span className="mr-1">
-                  ⚠️
-                </span>
-
+                <span className="mr-1">⚠️</span>
                 {error}
               </div>
             )}
@@ -396,7 +391,6 @@ function SettingPage() {
                 "
               >
                 <div className="mb-5 flex items-center gap-3">
-
                   <div
                     className="
                       flex h-10 w-10
@@ -413,11 +407,9 @@ function SettingPage() {
                   <h3 className="text-lg font-bold text-purple-100">
                     تصاویر انتخاب شده
                   </h3>
-
                 </div>
 
                 <div className="flex flex-wrap gap-5">
-
                   {images.map((image, index) => (
                     <div
                       key={index}
@@ -426,7 +418,6 @@ function SettingPage() {
                         overflow-visible
                       "
                     >
-
                       <img
                         src={URL.createObjectURL(image)}
                         alt={image.name}
@@ -447,9 +438,7 @@ function SettingPage() {
 
                       <button
                         type="button"
-                        onClick={() =>
-                          removeImage(index)
-                        }
+                        onClick={() => removeImage(index)}
                         className="
                           absolute
                           -right-2
@@ -477,14 +466,10 @@ function SettingPage() {
                           active:scale-90
                         "
                       >
-                        <span className="mb-px">
-                          ×
-                        </span>
+                        <span className="mb-px">×</span>
                       </button>
-
                     </div>
                   ))}
-
                 </div>
               </div>
             )}
@@ -520,7 +505,6 @@ function SettingPage() {
                 disabled:opacity-90
               "
             >
-
               <span
                 className="
                   pointer-events-none absolute
@@ -600,9 +584,7 @@ function SettingPage() {
                   </span>
                 </>
               )}
-
             </button>
-
           </div>
 
           {/* Bottom gradient */}
@@ -619,7 +601,6 @@ function SettingPage() {
               to-transparent
             "
           />
-
         </div>
 
         {/* API Error */}
@@ -650,7 +631,6 @@ function SettingPage() {
           <div className="mt-10">
 
             <div className="mb-6 text-center">
-
               <div
                 className="
                   mx-auto mb-4
@@ -681,11 +661,9 @@ function SettingPage() {
               >
                 نتیجه ویرایش تصاویر
               </h2>
-
             </div>
 
             <div className="space-y-6">
-
               {editedImages.map((item, index) => (
                 <div
                   key={index}
@@ -704,7 +682,6 @@ function SettingPage() {
                     sm:p-6
                   "
                 >
-
                   <div
                     className="
                       absolute left-0 right-0 top-0
@@ -740,7 +717,6 @@ function SettingPage() {
                         p-3
                       "
                     >
-
                       <h4
                         className="
                           mb-3
@@ -764,7 +740,6 @@ function SettingPage() {
                           hover:scale-[1.02]
                         "
                       />
-
                     </div>
 
                     {/* After */}
@@ -782,17 +757,44 @@ function SettingPage() {
                         shadow-purple-950/20
                       "
                     >
+                      <div className="mb-3 flex items-center justify-between gap-3">
+                        <h4
+                          className="
+                            font-bold
+                            text-purple-200
+                          "
+                        >
+                          After
+                        </h4>
 
-                      <h4
-                        className="
-                          mb-3
-                          text-center
-                          font-bold
-                          text-purple-200
-                        "
-                      >
-                        After
-                      </h4>
+                        <a
+                          href={item.after}
+                          download={`edited-image-${index + 1}.png`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="
+                            inline-flex
+                            items-center
+                            gap-2
+                            rounded-xl
+                            border border-purple-400/20
+                            bg-purple-500/10
+                            px-3
+                            py-2
+                            text-xs
+                            font-semibold
+                            text-purple-200
+                            transition-all
+                            duration-300
+                            hover:bg-purple-500/20
+                            hover:text-white
+                            active:scale-95
+                          "
+                        >
+                          <FiDownload className="text-base" />
+                          دانلود
+                        </a>
+                      </div>
 
                       <img
                         src={item.after}
@@ -806,19 +808,13 @@ function SettingPage() {
                           hover:scale-[1.02]
                         "
                       />
-
                     </div>
-
                   </div>
-
                 </div>
               ))}
-
             </div>
-
           </div>
         )}
-
       </div>
     </div>
   );

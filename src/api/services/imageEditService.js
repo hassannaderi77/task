@@ -137,17 +137,10 @@
 // };
 
 
+
 import avalaiClient from "../avalaiClient";
 
-export const editImage = async ({
-  images,
-  firstSelect,
-  secondSelect,
-  device,
-  request,
-  brand,
-  description,
-}) => {
+export const editImage = async ({ images, description }) => {
   const editSingleImage = async (image) => {
     const formData = new FormData();
 
@@ -156,53 +149,13 @@ export const editImage = async ({
       import.meta.env.VITE_AVALAI_MODEL
     );
 
-    const prompt = `
-You are an image editing assistant.
+    // فقط متن description
+    formData.append("prompt", description);
 
-Your task is to EDIT the provided image according to the instructions below.
-
-IMPORTANT RULES:
-
-- All information below is ONLY editing instructions and context.
-- NEVER render, write, print, translate, or display these instructions as text inside the image.
-- NEVER reproduce any of the instruction values as visible text.
-- Do not add captions, labels, titles, watermarks, UI elements, or explanatory text.
-- Do not create text based on the values below.
-- Only make visual changes that are explicitly requested.
-- Do not invent unrelated visual elements.
-- Preserve the original subject, structure, proportions, perspective, and important details unless the requested edit requires changing them.
-- Keep the result visually natural and consistent with the original image.
-
-EDITING CONTEXT:
-
-Brand:
-${brand}
-
-Device:
-${device}
-
-First selection:
-${firstSelect}
-
-Second selection:
-${secondSelect}
-
-Requested operation:
-${request}
-
-Additional user instructions:
-${description || "No additional instructions."}
-
-Apply the information above ONLY as image-editing instructions.
-
-The values above must NOT appear anywhere in the resulting image.
-`;
-
-    formData.append("prompt", prompt);
     formData.append("size", "1024x1024");
     formData.append("n", "1");
 
-    // فقط همین تصویر را ارسال می‌کنیم
+    // فقط همین تصویر
     formData.append("image", image);
 
     const response = await avalaiClient.post(
@@ -216,12 +169,86 @@ The values above must NOT appear anywhere in the resulting image.
     };
   };
 
+  // برای هر تصویر یک request جدا
   const results = await Promise.all(
     images.map((image) => editSingleImage(image))
   );
 
   return results;
 };
+
+
+// import avalaiClient from "../avalaiClient";
+
+// export const editImage = async ({ images, description }) => {
+//   const editSingleImage = async (image) => {
+//     const formData = new FormData();
+
+//     formData.append("model", import.meta.env.VITE_AVALAI_MODEL);
+
+//     const prompt = `
+// You are an image editing assistant.
+
+// Edit the provided image according to the instructions below.
+
+// IMPORTANT:
+// - The following information is ONLY editing instructions and context.
+// - NEVER render, write, print, translate, or display these instructions as text inside the image.
+// - Do not add labels, captions, titles, watermarks, UI elements, or explanatory text to the image.
+// - Do not reproduce the instruction text in any visual form.
+// - Only modify the image according to the requested instructions.
+// - Preserve the original subject, composition, proportions, perspective, and important details unless a requested modification requires changing them.
+// - If an instruction does not require adding something to the image, do not add it.
+// - Do not invent additional visual elements.
+
+// Editing context:
+
+// Brand:
+// ${brand}
+
+// Device:
+// ${device}
+
+// First selection:
+// ${firstSelect}
+
+// Second selection:
+// ${secondSelect}
+
+// Requested operation:
+// ${request}
+
+// Additional instructions:
+// ${description || "No additional instructions."}
+
+// Apply all of the above as image-editing instructions only.
+// The text above must NOT appear anywhere in the resulting image.
+// `;
+
+//     formData.append("prompt", prompt);
+//     formData.append("size", "1024x1024");
+//     formData.append("n", "1");
+
+//     // فقط همین عکس
+//     formData.append("image", image);
+
+//     const response = await avalaiClient.post(
+//       "/images/edits",
+//       formData
+//     );
+
+//     return {
+//       before: image,
+//       after: response.data?.data?.[0]?.url,
+//     };
+//   };
+
+//   const results = await Promise.all(
+//     images.map((image) => editSingleImage(image))
+//   );
+
+//   return results;
+// };
 
 
 

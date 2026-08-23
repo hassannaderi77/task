@@ -1,45 +1,34 @@
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
-
+import { FiUser, FiEdit3, FiPhone, FiMail } from "react-icons/fi";
 
 import { useAuth } from "../hooks/useAuth";
 
-;
-
 function Dashboard() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
+
   console.log("Dashboard user:", user);
-
-
-
-  
-
- 
 
   const infoItems = [
     {
       title: "نام",
-      value: user.name,
-      icon: "👤",
+      value: user?.name,
+      icon: FiUser,
     },
     {
       title: "نام خانوادگی",
-      value: user.family,
-      icon: "📝",
+      value: user?.family,
+      icon: FiEdit3,
     },
     {
       title: "شماره همراه",
-      value: user.phone,
-      icon: "📱",
+      value: user?.phone,
+      icon: FiPhone,
     },
     {
       title: "ایمیل",
-      value: user.email,
-      icon: "✉️",
+      value: user?.email,
+      icon: FiMail,
     },
   ];
-
-  
 
   return (
     <div
@@ -92,7 +81,7 @@ function Dashboard() {
               bg-gradient-to-br
               from-purple-500/20
               to-fuchsia-500/10
-              text-4xl
+              text-purple-200
               shadow-xl
               shadow-purple-950/30
               transition-all duration-500
@@ -100,7 +89,14 @@ function Dashboard() {
               hover:rotate-2
             "
           >
-            👨‍💻
+            <FiUser
+              className="
+                relative z-10
+                text-4xl
+                transition-transform duration-500
+                group-hover:scale-110
+              "
+            />
 
             <span
               className="
@@ -119,13 +115,14 @@ function Dashboard() {
 
           <h1
             className="
-              text-4xl font-black
-              text-transparent
               bg-gradient-to-r
               from-purple-200
               via-fuchsia-300
               to-purple-300
               bg-clip-text
+              text-4xl
+              font-black
+              text-transparent
               sm:text-5xl
             "
           >
@@ -178,10 +175,13 @@ function Dashboard() {
           />
 
           <div className="relative">
-            <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            {/* Card Header */}
+            <div className="mb-8">
               <h2
                 className="
-                  text-center text-2xl font-bold
+                  text-center
+                  text-2xl
+                  font-bold
                   text-transparent
                   bg-gradient-to-r
                   from-purple-300
@@ -192,10 +192,9 @@ function Dashboard() {
               >
                 اطلاعات کاربر
               </h2>
-
-              
             </div>
 
+            {/* Information Grid */}
             <div
               className="
                 grid
@@ -204,85 +203,91 @@ function Dashboard() {
                 sm:grid-cols-2
               "
             >
-              {infoItems.map((item) => (
-                <div
-                  key={item.title}
-                  className="
-                    group
-                    relative overflow-hidden
-                    rounded-2xl
-                    border border-purple-500/10
-                    bg-gradient-to-br
-                    from-white/[0.05]
-                    to-purple-500/[0.03]
-                    p-5
-                    transition-all duration-300
-                    hover:-translate-y-1
-                    hover:border-purple-400/30
-                    hover:bg-purple-500/[0.07]
-                    hover:shadow-xl
-                    hover:shadow-purple-950/20
-                  "
-                >
-                  {/* Card hover glow */}
-                  <div
-                    className="
-                      pointer-events-none absolute
-                      -left-10 -top-10
-                      h-20 w-20
-                      rounded-full
-                      bg-purple-500/10
-                      blur-2xl
-                      opacity-0
-                      transition-opacity duration-500
-                      group-hover:opacity-100
-                    "
-                  />
+              {infoItems.map((item) => {
+                const Icon = item.icon;
 
+                return (
                   <div
+                    key={item.title}
                     className="
-                      relative mb-3
-                      flex items-center gap-3
-                      text-slate-400
+                      group
+                      relative overflow-hidden
+                      rounded-2xl
+                      border border-purple-500/10
+                      bg-gradient-to-br
+                      from-white/[0.05]
+                      to-purple-500/[0.03]
+                      p-5
+                      transition-all duration-300
+                      hover:-translate-y-1
+                      hover:border-purple-400/30
+                      hover:bg-purple-500/[0.07]
+                      hover:shadow-xl
+                      hover:shadow-purple-950/20
                     "
                   >
-                    <span
+                    {/* Card hover glow */}
+                    <div
                       className="
-                        flex h-10 w-10
-                        items-center justify-center
-                        rounded-xl
-                        bg-gradient-to-br
-                        from-purple-500/20
-                        to-fuchsia-500/10
-                        text-xl
-                        transition-transform duration-300
-                        group-hover:scale-110
+                        pointer-events-none absolute
+                        -left-10 -top-10
+                        h-20 w-20
+                        rounded-full
+                        bg-purple-500/10
+                        blur-2xl
+                        opacity-0
+                        transition-opacity duration-500
+                        group-hover:opacity-100
+                      "
+                    />
+
+                    {/* Title */}
+                    <div
+                      className="
+                        relative mb-3
+                        flex items-center gap-3
+                        text-slate-400
                       "
                     >
-                      {item.icon}
-                    </span>
+                      <span
+                        className="
+                          flex h-10 w-10
+                          items-center justify-center
+                          rounded-xl
+                          bg-gradient-to-br
+                          from-purple-500/20
+                          to-fuchsia-500/10
+                          text-purple-200
+                          transition-transform duration-300
+                          group-hover:scale-110
+                        "
+                      >
+                        <Icon className="text-xl" />
+                      </span>
 
-                    <span className="text-sm font-medium">
-                      {item.title}
-                    </span>
+                      <span className="text-sm font-medium">
+                        {item.title}
+                      </span>
+                    </div>
+
+                    {/* Value */}
+                    <p
+                      className="
+                        relative
+                        break-all
+                        text-lg
+                        font-bold
+                        text-white
+                        transition-colors duration-300
+                        group-hover:text-purple-100
+                      "
+                    >
+                      {item.value || "-"}
+                    </p>
                   </div>
-
-                  <p
-                    className="
-                      relative break-all
-                      text-lg font-bold
-                      text-white
-                      transition-colors duration-300
-                      group-hover:text-purple-100
-                    "
-                  >
-                    {item.value || "-"}
-                  </p>
-                </div>
-              ))}
+                );
+              })}
             </div>
-
-           
           </div>
 
           {/* Bottom gradient */}
