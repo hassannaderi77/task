@@ -7,10 +7,10 @@ import PrivateLayout from "../layouts/PrivateLayout";
 import ProtectedRoute from "./ProtectedRoute";
 import PageLoading from "../components/ui/PageLoading";
 import RoleRoute from "./RoleRoute";
-import LandingPage from "../pages/LandingPage";
+
 import NotFound from "../pages/NotFound";
 
-// const LandingPage = lazy(() => import("../pages/LandingPage"));
+
 const Home = lazy(() => import("../pages/Home"));
 const Login = lazy(() => import("../pages/auth/Login"));
 const Register = lazy(() => import("../pages/auth/Register"));
@@ -28,7 +28,7 @@ function AppRoutes() {
 
         <Route element={<PublicLayout />}>
           <Route path="/" element={<Home />} />
-          {/* <Route path="/landing" element={<LandingPage />} /> */}
+        
           <Route path="/demo" element={<Demo />} />
         </Route>
 

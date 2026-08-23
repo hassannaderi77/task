@@ -1,37 +1,20 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useUsers } from "../hooks/useUsers";
+
 
 import { useAuth } from "../hooks/useAuth";
 
-import Loading from "../components/ui/Loading";
-import ErrorMessage from "../components/ui/ErrorMessage";
-import EmptyState from "../components/ui/EmptyState";
+;
 
 function Dashboard() {
   const { user, logout } = useAuth();
   console.log("Dashboard user:", user);
 
-  const navigate = useNavigate();
 
-  const {
-  data: users,
-  isLoading,
-  isError,
-  error,
-} = useUsers();
 
-if (isLoading) {
-  return <Loading text="در حال دریافت کاربران..." />;
-}
+  
 
-if (isError) {
-  return <ErrorMessage message={error.message} />;
-}
-
-if (!users || users.length === 0) {
-  return <EmptyState message="کاربری پیدا نشد." />;
-}
+ 
 
   const infoItems = [
     {
@@ -56,184 +39,265 @@ if (!users || users.length === 0) {
     },
   ];
 
-  console.log("Users:", users);
+  
 
   return (
     <div
       dir="rtl"
       className="
-      min-h-screen
-      bg-gradient-to-br
-      from-slate-950
-      via-slate-900
-      to-blue-950
-      px-4
-      py-10
-      text-white
+        relative min-h-screen
+        overflow-hidden
+        bg-gradient-to-br
+        from-[#08040f]
+        via-[#160d2b]
+        to-[#0d0718]
+        px-4 py-10
+        text-white
+        sm:py-14
       "
     >
+      {/* Background glows */}
+      <div
+        className="
+          pointer-events-none absolute
+          -right-32 -top-32
+          h-80 w-80
+          rounded-full
+          bg-purple-600/15
+          blur-[110px]
+        "
+      />
 
-      {isLoading && (
-  <p className="mb-4 text-center text-slate-400">
-    در حال دریافت کاربران...
-  </p>
-)}
+      <div
+        className="
+          pointer-events-none absolute
+          -bottom-32 -left-32
+          h-80 w-80
+          rounded-full
+          bg-fuchsia-600/10
+          blur-[110px]
+        "
+      />
 
-{isError && (
-  <p className="mb-4 text-center text-red-400">
-    خطا در دریافت کاربران: {error.message}
-  </p>
-)}
-      <div className="mx-auto max-w-4xl">
-        {/* Header /}
+      <div className="relative mx-auto max-w-4xl">
+        {/* Header */}
         <div className="mb-10 text-center">
-
           <div
             className="
-            mx-auto
-            mb-5
-            flex
-            h-20
-            w-20
-            items-center
-            justify-center
-            rounded-3xl
-            bg-blue-600/20
-            text-4xl
+              group relative mx-auto mb-5
+              flex h-20 w-20
+              items-center justify-center
+              rounded-3xl
+              border border-purple-400/20
+              bg-gradient-to-br
+              from-purple-500/20
+              to-fuchsia-500/10
+              text-4xl
+              shadow-xl
+              shadow-purple-950/30
+              transition-all duration-500
+              hover:scale-110
+              hover:rotate-2
             "
           >
             👨‍💻
-          </div>
 
+            <span
+              className="
+                pointer-events-none absolute inset-0
+                rounded-3xl
+                bg-gradient-to-br
+                from-purple-500/10
+                to-fuchsia-500/10
+                opacity-0
+                blur-xl
+                transition-opacity duration-500
+                group-hover:opacity-100
+              "
+            />
+          </div>
 
           <h1
             className="
-            text-4xl
-            font-black
-            sm:text-5xl
+              text-4xl font-black
+              text-transparent
+              bg-gradient-to-r
+              from-purple-200
+              via-fuchsia-300
+              to-purple-300
+              bg-clip-text
+              sm:text-5xl
             "
           >
             Dashboard
           </h1>
 
-
           <p className="mt-3 text-slate-400">
             مدیریت اطلاعات حساب کاربری
           </p>
 
-
-        </div>
-
-
-
-        {/ User Card */}
-        <div
-          className="
-          rounded-3xl
-          border
-          border-white/10
-          bg-white/5
-          p-6
-          shadow-2xl
-          backdrop-blur-xl
-          sm:p-10
-          "
-        >
-          <h2
-            className="
-            mb-8
-            text-center
-            text-2xl
-            font-bold
-            text-blue-400
-            "
-          >
-            اطلاعات کاربر
-          </h2>
-
-          <button
-            onClick={() => {
-              logout();
-              navigate("/login");
-            }}
-            className="rounded-xl bg-red-500 px-4 py-2 text-white"
-          >
-            خروج
-          </button>
-
           <div
             className="
-            grid
-            grid-cols-1
-            gap-5
-            sm:grid-cols-2
+              mx-auto mt-5
+              h-1 w-20
+              rounded-full
+              bg-gradient-to-r
+              from-purple-500
+              to-fuchsia-500
             "
-          >
-            {infoItems.map((item) => (
-              <div
-                key={item.title}
+          />
+        </div>
+
+        {/* User Card */}
+        <div
+          className="
+            relative overflow-hidden
+            rounded-[2rem]
+            border border-purple-500/20
+            bg-gradient-to-br
+            from-[#160d2b]/90
+            via-[#1d1038]/80
+            to-[#0d0718]/90
+            p-6
+            shadow-2xl
+            shadow-purple-950/40
+            backdrop-blur-xl
+            sm:p-10
+          "
+        >
+          {/* Card glow */}
+          <div
+            className="
+              pointer-events-none absolute
+              -right-20 -top-20
+              h-40 w-40
+              rounded-full
+              bg-purple-600/10
+              blur-3xl
+            "
+          />
+
+          <div className="relative">
+            <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <h2
                 className="
-                rounded-2xl
-                border
-                border-white/10
-                bg-white/5
-                p-5
-                transition
-                hover:bg-white/10
+                  text-center text-2xl font-bold
+                  text-transparent
+                  bg-gradient-to-r
+                  from-purple-300
+                  to-fuchsia-300
+                  bg-clip-text
+                  sm:text-right
                 "
               >
+                اطلاعات کاربر
+              </h2>
+
+              
+            </div>
+
+            <div
+              className="
+                grid
+                grid-cols-1
+                gap-4
+                sm:grid-cols-2
+              "
+            >
+              {infoItems.map((item) => (
                 <div
+                  key={item.title}
                   className="
-                  mb-3
-                  flex
-                  items-center
-                  gap-3
-                  text-slate-400
+                    group
+                    relative overflow-hidden
+                    rounded-2xl
+                    border border-purple-500/10
+                    bg-gradient-to-br
+                    from-white/[0.05]
+                    to-purple-500/[0.03]
+                    p-5
+                    transition-all duration-300
+                    hover:-translate-y-1
+                    hover:border-purple-400/30
+                    hover:bg-purple-500/[0.07]
+                    hover:shadow-xl
+                    hover:shadow-purple-950/20
                   "
                 >
-                  <span className="text-2xl">{item.icon}</span>
+                  {/* Card hover glow */}
+                  <div
+                    className="
+                      pointer-events-none absolute
+                      -left-10 -top-10
+                      h-20 w-20
+                      rounded-full
+                      bg-purple-500/10
+                      blur-2xl
+                      opacity-0
+                      transition-opacity duration-500
+                      group-hover:opacity-100
+                    "
+                  />
 
-                  <span>{item.title}</span>
+                  <div
+                    className="
+                      relative mb-3
+                      flex items-center gap-3
+                      text-slate-400
+                    "
+                  >
+                    <span
+                      className="
+                        flex h-10 w-10
+                        items-center justify-center
+                        rounded-xl
+                        bg-gradient-to-br
+                        from-purple-500/20
+                        to-fuchsia-500/10
+                        text-xl
+                        transition-transform duration-300
+                        group-hover:scale-110
+                      "
+                    >
+                      {item.icon}
+                    </span>
+
+                    <span className="text-sm font-medium">
+                      {item.title}
+                    </span>
+                  </div>
+
+                  <p
+                    className="
+                      relative break-all
+                      text-lg font-bold
+                      text-white
+                      transition-colors duration-300
+                      group-hover:text-purple-100
+                    "
+                  >
+                    {item.value || "-"}
+                  </p>
                 </div>
+              ))}
+            </div>
 
-                <p
-                  className="
-                  break-all
-                  text-lg
-                  font-bold
-                  text-white
-                  "
-                >
-                  {item.value || "-"}
-                </p>
-              </div>
-            ))}
+           
           </div>
 
-          <Link
-            to="/setting"
+          {/* Bottom gradient */}
+          <div
             className="
-            mt-8
-            block
-            rounded-2xl
-            bg-gradient-to-r
-            from-blue-600
-            to-indigo-600
-            px-6
-            py-3.5
-            text-center
-            font-bold
-            text-white
-            shadow-lg
-            shadow-blue-600/30
-            transition
-            hover:scale-[1.02]
-            hover:shadow-blue-500/40
-            active:scale-95
+              absolute bottom-0 left-1/2
+              h-[2px] w-1/3
+              -translate-x-1/2
+              rounded-full
+              bg-gradient-to-r
+              from-transparent
+              via-fuchsia-500
+              to-transparent
             "
-          >
-            رفتن به تنظیمات
-          </Link>
+          />
         </div>
       </div>
     </div>

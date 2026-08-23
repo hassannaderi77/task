@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
@@ -62,104 +61,420 @@ function Demo() {
   return (
     <div
       dir="rtl"
-      className="min-h-screen bg-slate-950 px-4 py-10 text-white sm:px-6"
+      className="
+        relative min-h-screen
+        overflow-hidden
+        bg-gradient-to-br
+        from-[#08040f]
+        via-[#160d2b]
+        to-[#0d0718]
+        px-4 py-10
+        text-white
+        sm:px-6
+      "
     >
-      <div className="mx-auto flex min-h-[80vh] max-w-md items-center justify-center">
-        <div className="w-full rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl sm:p-8">
-          <div className="mb-8 text-center">
-            <div className="mb-4 text-5xl">🚀</div>
+      {/* Background glows */}
+      <div
+        className="
+          pointer-events-none absolute
+          -right-32 -top-32
+          h-80 w-80
+          rounded-full
+          bg-purple-600/20
+          blur-[110px]
+          animate-pulse
+        "
+      />
 
-            <h1 className="text-3xl font-black">
-              نسخه دمو
-            </h1>
+      <div
+        className="
+          pointer-events-none absolute
+          -bottom-32 -left-32
+          h-80 w-80
+          rounded-full
+          bg-fuchsia-600/15
+          blur-[110px]
+          animate-pulse
+        "
+      />
 
-            <p className="mt-3 text-sm text-slate-400">
-              برای ورود به نسخه دمو شماره موبایل خود را وارد کنید
-            </p>
-          </div>
+      <div className="relative mx-auto flex min-h-[80vh] max-w-md items-center justify-center">
+        <div
+          className="
+            group relative w-full
+            overflow-hidden
+            rounded-[2rem]
+            border border-purple-500/20
+            bg-gradient-to-br
+            from-[#160d2b]/95
+            via-[#1d1038]/90
+            to-[#0d0718]/95
+            p-6
+            shadow-2xl
+            shadow-purple-950/40
+            backdrop-blur-2xl
+            sm:p-8
+          "
+        >
+          {/* Top gradient */}
+          <div
+            className="
+              absolute left-0 right-0 top-0
+              h-[2px]
+              bg-gradient-to-r
+              from-transparent
+              via-purple-500
+              to-fuchsia-500
+            "
+          />
 
-          {step === 1 && (
-            <form onSubmit={handlePhoneSubmit}>
-              <label className="mb-2 block text-sm font-bold text-slate-300">
-                شماره موبایل
-              </label>
+          {/* Decorative glow */}
+          <div
+            className="
+              pointer-events-none absolute
+              -right-20 -top-20
+              h-40 w-40
+              rounded-full
+              bg-purple-600/10
+              blur-3xl
+              transition-all duration-700
+              group-hover:bg-purple-500/20
+            "
+          />
 
-              <input
-                type="tel"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="09123456789"
-                className="w-full rounded-2xl border border-slate-700 bg-slate-800 px-4 py-4 text-left outline-none transition focus:border-blue-500"
-                dir="ltr"
-              />
-
-              {error && (
-                <p className="mt-3 rounded-xl bg-red-500/10 p-3 text-center text-sm text-red-400">
-                  {error}
-                </p>
-              )}
-
-              <button
-                type="submit"
-                className="mt-5 w-full rounded-2xl bg-blue-600 py-4 font-bold transition hover:bg-blue-500 active:scale-95"
+          <div className="relative">
+            {/* Header */}
+            <div className="mb-8 text-center">
+              <div
+                className="
+                  mx-auto mb-5
+                  flex h-20 w-20
+                  items-center justify-center
+                  rounded-3xl
+                  border border-purple-400/20
+                  bg-gradient-to-br
+                  from-purple-500/20
+                  via-purple-500/10
+                  to-fuchsia-500/10
+                  text-5xl
+                  shadow-xl
+                  shadow-purple-950/30
+                  transition-all duration-500
+                  hover:scale-110
+                  hover:-rotate-2
+                "
               >
-                دریافت کد تایید
-              </button>
-            </form>
-          )}
-
-          {step === 2 && (
-            <form onSubmit={handleCodeSubmit}>
-              <div className="mb-5 rounded-2xl bg-slate-800 p-4 text-center">
-                <p className="text-sm text-slate-400">
-                  کد تایید برای شماره
-                </p>
-
-                <p className="mt-2 font-bold" dir="ltr">
-                  {phone}
-                </p>
+                🚀
               </div>
 
-              <label className="mb-2 block text-sm font-bold text-slate-300">
-                کد تایید
-              </label>
-
-              <input
-                type="text"
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-                placeholder="- - - - - -"
-                maxLength={6}
-                className="w-full rounded-2xl border border-slate-700 bg-slate-800 px-4 py-4 text-center text-xl tracking-[0.5em] outline-none transition focus:border-blue-500"
-                dir="ltr"
-              />
-
-              {error && (
-                <p className="mt-3 rounded-xl bg-red-500/10 p-3 text-center text-sm text-red-400">
-                  {error}
-                </p>
-              )}
-
-              <button
-                type="submit"
-                className="mt-5 w-full rounded-2xl bg-blue-600 py-4 font-bold transition hover:bg-blue-500 active:scale-95"
+              <h1
+                className="
+                  text-3xl font-black
+                  text-transparent
+                  bg-gradient-to-r
+                  from-purple-200
+                  via-fuchsia-300
+                  to-purple-300
+                  bg-clip-text
+                "
               >
-                ورود به نسخه دمو
-              </button>
+                نسخه دمو
+              </h1>
 
-              <button
-                type="button"
-                onClick={() => {
-                  setStep(1);
-                  setCode("");
-                  setError("");
-                }}
-                className="mt-3 w-full rounded-2xl py-3 text-sm text-slate-400 transition hover:text-white"
-              >
-                تغییر شماره موبایل
-              </button>
-            </form>
-          )}
+              <p className="mt-3 text-sm leading-6 text-slate-400">
+                برای ورود به نسخه دمو شماره موبایل خود را وارد کنید
+              </p>
+
+              {/* Step indicator */}
+              <div className="mt-6 flex items-center justify-center gap-2">
+                <span
+                  className={`
+                    h-2 rounded-full transition-all duration-500
+                    ${
+                      step === 1
+                        ? "w-10 bg-gradient-to-r from-purple-500 to-fuchsia-500"
+                        : "w-2 bg-purple-500/30"
+                    }
+                  `}
+                />
+
+                <span
+                  className={`
+                    h-2 rounded-full transition-all duration-500
+                    ${
+                      step === 2
+                        ? "w-10 bg-gradient-to-r from-purple-500 to-fuchsia-500"
+                        : "w-2 bg-purple-500/30"
+                    }
+                  `}
+                />
+              </div>
+            </div>
+
+            {step === 1 && (
+              <form onSubmit={handlePhoneSubmit}>
+                <label className="mb-2 block text-sm font-bold text-purple-100">
+                  شماره موبایل
+                </label>
+
+                <div className="relative">
+                  <span
+                    className="
+                      pointer-events-none absolute
+                      right-4 top-1/2
+                      -translate-y-1/2
+                      text-lg
+                    "
+                  >
+                    📱
+                  </span>
+
+                  <input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="09123456789"
+                    className="
+                      w-full rounded-2xl
+                      border border-purple-500/15
+                      bg-white/[0.04]
+                      px-12 py-4
+                      text-left text-white
+                      placeholder:text-slate-600
+                      outline-none
+                      backdrop-blur-md
+                      transition-all duration-300
+
+                      focus:border-purple-400/60
+                      focus:bg-purple-500/[0.06]
+                      focus:ring-4
+                      focus:ring-purple-500/15
+                      focus:shadow-lg
+                      focus:shadow-purple-950/20
+                    "
+                    dir="ltr"
+                  />
+                </div>
+
+                {error && (
+                  <p
+                    className="
+                      mt-3 rounded-2xl
+                      border border-red-500/15
+                      bg-gradient-to-r
+                      from-red-500/10
+                      to-purple-500/[0.05]
+                      p-3
+                      text-center text-sm
+                      text-red-300
+                    "
+                  >
+                    ⚠️ {error}
+                  </p>
+                )}
+
+                <button
+                  type="submit"
+                  className="
+                    group relative mt-5 w-full
+                    overflow-hidden
+                    rounded-2xl
+                    bg-gradient-to-r
+                    from-purple-600
+                    via-violet-600
+                    to-fuchsia-600
+                    py-4
+                    font-bold
+                    text-white
+                    shadow-lg
+                    shadow-purple-600/30
+                    transition-all duration-300
+
+                    hover:-translate-y-0.5
+                    hover:shadow-xl
+                    hover:shadow-purple-500/40
+                    active:scale-95
+                  "
+                >
+                  <span
+                    className="
+                      absolute inset-y-0 -left-full
+                      w-1/2
+                      skew-x-[-20deg]
+                      bg-gradient-to-r
+                      from-transparent
+                      via-white/20
+                      to-transparent
+                      transition-all duration-700
+                      group-hover:left-[130%]
+                    "
+                  />
+
+                  <span className="relative">
+                    دریافت کد تایید
+                  </span>
+                </button>
+              </form>
+            )}
+
+            {step === 2 && (
+              <form onSubmit={handleCodeSubmit}>
+                <div
+                  className="
+                    mb-5 rounded-2xl
+                    border border-purple-500/15
+                    bg-gradient-to-r
+                    from-purple-500/[0.08]
+                    to-fuchsia-500/[0.05]
+                    p-4 text-center
+                  "
+                >
+                  <p className="text-sm text-slate-400">
+                    کد تایید برای شماره
+                  </p>
+
+                  <p
+                    className="
+                      mt-2 font-bold
+                      text-purple-200
+                    "
+                    dir="ltr"
+                  >
+                    {phone}
+                  </p>
+                </div>
+
+                <label className="mb-2 block text-sm font-bold text-purple-100">
+                  کد تایید
+                </label>
+
+                <input
+                  type="text"
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
+                  placeholder="- - - - - -"
+                  maxLength={6}
+                  className="
+                    w-full rounded-2xl
+                    border border-purple-500/15
+                    bg-white/[0.04]
+                    px-4 py-4
+                    text-center text-xl
+                    tracking-[0.5em]
+                    text-white
+                    placeholder:text-slate-600
+                    outline-none
+                    backdrop-blur-md
+                    transition-all duration-300
+
+                    focus:border-fuchsia-400/60
+                    focus:bg-purple-500/[0.06]
+                    focus:ring-4
+                    focus:ring-purple-500/15
+                    focus:shadow-lg
+                    focus:shadow-purple-950/20
+                  "
+                  dir="ltr"
+                />
+
+                {error && (
+                  <p
+                    className="
+                      mt-3 rounded-2xl
+                      border border-red-500/15
+                      bg-gradient-to-r
+                      from-red-500/10
+                      to-purple-500/[0.05]
+                      p-3
+                      text-center text-sm
+                      text-red-300
+                    "
+                  >
+                    ⚠️ {error}
+                  </p>
+                )}
+
+                <button
+                  type="submit"
+                  className="
+                    group relative mt-5 w-full
+                    overflow-hidden
+                    rounded-2xl
+                    bg-gradient-to-r
+                    from-purple-600
+                    via-violet-600
+                    to-fuchsia-600
+                    py-4
+                    font-bold
+                    text-white
+                    shadow-lg
+                    shadow-purple-600/30
+                    transition-all duration-300
+
+                    hover:-translate-y-0.5
+                    hover:shadow-xl
+                    hover:shadow-purple-500/40
+                    active:scale-95
+                  "
+                >
+                  <span
+                    className="
+                      absolute inset-y-0 -left-full
+                      w-1/2
+                      skew-x-[-20deg]
+                      bg-gradient-to-r
+                      from-transparent
+                      via-white/20
+                      to-transparent
+                      transition-all duration-700
+                      group-hover:left-[130%]
+                    "
+                  />
+
+                  <span className="relative">
+                    ورود به نسخه دمو
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setStep(1);
+                    setCode("");
+                    setError("");
+                  }}
+                  className="
+                    mt-3 w-full
+                    rounded-2xl
+                    border border-transparent
+                    py-3
+                    text-sm
+                    text-slate-400
+                    transition-all duration-300
+                    hover:border-purple-500/10
+                    hover:bg-purple-500/[0.05]
+                    hover:text-purple-200
+                  "
+                >
+                  تغییر شماره موبایل
+                </button>
+              </form>
+            )}
+          </div>
+
+          {/* Bottom gradient */}
+          <div
+            className="
+              absolute bottom-0 left-1/2
+              h-[2px] w-1/3
+              -translate-x-1/2
+              rounded-full
+              bg-gradient-to-r
+              from-transparent
+              via-fuchsia-500
+              to-transparent
+            "
+          />
         </div>
       </div>
     </div>
@@ -167,4 +482,3 @@ function Demo() {
 }
 
 export default Demo;
-

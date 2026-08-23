@@ -13,187 +13,406 @@ function Login() {
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
 
-const handleLogin = async (e) => {
-  e.preventDefault();
+  const handleLogin = async (e) => {
+    e.preventDefault();
 
-  if (!phone || !code) {
-    setError("شماره همراه و رمز عبور را وارد کنید");
-    return;
-  }
+    if (!phone || !code) {
+      setError("شماره همراه و رمز عبور را وارد کنید");
+      return;
+    }
 
-  try {
-    const response = await loginUser({
-      phone,
-      password: code,
-    });
+    try {
+      const response = await loginUser({
+        phone,
+        password: code,
+      });
 
-    login(response.user);
+      login(response.user);
 
-    navigate("/dashboard");
-  } catch (error) {
-    setError(
-      error.response?.data?.message || "ورود ناموفق بود"
-    );
-  }
-};
+      navigate("/dashboard");
+    } catch (error) {
+      setError(
+        error.response?.data?.message || "ورود ناموفق بود"
+      );
+    }
+  };
 
   return (
     <div
       dir="rtl"
       className="
-        min-h-screen
-        bg-linear-to-br
-        from-slate-950
-        via-slate-900
-        to-blue-950
-        px-4
-        py-10
+        relative min-h-screen
+        overflow-hidden
+        bg-gradient-to-br
+        from-[#08040f]
+        via-[#160d2b]
+        to-[#0d0718]
+        px-4 py-10
         text-white
       "
     >
-      <div className="mx-auto flex min-h-[80vh] max-w-md items-center">
+      {/* Background glow */}
+      <div
+        className="
+          pointer-events-none absolute
+          -right-40 -top-40
+          h-96 w-96
+          rounded-full
+          bg-purple-600/20
+          blur-[120px]
+          animate-pulse
+        "
+      />
+
+      <div
+        className="
+          pointer-events-none absolute
+          -bottom-40 -left-40
+          h-96 w-96
+          rounded-full
+          bg-fuchsia-600/15
+          blur-[120px]
+          animate-pulse
+        "
+      />
+
+      {/* Center glow */}
+      <div
+        className="
+          pointer-events-none absolute
+          left-1/2 top-1/2
+          h-72 w-72
+          -translate-x-1/2
+          -translate-y-1/2
+          rounded-full
+          bg-violet-600/10
+          blur-[100px]
+        "
+      />
+
+      <div className="relative mx-auto flex min-h-[80vh] max-w-md items-center">
         <div
           className="
-            w-full
-            rounded-3xl
-            border
-            border-white/10
-            bg-white/5
+            group relative w-full
+            overflow-hidden
+            rounded-[2rem]
+            border border-purple-500/20
+            bg-gradient-to-br
+            from-[#160d2b]/95
+            via-[#1d1038]/90
+            to-[#0d0718]/95
             p-6
             shadow-2xl
-            backdrop-blur-xl
+            shadow-purple-950/40
+            backdrop-blur-2xl
             sm:p-10
           "
         >
-          <div className="mb-8 text-center">
-            <div
-              className="
-                mx-auto
-                mb-4
-                flex
-                h-16
-                w-16
-                items-center
-                justify-center
-                rounded-2xl
-                bg-blue-600/20
-                text-3xl
-              "
-            >
-              🔐
-            </div>
+          {/* Top gradient */}
+          <div
+            className="
+              absolute left-0 right-0 top-0
+              h-[2px]
+              bg-gradient-to-r
+              from-transparent
+              via-purple-500
+              to-fuchsia-500
+            "
+          />
 
-            <h1 className="text-3xl font-black sm:text-4xl">
-              ورود به حساب
-            </h1>
+          {/* Card glow */}
+          <div
+            className="
+              pointer-events-none absolute
+              -right-24 -top-24
+              h-48 w-48
+              rounded-full
+              bg-purple-600/10
+              blur-3xl
+              transition-all duration-700
+              group-hover:bg-purple-500/20
+            "
+          />
 
-            <p className="mt-3 text-sm text-slate-400">
-              شماره همراه و کد تایید را وارد کنید
-            </p>
-          </div>
+          <div
+            className="
+              pointer-events-none absolute
+              -bottom-24 -left-24
+              h-48 w-48
+              rounded-full
+              bg-fuchsia-600/10
+              blur-3xl
+            "
+          />
 
-          <form
-            onSubmit={handleLogin}
-            className="flex flex-col gap-4"
-          >
-            <input
-              type="tel"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="شماره همراه"
-              className="
-              text-center direction-ltr
-                w-full
-                rounded-2xl
-                border
-                border-white/10
-                bg-white/5
-                px-5
-                py-3.5
-                text-sm
-                text-white
-                placeholder:text-slate-400
-                outline-none
-                focus:border-blue-400
-                focus:ring-4
-                focus:ring-blue-500/20
-              "
-            />
-
-            <input
-              type="text"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              placeholder="رمز ورود"
-              className="
-              text-center direction-ltr
-                w-full
-                rounded-2xl
-                border
-                border-white/10
-                bg-white/5
-                px-5
-                py-3.5
-                text-sm
-                text-white
-                placeholder:text-slate-400
-                outline-none
-                focus:border-blue-400
-                focus:ring-4
-                focus:ring-blue-500/20
-              "
-            />
-
-            {error && (
-              <p
+          <div className="relative">
+            {/* Header */}
+            <div className="mb-8 text-center">
+              <div
                 className="
-                  rounded-xl
-                  border
-                  border-red-500/20
-                  bg-red-500/10
-                  px-4
-                  py-3
-                  text-sm
-                  text-red-400
+                  group/icon mx-auto mb-5
+                  flex h-20 w-20
+                  items-center justify-center
+                  rounded-3xl
+                  border border-purple-400/20
+                  bg-gradient-to-br
+                  from-purple-500/20
+                  via-violet-500/10
+                  to-fuchsia-500/10
+                  text-4xl
+                  shadow-xl
+                  shadow-purple-950/30
+                  transition-all duration-500
+                  hover:scale-110
+                  hover:-rotate-3
                 "
               >
-                {error}
+                <span className="transition-transform duration-500 group-hover/icon:scale-110">
+                  🔐
+                </span>
+              </div>
+
+              <h1
+                className="
+                  text-3xl font-black
+                  text-transparent
+                  bg-gradient-to-r
+                  from-purple-200
+                  via-fuchsia-300
+                  to-purple-300
+                  bg-clip-text
+                  sm:text-4xl
+                "
+              >
+                ورود به حساب
+              </h1>
+
+              <p className="mt-3 text-sm leading-6 text-slate-400">
+                شماره همراه و کد تایید را وارد کنید
               </p>
-            )}
 
-            <button
-              type="submit"
-              className="
-                mt-4
-                rounded-2xl
-                bg-gradient-to-r
-                from-blue-600
-                to-indigo-600
-                px-6
-                py-3.5
-                font-bold
-                text-white
-                shadow-lg
-                shadow-blue-600/30
-                transition
-                hover:scale-[1.02]
-                active:scale-95
-              "
+              <div
+                className="
+                  mx-auto mt-5
+                  h-1 w-16
+                  rounded-full
+                  bg-gradient-to-r
+                  from-purple-500
+                  to-fuchsia-500
+                "
+              />
+            </div>
+
+            {/* Login Form */}
+            <form
+              onSubmit={handleLogin}
+              className="flex flex-col gap-4"
             >
-              ورود
-            </button>
-          </form>
+              {/* Phone */}
+              <div>
+                <label className="mb-2 block text-sm font-bold text-purple-100">
+                  شماره همراه
+                </label>
 
-          <div className="mt-6 text-center text-sm text-slate-400">
-            حساب کاربری ندارید؟{" "}
+                <div className="relative">
+                  <span
+                    className="
+                      pointer-events-none absolute
+                      right-4 top-1/2
+                      -translate-y-1/2
+                      text-lg
+                    "
+                  >
+                    📱
+                  </span>
 
-            <Link
-              to="/register"
-              className="font-bold text-blue-400 hover:text-blue-300"
-            >
-              ثبت نام کنید
-            </Link>
+                  <input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="شماره همراه"
+                    className="
+                      w-full
+                      rounded-2xl
+                      border border-purple-500/15
+                      bg-white/[0.04]
+                      px-12 py-4
+                      text-center text-sm
+                      text-white
+                      placeholder:text-slate-500
+                      outline-none
+                      backdrop-blur-md
+                      transition-all duration-300
+
+                      focus:border-purple-400/60
+                      focus:bg-purple-500/[0.06]
+                      focus:ring-4
+                      focus:ring-purple-500/15
+                      focus:shadow-lg
+                      focus:shadow-purple-950/20
+                    "
+                    dir="ltr"
+                  />
+                </div>
+              </div>
+
+              {/* Password / Code */}
+              <div>
+                <label className="mb-2 block text-sm font-bold text-purple-100">
+                  رمز ورود
+                </label>
+
+                <div className="relative">
+                  <span
+                    className="
+                      pointer-events-none absolute
+                      right-4 top-1/2
+                      -translate-y-1/2
+                      text-lg
+                    "
+                  >
+                    🔑
+                  </span>
+
+                  <input
+                    type="text"
+                    value={code}
+                    onChange={(e) => setCode(e.target.value)}
+                    placeholder="رمز ورود"
+                    className="
+                      w-full
+                      rounded-2xl
+                      border border-purple-500/15
+                      bg-white/[0.04]
+                      px-12 py-4
+                      text-center text-sm
+                      text-white
+                      placeholder:text-slate-500
+                      outline-none
+                      backdrop-blur-md
+                      transition-all duration-300
+
+                      focus:border-fuchsia-400/60
+                      focus:bg-purple-500/[0.06]
+                      focus:ring-4
+                      focus:ring-purple-500/15
+                      focus:shadow-lg
+                      focus:shadow-purple-950/20
+                    "
+                    dir="ltr"
+                  />
+                </div>
+              </div>
+
+              {/* Error */}
+              {error && (
+                <div
+                  className="
+                    rounded-2xl
+                    border border-red-500/20
+                    bg-gradient-to-r
+                    from-red-500/10
+                    to-purple-500/[0.04]
+                    px-4 py-3
+                    text-center
+                    text-sm
+                    font-medium
+                    text-red-300
+                    shadow-lg
+                    shadow-red-950/10
+                  "
+                >
+                  <span className="mr-1">⚠️</span>
+                  {error}
+                </div>
+              )}
+
+              {/* Submit */}
+              <button
+                type="submit"
+                className="
+                  group/button relative
+                  mt-3
+                  overflow-hidden
+                  rounded-2xl
+                  bg-gradient-to-r
+                  from-purple-600
+                  via-violet-600
+                  to-fuchsia-600
+                  px-6 py-4
+                  font-bold
+                  text-white
+                  shadow-xl
+                  shadow-purple-600/30
+                  transition-all duration-300
+
+                  hover:-translate-y-0.5
+                  hover:shadow-2xl
+                  hover:shadow-purple-500/40
+                  active:scale-[0.98]
+                "
+              >
+                {/* Shine animation */}
+                <span
+                  className="
+                    absolute inset-y-0 -left-full
+                    w-1/2
+                    skew-x-[-20deg]
+                    bg-gradient-to-r
+                    from-transparent
+                    via-white/20
+                    to-transparent
+                    transition-all duration-700
+                    group-hover/button:left-[130%]
+                  "
+                />
+
+                <span className="relative flex items-center justify-center gap-2">
+                  <span>ورود</span>
+
+                  <span className="transition-transform duration-300 group-hover/button:-translate-x-1">
+                    ←
+                  </span>
+                </span>
+              </button>
+            </form>
+
+            {/* Register */}
+            <div className="mt-7 text-center text-sm text-slate-400">
+              حساب کاربری ندارید؟{" "}
+
+              <Link
+                to="/register"
+                className="
+                  font-bold
+                  text-transparent
+                  bg-gradient-to-r
+                  from-purple-300
+                  to-fuchsia-300
+                  bg-clip-text
+                  transition-all duration-300
+                  hover:from-purple-200
+                  hover:to-fuchsia-200
+                "
+              >
+                ثبت نام کنید
+              </Link>
+            </div>
           </div>
+
+          {/* Bottom gradient */}
+          <div
+            className="
+              absolute bottom-0 left-1/2
+              h-[2px] w-1/3
+              -translate-x-1/2
+              rounded-full
+              bg-gradient-to-r
+              from-transparent
+              via-fuchsia-500
+              to-transparent
+            "
+          />
         </div>
       </div>
     </div>
