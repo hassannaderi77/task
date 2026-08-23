@@ -1,16 +1,16 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "../../context/authContext";
+import { registerUser } from "../../api/services/authService";
 
 function Register() {
-  const { login } = useContext(AuthContext);
 
   const [loginInfo, setLoginInfo] = useState({
-    name: "",
-    family: "",
-    phone: "",
-    email: "",
-  });
+  name: "",
+  family: "",
+  phone: "",
+  email: "",
+  password: "",
+});
 
   const navigate = useNavigate();
 
@@ -23,16 +23,25 @@ function Register() {
     }));
   };
 
-  const clickHandler = (e) => {
+  const clickHandler = async (e) => {
     e.preventDefault();
 
     if (
-      loginInfo.name &&
-      loginInfo.family &&
-      loginInfo.phone &&
-      loginInfo.email
-    ) {
+  !loginInfo.name ||
+  !loginInfo.family ||
+  !loginInfo.phone ||
+  !loginInfo.email ||
+  !loginInfo.password
+) {
+      return;
+    }
+
+    try {
+      await registerUser(loginInfo);
+
       navigate("/login");
+    } catch (error) {
+      console.error("Register error:", error);
     }
   };
 
@@ -132,6 +141,15 @@ function Register() {
             className={inputClass}
           />
 
+          <input
+            type="password"
+            name="password"
+            value={loginInfo.password}
+            onChange={handleChange}
+            placeholder="رمز عبور"
+            className={inputClass}
+          />
+
           <button
             type="submit"
             className="
@@ -166,11 +184,11 @@ function Register() {
         </div>
 
         <Link
-  to="/login"
-  className="block rounded-2xl border border-white/10 bg-white/5 px-6 py-3.5 text-center font-semibold text-white transition hover:bg-white/10 active:scale-95"
->
-  ورود به حساب
-</Link>
+          to="/login"
+          className="block rounded-2xl border border-white/10 bg-white/5 px-6 py-3.5 text-center font-semibold text-white transition hover:bg-white/10 active:scale-95"
+        >
+          ورود به حساب
+        </Link>
       </div>
     </div>
   );

@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { AuthContext } from "../../context/authContext";
 
 function Navbar() {
-  const { isAuthenticated, logout } = useContext(AuthContext);
+  const { user, isAuthenticated, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -25,22 +25,24 @@ function Navbar() {
   ];
 
   const privateLinks = [
-    {
-      title: "خانه",
-      path: "/",
-      icon: "🏠",
-    },
-    {
-      title: "داشبورد",
-      path: "/dashboard",
-      icon: "📊",
-    },
-    {
-      title: "تنظیمات",
-      path: "/setting",
-      icon: "⚙️",
-    },
-  ];
+  {
+    title: "خانه",
+    path: "/",
+    icon: "🏠",
+  },
+
+  {
+    title: user?.role === "admin" ? "پنل مدیریت" : "داشبورد",
+    path: user?.role === "admin" ? "/admin" : "/dashboard",
+    icon: user?.role === "admin" ? "🛠️" : "📊",
+  },
+
+  {
+    title: "تنظیمات",
+    path: "/setting",
+    icon: "⚙️",
+  },
+];
 
   const links = isAuthenticated ? privateLinks : guestLinks;
 

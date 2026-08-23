@@ -69,6 +69,7 @@
 //   return response.data;
 // };
 
+import { translateToEnglish } from "./translationService";
 import avalaiClient from "../avalaiClient";
 export const editImage = async ({
   images,
@@ -110,7 +111,9 @@ Preserve the original subject, structure, proportions, and important details of 
 Apply only the requested modifications and keep the result visually natural and consistent with the original image.
 `;
 
-    formData.append("prompt", prompt);
+const translatedPrompt = await translateToEnglish(prompt);
+
+    formData.append("prompt", translatedPrompt);
     formData.append("size", "1024x1024");
     formData.append("n", "1");
 

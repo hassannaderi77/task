@@ -17,6 +17,8 @@ const Register = lazy(() => import("../pages/auth/Register"));
 const Demo = lazy(() => import("../pages/Demo"));
 const Dashboard = lazy(() => import("../pages/Dashboard"));
 const SettingPage = lazy(() => import("../pages/SettingPage"));
+const AdminPanel = lazy(() => import("../pages/AdminPanel"));
+
 
 function AppRoutes() {
   return (
@@ -45,6 +47,13 @@ function AppRoutes() {
             <Route path="/setting" element={<SettingPage />} />
           </Route>
         </Route>
+
+        <Route element={<RoleRoute allowedRoles={["admin"]} />}>
+  <Route element={<PrivateLayout />}>
+    <Route path="/admin" element={<AdminPanel />} />
+  </Route>
+</Route>
+
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>

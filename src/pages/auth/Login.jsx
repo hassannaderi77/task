@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/authContext";
+import { loginUser } from "../../api/services/authService";
 
 function Login() {
   const { login } = useContext(AuthContext);
@@ -12,31 +13,29 @@ function Login() {
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
 
-  const handleLogin = (e) => {
-    e.preventDefault();
+const handleLogin = async (e) => {
+  e.preventDefault();
 
-    if (!phone) {
-      setError("شماره همراه را وارد کنید");
-      return;
-    }
+  if (!phone || !code) {
+    setError("شماره همراه و رمز عبور را وارد کنید");
+    return;
+  }
 
-    if (code !== "123456") {
-      setError("کد تایید صحیح نمی‌باشد");
-      return;
-    }
-
-    const user = {
-      name: "Hassan",
-      family: "Naderi",
+  try {
+    const response = await loginUser({
       phone,
-      email: "hassan@example.com",
-      role: "user",
-    };
+      password: code,
+    });
 
-    login(user);
+    login(response.user);
 
-    navigate("/setting");
-  };
+    navigate("/dashboard");
+  } catch (error) {
+    setError(
+      error.response?.data?.message || "ورود ناموفق بود"
+    );
+  }
+};
 
   return (
     <div
@@ -125,8 +124,7 @@ function Login() {
               type="text"
               value={code}
               onChange={(e) => setCode(e.target.value)}
-              maxLength={6}
-              placeholder="کد تایید"
+              placeholder="رمز ورود"
               className="
               text-center direction-ltr
                 w-full
