@@ -547,7 +547,7 @@ function UsersManagement({
             >
               {userHistory.map((item) => {
                 const beforeUrl = `${API_URL}${item.beforeImage}`;
-                const afterUrl = item.afterImage;
+                const afterUrl = `${API_URL}${item.afterImage}`;
 
                 const editType = editTypeLabels[item.firstSelect] || {
                   title: item.firstSelect || "-",

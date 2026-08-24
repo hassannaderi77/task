@@ -413,7 +413,7 @@ function HistoryPage() {
                       </h3>
 
                       <a
-                        href={item.afterImage}
+                        href={`${API_URL}${item.afterImage}`}
                         download={`after-image-${index + 1}.png`}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -441,7 +441,7 @@ function HistoryPage() {
                     </div>
 
                     <img
-                      src={item.afterImage}
+                      src={`${API_URL}${item.afterImage}`}
                       alt="After"
                       className="
                         aspect-video
