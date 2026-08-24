@@ -1,10 +1,12 @@
 import React, { useContext, useRef, useState } from "react";
+import ImageEditor from "../components/ui/ImageEditor";
 
 import { AuthContext } from "../context/authContext";
 
 import { getApiErrorMessage } from "../api/errorHandler";
 
-import { FiDownload } from "react-icons/fi";
+import { FiDownload, FiEdit3 } from "react-icons/fi";
+import { HiSparkles } from "react-icons/hi2";
 
 import Numberone from "../components/filter/Numberone";
 import Numbertwo from "../components/filter/Numbertwo";
@@ -31,6 +33,7 @@ function SettingPage() {
   const [error, setError] = useState("");
   const [apiError, setApiError] = useState("");
   const [editedImages, setEditedImages] = useState([]);
+  const [editingImage, setEditingImage] = useState(null);
 
   const { user } = useContext(AuthContext);
 
@@ -39,12 +42,7 @@ function SettingPage() {
 
   const { mutateAsync: editImage, isPending } = useImageEdit();
 
-  const check =
-    firstSelect &&
-    secondSelect &&
-    device &&
-    request &&
-    brand;
+  const check = firstSelect && secondSelect && device && request && brand;
 
   const clickHnadler = async () => {
     if (
@@ -138,6 +136,13 @@ function SettingPage() {
     );
   };
 
+  const editSelectedImage = (index) => {
+    setEditingImage({
+      image: images[index],
+      index,
+    });
+  };
+
   return (
     <div
       dir="rtl"
@@ -178,7 +183,6 @@ function SettingPage() {
       />
 
       <div className="relative mx-auto max-w-5xl">
-
         {/* Header */}
 
         <div className="mb-10 text-center">
@@ -290,7 +294,6 @@ function SettingPage() {
           />
 
           <div className="relative">
-
             {/* Selects */}
 
             <Numberone
@@ -313,20 +316,11 @@ function SettingPage() {
                 lg:grid-cols-3
               "
             >
-              <Device
-                device={device}
-                setDevice={setDevice}
-              />
+              <Device device={device} setDevice={setDevice} />
 
-              <Request
-                request={request}
-                setRequest={setRequest}
-              />
+              <Request request={request} setRequest={setRequest} />
 
-              <Brand
-                brand={brand}
-                setBrand={setBrand}
-              />
+              <Brand brand={brand} setBrand={setBrand} />
             </div>
 
             {/* Description */}
@@ -438,6 +432,34 @@ function SettingPage() {
 
                       <button
                         type="button"
+                        onClick={() => editSelectedImage(index)}
+                        title="ویرایش تصویر"
+                        className="
+    absolute
+    bottom-2
+    left-2
+    flex
+    h-8 w-8
+    items-center
+    justify-center
+    rounded-xl
+    border border-white/20
+    bg-black/60
+    text-white
+    shadow-lg
+    backdrop-blur-md
+    transition-all
+    duration-300
+    hover:scale-110
+    hover:bg-purple-600
+    active:scale-95
+  "
+                      >
+                        <FiEdit3 className="h-4 w-4" />
+                      </button>
+
+                      <button
+                        type="button"
                         onClick={() => removeImage(index)}
                         className="
                           absolute
@@ -480,105 +502,123 @@ function SettingPage() {
               onClick={clickHnadler}
               disabled={isPending}
               className="
-                group relative
-                mt-8 flex w-full
-                items-center
-                justify-center
-                gap-3
-                overflow-hidden
-                rounded-2xl
-                bg-gradient-to-r
-                from-purple-600
-                via-violet-600
-                to-fuchsia-600
-                py-4
-                font-bold
-                text-white
-                shadow-xl
-                shadow-purple-600/30
-                transition-all duration-300
-                hover:-translate-y-0.5
-                hover:shadow-2xl
-                hover:shadow-purple-500/40
-                active:scale-[0.98]
-                disabled:cursor-not-allowed
-                disabled:opacity-90
-              "
+              cursor-pointer
+    group relative
+    mt-8 flex w-full
+    items-center
+    justify-center
+    gap-3
+    overflow-hidden
+    rounded-2xl
+    bg-gradient-to-r
+    from-purple-600
+    via-violet-600
+    to-fuchsia-600
+    py-4
+    font-bold
+    text-white
+    shadow-xl
+    shadow-purple-600/30
+    transition-all duration-300
+    hover:-translate-y-0.5
+    hover:shadow-2xl
+    hover:shadow-purple-500/40
+    active:scale-[0.98]
+    disabled:cursor-not-allowed
+    disabled:opacity-90
+  "
             >
+              {/* افکت نور هنگام hover */}
               <span
                 className="
-                  pointer-events-none absolute
-                  inset-y-0
-                  -left-full
-                  w-1/2
-                  skew-x-[-20deg]
-                  bg-gradient-to-r
-                  from-transparent
-                  via-white/20
-                  to-transparent
-                  transition-all duration-700
-                  group-hover:left-[130%]
-                "
+      pointer-events-none
+      absolute
+      inset-y-0
+      -left-full
+      w-1/2
+      skew-x-[-20deg]
+      bg-gradient-to-r
+      from-transparent
+      via-white/20
+      to-transparent
+      transition-all duration-700
+      group-hover:left-[130%]
+    "
               />
 
               {isPending ? (
                 <>
+                  {/* افکت نور متحرک هنگام پردازش */}
+                  <span
+                    className="
+          pointer-events-none
+          absolute
+          inset-y-0
+          -translate-x-full
+          w-1/2
+          skew-x-[-20deg]
+          bg-gradient-to-r
+          from-transparent
+          via-white/20
+          to-transparent
+          animate-[loadingShimmer_1.8s_infinite]
+        "
+                  />
+
+                  {/* Spinner */}
                   <div
                     className="
-                      relative flex
-                      h-6 w-6
-                      items-center
-                      justify-center
-                    "
+          relative flex
+          h-6 w-6
+          items-center
+          justify-center
+        "
                   >
                     <span
                       className="
-                        absolute
-                        h-6 w-6
-                        animate-ping
-                        rounded-full
-                        bg-white/20
-                      "
+            absolute
+            h-6 w-6
+            animate-ping
+            rounded-full
+            bg-white/20
+          "
                     />
 
                     <span
                       className="
-                        absolute
-                        h-4 w-4
-                        animate-spin
-                        rounded-full
-                        border-2
-                        border-white/30
-                        border-t-white
-                      "
+            absolute
+            h-4 w-4
+            animate-spin
+            rounded-full
+            border-2
+            border-white/30
+            border-t-white
+          "
                     />
 
                     <span
                       className="
-                        h-1.5 w-1.5
-                        rounded-full
-                        bg-white
-                      "
+            h-1.5 w-1.5
+            rounded-full
+            bg-white
+          "
                     />
                   </div>
 
-                  <span className="relative">
-                    لطفا صبر کنید
-                  </span>
+                  <span className="relative">لطفا صبر کنید</span>
                 </>
               ) : (
                 <>
-                  <span className="relative">
-                    ارسال درخواست
-                  </span>
+                  <span className="relative">ارسال درخواست</span>
 
                   <span
                     className="
-                      relative text-lg
-                      transition-transform
-                      duration-300
-                      group-hover:rotate-12
-                    "
+          relative
+          text-lg
+          transition-transform
+          duration-300
+          group-hover:rotate-12
+        "
                   >
                     ✦
                   </span>
@@ -629,35 +669,35 @@ function SettingPage() {
 
         {editedImages.length > 0 && (
           <div className="mt-10">
-
             <div className="mb-6 text-center">
               <div
                 className="
-                  mx-auto mb-4
-                  flex h-14 w-14
-                  items-center justify-center
-                  rounded-2xl
-                  bg-gradient-to-br
-                  from-purple-500/20
-                  to-fuchsia-500/10
-                  text-2xl
-                  shadow-lg
-                  shadow-purple-950/20
-                "
+      mx-auto mb-4
+      flex h-14 w-14
+      items-center justify-center
+      rounded-2xl
+      bg-gradient-to-br
+      from-purple-500/20
+      to-fuchsia-500/10
+      text-2xl
+      text-purple-300
+      shadow-lg
+      shadow-purple-950/20
+    "
               >
-                ✨
+                <HiSparkles />
               </div>
 
               <h2
                 className="
-                  text-2xl font-black
-                  text-transparent
-                  bg-gradient-to-r
-                  from-purple-200
-                  via-fuchsia-300
-                  to-purple-300
-                  bg-clip-text
-                "
+      text-2xl font-black
+      text-transparent
+      bg-gradient-to-r
+      from-purple-200
+      via-fuchsia-300
+      to-purple-300
+      bg-clip-text
+    "
               >
                 نتیجه ویرایش تصاویر
               </h2>
@@ -705,7 +745,6 @@ function SettingPage() {
                   </h3>
 
                   <div className="grid gap-6 md:grid-cols-2">
-
                     {/* Before */}
 
                     <div
@@ -814,6 +853,22 @@ function SettingPage() {
               ))}
             </div>
           </div>
+        )}
+
+        {editingImage && (
+          <ImageEditor
+            image={editingImage.image}
+            onClose={() => setEditingImage(null)}
+            onSave={(editedFile) => {
+              setImages((prevImages) =>
+                prevImages.map((image, index) =>
+                  index === editingImage.index ? editedFile : image,
+                ),
+              );
+
+              setEditingImage(null);
+            }}
+          />
         )}
       </div>
     </div>

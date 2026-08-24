@@ -1,5 +1,5 @@
+const API_URL = import.meta.env.VITE_API_URL.replace(/\/api\/?$/, "");
 import React, { useContext, useEffect, useState } from "react";
-
 import {
   FiDownload,
   FiClock,
@@ -344,7 +344,7 @@ function HistoryPage() {
                       </h3>
 
                       <a
-                        href={`http://localhost:5000${item.beforeImage}`}
+                        href={`${API_URL}${item.beforeImage}`}
                         download={`before-image-${index + 1}.png`}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -372,7 +372,7 @@ function HistoryPage() {
                     </div>
 
                     <img
-                      src={`http://localhost:5000${item.beforeImage}`}
+                      src={`${API_URL}${item.beforeImage}`}
                       alt="Before"
                       className="
                         aspect-video

@@ -228,7 +228,7 @@ function AdminPanel() {
                       bg-clip-text
                     "
                   >
-                    پنل مدیریت
+                     Hi Hasan
                   </h1>
 
                   <div

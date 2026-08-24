@@ -2,12 +2,7 @@ import React from "react";
 
 import Loading from "../ui/Loading";
 
-import {
-  FiDownload,
-  FiImage,
-  FiUsers,
-  FiX,
-} from "react-icons/fi";
+import { FiDownload, FiImage, FiUsers, FiX } from "react-icons/fi";
 
 function UsersManagement({
   users,
@@ -21,6 +16,76 @@ function UsersManagement({
   historyError,
   onCloseHistory,
 }) {
+  const API_URL = import.meta.env.VITE_API_URL.replace(/\/api\/?$/, "");
+
+  const editTypeLabels = {
+    background_change: {
+      title: "پس‌زمینه",
+      description: "تغییر، حذف یا اصلاح پس‌زمینه",
+    },
+    background_remove: {
+      title: "پس‌زمینه",
+      description: "تغییر، حذف یا اصلاح پس‌زمینه",
+    },
+    quality: {
+      title: "کیفیت تصویر",
+      description: "افزایش کیفیت و وضوح تصویر",
+    },
+    appearance: {
+      title: "ظاهر تصویر",
+      description: "تغییر رنگ، نور یا ظاهر کلی تصویر",
+    },
+    object: {
+      title: "جزئیات تصویر",
+      description: "تغییر یا حذف عناصر موجود در تصویر",
+    },
+  };
+
+  const editIntensityLabels = {
+    minimal: {
+      title: "حداقلی",
+    },
+    moderate: {
+      title: "متوسط",
+    },
+    strong: {
+      title: "زیاد",
+    },
+    creative: {
+      title: "خلاقانه",
+    },
+  };
+
+  const editStyleLabels = {
+    natural: {
+      title: "طبیعی",
+      description: "تغییرات طبیعی و حفظ ظاهر اصلی تصویر",
+    },
+    professional: {
+      title: "حرفه‌ای",
+      description: "بهبود کیفیت و ظاهر تصویر با نتیجه حرفه‌ای",
+    },
+    creative: {
+      title: "خلاقانه",
+      description: "اعمال تغییرات خلاقانه بر اساس درخواست کاربر",
+    },
+  };
+
+  const imageTypeLabels = {
+    product: {
+      title: "محصول",
+      description: "تصویر یک محصول یا کالا",
+    },
+    person: {
+      title: "شخص",
+      description: "تصویر شخص یا پرتره",
+    },
+    object: {
+      title: "شیء",
+      description: "تصویر یک شیء یا وسیله",
+    },
+  };
+
   const downloadImage = async (imageUrl, fileName) => {
     try {
       const response = await fetch(imageUrl);
@@ -30,6 +95,7 @@ function UsersManagement({
       }
 
       const blob = await response.blob();
+
       const blobUrl = window.URL.createObjectURL(blob);
 
       const link = document.createElement("a");
@@ -38,7 +104,9 @@ function UsersManagement({
       link.download = fileName;
 
       document.body.appendChild(link);
+
       link.click();
+
       document.body.removeChild(link);
 
       window.URL.revokeObjectURL(blobUrl);
@@ -303,9 +371,7 @@ function UsersManagement({
                   <div>
                     <span className="text-slate-600">شماره</span>
 
-                    <p className="mt-1 text-slate-400">
-                      {user.phone || "-"}
-                    </p>
+                    <p className="mt-1 text-slate-400">{user.phone || "-"}</p>
                   </div>
 
                   <div>
@@ -403,8 +469,7 @@ function UsersManagement({
                   </h2>
 
                   <p className="mt-1 text-sm text-slate-400">
-                    {selectedUser.name || "-"}{" "}
-                    {selectedUser.family || ""}
+                    {selectedUser.name || "-"} {selectedUser.family || ""}
                   </p>
                 </div>
               </div>
@@ -455,43 +520,60 @@ function UsersManagement({
           )}
 
           {/* Empty History */}
-          {!isLoadingHistory &&
-            !historyError &&
-            userHistory.length === 0 && (
-              <div className="py-10 text-center">
-                <div className="flex justify-center text-fuchsia-400">
-                  <FiImage size={42} />
-                </div>
-
-                <p className="mt-4 font-bold text-purple-100">
-                  این کاربر هنوز تصویری ویرایش نکرده است
-                </p>
-
-                <p className="mt-2 text-sm text-slate-500">
-                  تاریخچه ویرایش‌های کاربر در این بخش نمایش داده می‌شود.
-                </p>
+          {!isLoadingHistory && !historyError && userHistory.length === 0 && (
+            <div className="py-10 text-center">
+              <div className="flex justify-center text-fuchsia-400">
+                <FiImage size={42} />
               </div>
-            )}
+
+              <p className="mt-4 font-bold text-purple-100">
+                این کاربر هنوز تصویری ویرایش نکرده است
+              </p>
+
+              <p className="mt-2 text-sm text-slate-500">
+                تاریخچه ویرایش‌های کاربر در این بخش نمایش داده می‌شود.
+              </p>
+            </div>
+          )}
 
           {/* History Items */}
-          {!isLoadingHistory &&
-            !historyError &&
-            userHistory.length > 0 && (
-              <div
-                className="
+          {!isLoadingHistory && !historyError && userHistory.length > 0 && (
+            <div
+              className="
                   grid gap-5
                   sm:grid-cols-2
                   lg:grid-cols-3
                 "
-              >
-                {userHistory.map((item) => {
-                  const beforeUrl = `http://localhost:5000${item.beforeImage}`;
-                  const afterUrl = item.afterImage;
+            >
+              {userHistory.map((item) => {
+                const beforeUrl = `${API_URL}${item.beforeImage}`;
+                const afterUrl = item.afterImage;
 
-                  return (
-                    <div
-                      key={item._id}
-                      className="
+                const editType = editTypeLabels[item.firstSelect] || {
+                  title: item.firstSelect || "-",
+                  description: "",
+                };
+
+                const editIntensity = editIntensityLabels[
+                  item.secondSelect
+                ] || {
+                  title: item.secondSelect || "-",
+                };
+
+                const editStyle = editStyleLabels[item.request] || {
+                  title: item.request || "-",
+                  description: "",
+                };
+
+                const imageType = imageTypeLabels[item.brand] || {
+                  title: item.brand || "-",
+                  description: "",
+                };
+
+                return (
+                  <div
+                    key={item._id}
+                    className="
                         overflow-hidden
                         rounded-2xl
                         border border-purple-500/15
@@ -499,38 +581,35 @@ function UsersManagement({
                         shadow-lg
                         shadow-purple-950/10
                       "
-                    >
-                      {/* Images */}
-                      <div className="grid grid-cols-2 gap-2 p-2">
-                        {/* Before */}
-                        <div>
-                          <p className="mb-2 text-center text-[11px] text-slate-500">
-                            اولیه
-                          </p>
+                  >
+                    {/* Images */}
+                    <div className="grid grid-cols-2 gap-2 p-2">
+                      {/* Before */}
+                      <div>
+                        <p className="mb-2 text-center text-[11px] text-slate-500">
+                          اولیه
+                        </p>
 
-                          <div className="group relative overflow-hidden rounded-xl">
-                            <img
-                              src={beforeUrl}
-                              alt="Before"
-                              className="
+                        <div className="group relative overflow-hidden rounded-xl">
+                          <img
+                            src={beforeUrl}
+                            alt="Before"
+                            className="
                                 aspect-square
                                 w-full
                                 rounded-xl
                                 object-cover
                               "
-                            />
+                          />
 
-                            {/* Download Button */}
-                            <button
-                              type="button"
-                              onClick={() =>
-                                downloadImage(
-                                  beforeUrl,
-                                  `before-${item._id}.jpg`
-                                )
-                              }
-                              title="دانلود تصویر اولیه"
-                              className="
+                          {/* Download Button */}
+                          <button
+                            type="button"
+                            onClick={() =>
+                              downloadImage(beforeUrl, `before-${item._id}.jpg`)
+                            }
+                            title="دانلود تصویر اولیه"
+                            className="
                                 absolute
                                 bottom-2
                                 right-2
@@ -551,41 +630,38 @@ function UsersManagement({
                                 hover:bg-purple-600
                                 active:scale-95
                               "
-                            >
-                              <FiDownload size={17} />
-                            </button>
-                          </div>
+                          >
+                            <FiDownload size={17} />
+                          </button>
                         </div>
+                      </div>
 
-                        {/* After */}
-                        <div>
-                          <p className="mb-2 text-center text-[11px] text-fuchsia-300">
-                            نتیجه
-                          </p>
+                      {/* After */}
+                      <div>
+                        <p className="mb-2 text-center text-[11px] text-fuchsia-300">
+                          نتیجه
+                        </p>
 
-                          <div className="group relative overflow-hidden rounded-xl">
-                            <img
-                              src={afterUrl}
-                              alt="After"
-                              className="
+                        <div className="group relative overflow-hidden rounded-xl">
+                          <img
+                            src={afterUrl}
+                            alt="After"
+                            className="
                                 aspect-square
                                 w-full
                                 rounded-xl
                                 object-cover
                               "
-                            />
+                          />
 
-                            {/* Download Button */}
-                            <button
-                              type="button"
-                              onClick={() =>
-                                downloadImage(
-                                  afterUrl,
-                                  `after-${item._id}.jpg`
-                                )
-                              }
-                              title="دانلود تصویر نتیجه"
-                              className="
+                          {/* Download Button */}
+                          <button
+                            type="button"
+                            onClick={() =>
+                              downloadImage(afterUrl, `after-${item._id}.jpg`)
+                            }
+                            title="دانلود تصویر نتیجه"
+                            className="
                                 absolute
                                 bottom-2
                                 right-2
@@ -606,32 +682,32 @@ function UsersManagement({
                                 hover:bg-fuchsia-600
                                 active:scale-95
                               "
-                            >
-                              <FiDownload size={17} />
-                            </button>
-                          </div>
+                          >
+                            <FiDownload size={17} />
+                          </button>
                         </div>
                       </div>
+                    </div>
 
-                      {/* History Information */}
-                      <div className="px-4 pb-4">
-                        <div
-                          className="
+                    {/* History Information */}
+                    <div className="px-4 pb-4">
+                      <div
+                        className="
                             flex items-center
                             justify-between
                             gap-2
                           "
-                        >
-                          <span className="text-xs text-slate-500">
-                            {item.createdAt
-                              ? new Date(
-                                  item.createdAt
-                                ).toLocaleDateString("fa-IR")
-                              : "-"}
-                          </span>
+                      >
+                        <span className="text-xs text-slate-500">
+                          {item.createdAt
+                            ? new Date(item.createdAt).toLocaleDateString(
+                                "fa-IR",
+                              )
+                            : "-"}
+                        </span>
 
-                          <span
-                            className="
+                        <span
+                          className="
                               rounded-lg
                               border border-purple-500/20
                               bg-purple-500/10
@@ -639,86 +715,186 @@ function UsersManagement({
                               text-[11px]
                               text-purple-200
                             "
-                          >
-                            ویرایش
-                          </span>
-                        </div>
+                        >
+                          ویرایش
+                        </span>
+                      </div>
 
-                        <div className="mt-4 space-y-2">
-                          <div className="flex justify-between gap-3 text-xs">
-                            <span className="text-slate-500">
-                              نوع ویرایش
+                      <div className="mt-4 space-y-3">
+                        {/* هدف اصلی ویرایش */}
+                        <div
+                          className="
+      rounded-xl
+      border border-purple-500/10
+      bg-white/[0.02]
+      px-3 py-2.5
+    "
+                        >
+                          <div className="flex items-center justify-between gap-3">
+                            <span className="text-xs font-medium text-slate-500">
+                              هدف اصلی ویرایش
                             </span>
 
-                            <span className="text-purple-100">
-                              {item.firstSelect || "-"}
+                            <span
+                              className="
+          rounded-lg
+          border border-purple-400/20
+          bg-purple-500/10
+          px-2.5 py-1
+          text-xs font-bold
+          text-purple-200
+        "
+                            >
+                              {item.firstSelect === "background_change"
+                                ? "پس‌زمینه"
+                                : item.firstSelect === "quality"
+                                  ? "کیفیت تصویر"
+                                  : item.firstSelect === "appearance"
+                                    ? "ظاهر تصویر"
+                                    : item.firstSelect === "details"
+                                      ? "جزئیات تصویر"
+                                      : item.firstSelect || "-"}
                             </span>
                           </div>
+                        </div>
 
-                          <div className="flex justify-between gap-3 text-xs">
-                            <span className="text-slate-500">
+                        {/* میزان تغییر */}
+                        <div
+                          className="
+      rounded-xl
+      border border-fuchsia-500/10
+      bg-white/[0.02]
+      px-3 py-2.5
+    "
+                        >
+                          <div className="flex items-center justify-between gap-3">
+                            <span className="text-xs font-medium text-slate-500">
                               میزان تغییر
                             </span>
 
-                            <span className="text-purple-100">
-                              {item.secondSelect || "-"}
-                            </span>
-                          </div>
-
-                          <div className="flex justify-between gap-3 text-xs">
-                            <span className="text-slate-500">
-                              دستگاه
-                            </span>
-
-                            <span className="text-purple-100">
-                              {item.device || "-"}
-                            </span>
-                          </div>
-
-                          <div className="flex justify-between gap-3 text-xs">
-                            <span className="text-slate-500">
-                              برند
-                            </span>
-
-                            <span className="text-purple-100">
-                              {item.brand || "-"}
+                            <span
+                              className="
+          rounded-lg
+          border border-fuchsia-400/20
+          bg-fuchsia-500/10
+          px-2.5 py-1
+          text-xs font-bold
+          text-fuchsia-200
+        "
+                            >
+                              {item.secondSelect === "minimal"
+                                ? "حداقلی"
+                                : item.secondSelect === "strong"
+                                  ? "قوی"
+                                  : item.secondSelect === "creative"
+                                    ? "خلاقانه"
+                                    : item.secondSelect || "-"}
                             </span>
                           </div>
                         </div>
 
-                        {item.description && (
-                          <div
-                            className="
+                        {/* سبک ویرایش */}
+                        <div
+                          className="
+      rounded-xl
+      border border-violet-500/10
+      bg-white/[0.02]
+      px-3 py-2.5
+    "
+                        >
+                          <div className="flex items-center justify-between gap-3">
+                            <span className="text-xs font-medium text-slate-500">
+                              سبک ویرایش
+                            </span>
+
+                            <span
+                              className="
+          rounded-lg
+          border border-violet-400/20
+          bg-violet-500/10
+          px-2.5 py-1
+          text-xs font-bold
+          text-violet-200
+        "
+                            >
+                              {item.request === "natural"
+                                ? "طبیعی"
+                                : item.request === "professional"
+                                  ? "حرفه‌ای"
+                                  : item.request === "creative"
+                                    ? "خلاقانه"
+                                    : item.request || "-"}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* نوع تصویر */}
+                        <div
+                          className="
+      rounded-xl
+      border border-purple-500/10
+      bg-white/[0.02]
+      px-3 py-2.5
+    "
+                        >
+                          <div className="flex items-center justify-between gap-3">
+                            <span className="text-xs font-medium text-slate-500">
+                              نوع تصویر
+                            </span>
+
+                            <span
+                              className="
+          rounded-lg
+          border border-purple-400/20
+          bg-purple-500/10
+          px-2.5 py-1
+          text-xs font-bold
+          text-purple-200
+        "
+                            >
+                              {item.brand === "object"
+                                ? "شیء"
+                                : item.brand === "product"
+                                  ? "محصول"
+                                  : item.brand === "person"
+                                    ? "شخص"
+                                    : item.brand || "-"}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {item.description && (
+                        <div
+                          className="
                               mt-4
                               rounded-xl
                               border border-purple-500/10
-                              bg-purple-500/[0.03]
+                              bg-purple-500آ/[0.03]
                               p-3
                             "
-                          >
-                            <p className="text-[11px] text-slate-500">
-                              توضیحات
-                            </p>
+                        >
+                          <p className="text-[11px] text-slate-500">توضیحات</p>
 
-                            <p
-                              className="
+                          <p
+                            className="
                                 mt-1
                                 break-words
                                 text-xs
                                 leading-6
                                 text-slate-300
                               "
-                            >
-                              {item.description}
-                            </p>
-                          </div>
-                        )}
-                      </div>
+                          >
+                            {item.description}
+                          </p>
+                        </div>
+                      )}
                     </div>
-                  );
-                })}
-              </div>
-            )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
     </div>
