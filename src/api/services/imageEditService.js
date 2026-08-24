@@ -112,12 +112,36 @@ USER INSTRUCTION applied.
     |--------------------------------------------------------------------------
     */
 
-    const response = await avalaiClient.post("/images/edits", formData);
+    try {
+  const response = await avalaiClient.post(
+    "/images/edits",
+    formData
+  );
 
-    return {
-      before: image,
-      after: response.data?.data?.[0]?.url,
-    };
+  console.log("AVALAI SUCCESS:", response.data);
+
+  return {
+    before: image,
+    after: response.data?.data?.[0]?.url,
+  };
+} catch (error) {
+  console.error(
+    "AVALAI ERROR STATUS:",
+    error.response?.status
+  );
+
+  console.error(
+    "AVALAI ERROR DATA:",
+    error.response?.data
+  );
+
+  console.error(
+    "AVALAI ERROR HEADERS:",
+    error.response?.headers
+  );
+
+  throw error;
+}
   };
 
   /*

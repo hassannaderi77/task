@@ -22,6 +22,9 @@ import { useImageEdit } from "../hooks/useImageEdit";
 
 import { createHistory } from "../api/services/historyService";
 
+
+const API_URL = import.meta.env.VITE_API_URL.replace("/api", "");
+
 function SettingPage() {
   const [firstSelect, setFirstSelect] = useState("");
   const [secondSelect, setSecondSelect] = useState("");
@@ -93,37 +96,48 @@ function SettingPage() {
 
       // ذخیره تاریخچه هر تصویر
       try {
-        await Promise.all(
-          result.map((item, index) => {
-            console.log("========== HISTORY DEBUG ==========");
-            console.log("Image index:", index);
-            console.log("History item:", item);
-            console.log("Before:", item.before);
-            console.log("Before type:", typeof item.before);
-            console.log("Before is File:", item.before instanceof File);
-            console.log("After:", item.after);
-            console.log("After type:", typeof item.after);
-            console.log("User ID:", user.id);
-            console.log("===================================");
+  const historyResults = await Promise.all(
+    result.map(async (item, index) => {
+      console.log("========== HISTORY DEBUG ==========");
+      console.log("Image index:", index);
+      console.log("Before:", item.before);
+      console.log("After from Avalai:", item.after);
+      console.log("User ID:", user.id);
+      console.log("===================================");
 
-            return createHistory({
-              userId: user.id,
-              beforeImage: item.before,
-              afterImage: item.after,
-              firstSelect,
-              secondSelect,
-              device,
-              request,
-              brand,
-              description,
-            });
-          }),
-        );
+      const savedHistory = await createHistory({
+        userId: user.id,
+        beforeImage: item.before,
+        afterImage: item.after,
+        firstSelect,
+        secondSelect,
+        device,
+        request,
+        brand,
+        description,
+      });
 
-        console.log("Image history saved successfully");
-      } catch (historyError) {
-        console.error("History save error:", historyError);
-      }
+      console.log("SAVED HISTORY:", savedHistory);
+
+      return {
+        ...item,
+
+        // URL داخلی Backend
+        after: savedHistory.afterImage,
+      };
+    }),
+  );
+
+  console.log("HISTORY RESULTS:", historyResults);
+
+  // به جای URL موقت Avalai،
+  // URL ذخیره‌شده در Backend را نمایش بده
+  setEditedImages(historyResults);
+
+  console.log("Image history saved successfully");
+} catch (historyError) {
+  console.error("History save error:", historyError);
+}
     } catch (error) {
       console.error("Image edit error:", error);
       setApiError(getApiErrorMessage(error));
@@ -807,7 +821,7 @@ function SettingPage() {
                         </h4>
 
                         <a
-                          href={item.after}
+                          href={`${API_URL}${item.after}`}
                           download={`edited-image-${index + 1}.png`}
                           target="_blank"
                           rel="noopener noreferrer"
@@ -836,7 +850,7 @@ function SettingPage() {
                       </div>
 
                       <img
-                        src={item.after}
+                         src={`${API_URL}${item.after}`}
                         alt={`After ${index + 1}`}
                         className="
                           w-full

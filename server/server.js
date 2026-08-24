@@ -8,6 +8,7 @@ import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import ImageHistory from "./models/ImageHistory.js";
+import axios from "axios";
 
 dotenv.config();
 
@@ -121,16 +122,59 @@ app.post(
 
       if (!userId || !req.file || !afterImage) {
         return res.status(400).json({
-          message: "اطلاعات تاریخچه ناقص است",
+          message: "Ø§Ø·Ù„Ø§Ø¹Ø§Øª ØªØ§Ø±ÛŒØ®Ú†Ù‡ Ù†Ø§Ù‚Øµ Ø§Ø³Øª",
         });
       }
 
+      // =========================
+      // Save before image
+      // =========================
+
       const beforeImageUrl = `/uploads/before/${req.file.filename}`;
+
+      // =========================
+      // Download after image
+      // =========================
+
+      console.log("Downloading after image...");
+
+      const afterImageResponse = await axios.get(afterImage, {
+        responseType: "arraybuffer",
+        timeout: 120000,
+      });
+
+      const afterExtension =
+        path.extname(new URL(afterImage).pathname) || ".png";
+
+      const afterFilename = `${Date.now()}-${Math.round(
+        Math.random() * 1e9
+      )}${afterExtension}`;
+
+      const afterImagePath = path.join(
+        afterUploadDir,
+        afterFilename
+      );
+
+      fs.writeFileSync(
+        afterImagePath,
+        afterImageResponse.data
+      );
+
+      const afterImageUrl = `/uploads/after/${afterFilename}`;
+
+      console.log(
+        "After image saved:",
+        afterImageUrl
+      );
+
+      // =========================
+      // Save history
+      // =========================
 
       const history = await ImageHistory.create({
         userId,
         beforeImage: beforeImageUrl,
-        afterImage,
+        afterImage: afterImageUrl,
         firstSelect,
         secondSelect,
         device,
@@ -139,12 +183,18 @@ app.post(
         description,
       });
 
-      res.status(201).json(history);
+      res.status(201).json({
+        ...history.toObject(),
+        afterImage: afterImageUrl,
+      });
     } catch (error) {
-      console.error("Create history error:", error);
+      console.error(
+        "Create history error:",
+        error
+      );
 
       res.status(500).json({
-        message: "خطا در ذخیره تاریخچه",
+        message: "Ø®Ø·Ø§ Ø¯Ø± Ø°Ø®ÛŒØ±Ù‡ ØªØ§Ø±ÛŒØ®Ú†Ù‡",
       });
     }
   }
@@ -226,7 +276,7 @@ app.get("/api/history/stats/today", async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: "خطا در دریافت آمار درخواست‌ها",
+      message: "Ø®Ø·Ø§ Ø¯Ø± Ø¯Ø±ÛŒØ§ÙØª Ø¢Ù…Ø§Ø± Ø¯Ø±Ø®ÙˆØ§Ø³Øªâ€ŒÙ‡Ø§",
     });
   }
 });
@@ -253,7 +303,7 @@ app.get("/api/history/:userId", async (req, res) => {
     );
 
     res.status(500).json({
-      message: "خطا در دریافت تاریخچه",
+      message: "Ø®Ø·Ø§ Ø¯Ø± Ø¯Ø±ÛŒØ§ÙØª ØªØ§Ø±ÛŒØ®Ú†Ù‡",
     });
   }
 });
@@ -277,7 +327,7 @@ app.post("/api/auth/login", async (req, res) => {
       return res.status(400).json({
         success: false,
         message:
-          "شماره همراه و رمز عبور الزامی هستند",
+          "Ø´Ù…Ø§Ø±Ù‡ Ù‡Ù…Ø±Ø§Ù‡ Ùˆ Ø±Ù…Ø² Ø¹Ø¨ÙˆØ± Ø§Ù„Ø²Ø§Ù…ÛŒ Ù‡Ø³ØªÙ†Ø¯",
       });
     }
 
@@ -289,14 +339,14 @@ app.post("/api/auth/login", async (req, res) => {
       return res.status(401).json({
         success: false,
         message:
-          "کاربری با این شماره همراه پیدا نشد",
+          "Ú©Ø§Ø±Ø¨Ø±ÛŒ Ø¨Ø§ Ø§ÛŒÙ† Ø´Ù…Ø§Ø±Ù‡ Ù‡Ù…Ø±Ø§Ù‡ Ù¾ÛŒØ¯Ø§ Ù†Ø´Ø¯",
       });
     }
 
     if (user.password !== password) {
       return res.status(401).json({
         success: false,
-        message: "رمز عبور اشتباه است",
+        message: "Ø±Ù…Ø² Ø¹Ø¨ÙˆØ± Ø§Ø´ØªØ¨Ø§Ù‡ Ø§Ø³Øª",
       });
     }
 
@@ -320,7 +370,7 @@ app.post("/api/auth/login", async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: "خطا در ورود",
+      message: "Ø®Ø·Ø§ Ø¯Ø± ÙˆØ±ÙˆØ¯",
     });
   }
 });
@@ -351,7 +401,7 @@ app.post(
         return res.status(400).json({
           success: false,
           message:
-            "همه فیلدها الزامی هستند",
+            "Ù‡Ù…Ù‡ ÙÛŒÙ„Ø¯Ù‡Ø§ Ø§Ù„Ø²Ø§Ù…ÛŒ Ù‡Ø³ØªÙ†Ø¯",
         });
       }
 
@@ -367,7 +417,7 @@ app.post(
         return res.status(409).json({
           success: false,
           message:
-            "کاربر با این ایمیل یا شماره همراه قبلاً ثبت شده است",
+            "Ú©Ø§Ø±Ø¨Ø± Ø¨Ø§ Ø§ÛŒÙ† Ø§ÛŒÙ…ÛŒÙ„ ÛŒØ§ Ø´Ù…Ø§Ø±Ù‡ Ù‡Ù…Ø±Ø§Ù‡ Ù‚Ø¨Ù„Ø§Ù‹ Ø«Ø¨Øª Ø´Ø¯Ù‡ Ø§Ø³Øª",
         });
       }
 
@@ -401,7 +451,7 @@ app.post(
 
       res.status(500).json({
         success: false,
-        message: "خطا در ثبت نام",
+        message: "Ø®Ø·Ø§ Ø¯Ø± Ø«Ø¨Øª Ù†Ø§Ù…",
       });
     }
   }
@@ -476,7 +526,7 @@ app.get("/api/users", async (req, res) => {
     res.status(500).json({
       success: false,
       message:
-        "خطا در دریافت کاربران",
+        "Ø®Ø·Ø§ Ø¯Ø± Ø¯Ø±ÛŒØ§ÙØª Ú©Ø§Ø±Ø¨Ø±Ø§Ù†",
     });
   }
 });
