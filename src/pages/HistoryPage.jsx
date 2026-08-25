@@ -13,6 +13,39 @@ import ErrorMessage from "../components/ui/ErrorMessage";
 
 import { getHistory } from "../api/services/historyService";
 
+const firstSelectLabels = {
+  background_remove: "حذف پس‌زمینه",
+  background_change: "تغییر پس‌زمینه",
+  object_remove: "حذف یک شیء از تصویر",
+  object_add: "اضافه کردن شیء به تصویر",
+};
+
+const secondSelectLabels = {
+  minimal: "تغییر جزئی",
+  moderate: "تغییر متوسط",
+  strong: "تغییر قابل توجه",
+  creative: "ویرایش خلاقانه",
+};
+
+const deviceLabels = {
+  background: "پس‌زمینه",
+  quality: "کیفیت تصویر",
+  appearance: "ظاهر تصویر",
+  object: "جزئیات تصویر",
+};
+
+const requestLabels = {
+  natural: "طبیعی",
+  professional: "حرفه‌ای",
+  creative: "خلاقانه",
+};
+
+const brandLabels = {
+  product: "محصول",
+  person: "شخص",
+  object: "شیء",
+};
+
 function HistoryPage() {
   const { user } = useContext(AuthContext);
 
@@ -465,29 +498,29 @@ function HistoryPage() {
                   "
                 >
                   <Info
-                    title="نوع ویرایش"
-                    value={item.firstSelect}
-                  />
+  title="نوع ویرایش تصویر"
+  value={firstSelectLabels[item.firstSelect] || item.firstSelect}
+/>
 
-                  <Info
-                    title="میزان تغییر"
-                    value={item.secondSelect}
-                  />
+<Info
+  title="میزان تغییر تصویر"
+  value={secondSelectLabels[item.secondSelect] || item.secondSelect}
+/>
 
-                  <Info
-                    title="دستگاه"
-                    value={item.device}
-                  />
+<Info
+  title="هدف اصلی ویرایش"
+  value={deviceLabels[item.device] || item.device}
+/>
 
-                  <Info
-                    title="درخواست"
-                    value={item.request}
-                  />
+<Info
+  title="سبک ویرایش"
+  value={requestLabels[item.request] || item.request}
+/>
 
-                  <Info
-                    title="برند"
-                    value={item.brand}
-                  />
+<Info
+  title="نوع تصویر"
+  value={brandLabels[item.brand] || item.brand}
+/>
 
                   {item.description && (
                     <Info
