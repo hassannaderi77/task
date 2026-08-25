@@ -403,6 +403,87 @@ app.get("/api/history/:userId", async (req, res) => {
   }
 });
 
+// =========================
+// Delete user history item
+// =========================
+
+app.delete("/api/history/:historyId", async (req, res) => {
+  try {
+    const { historyId } = req.params;
+    const { userId } = req.body;
+
+    if (!historyId || !userId) {
+      return res.status(400).json({
+        success: false,
+        message: "اطلاعات حذف ناقص است",
+      });
+    }
+
+    const history = await ImageHistory.findOne({
+      _id: historyId,
+      userId,
+    });
+
+    if (!history) {
+      return res.status(404).json({
+        success: false,
+        message: "مورد موردنظر پیدا نشد",
+      });
+    }
+
+    // =========================
+    // Delete before image
+    // =========================
+
+    if (history.beforeImage) {
+      const beforePath = path.join(
+        __dirname,
+        history.beforeImage.replace(/^\/uploads\//, "uploads/")
+      );
+
+      if (fs.existsSync(beforePath)) {
+        fs.unlinkSync(beforePath);
+      }
+    }
+
+    // =========================
+    // Delete after image
+    // =========================
+
+    if (history.afterImage) {
+      const afterPath = path.join(
+        __dirname,
+        history.afterImage.replace(/^\/uploads\//, "uploads/")
+      );
+
+      if (fs.existsSync(afterPath)) {
+        fs.unlinkSync(afterPath);
+      }
+    }
+
+    // =========================
+    // Delete history document
+    // =========================
+
+    await ImageHistory.deleteOne({
+      _id: historyId,
+      userId,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "History deleted successfully",
+    });
+  } catch (error) {
+    console.error("Delete history error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "خطا در حذف تاریخچه",
+    });
+  }
+});
+
 // =====================================================
 // AUTH
 // =====================================================

@@ -36,3 +36,16 @@ export const getHistory = async (userId) => {
 
   return response.data;
 };
+
+export const deleteHistory = async (historyId, userId) => {
+  const response = await apiClient.delete(
+    `/history/${historyId}`,
+    {
+      data: {
+        userId,
+      },
+    }
+  );
+
+  return response.data;
+};

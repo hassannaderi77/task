@@ -1,17 +1,13 @@
 const API_URL = import.meta.env.VITE_API_URL.replace("/api", "");
 import React, { useContext, useEffect, useState } from "react";
-import {
-  FiDownload,
-  FiClock,
-  FiImage,
-} from "react-icons/fi";
+import { FiDownload, FiClock, FiImage, FiTrash2 } from "react-icons/fi";
 
 import { AuthContext } from "../context/authContext";
 
 import Loading from "../components/ui/Loading";
 import ErrorMessage from "../components/ui/ErrorMessage";
 
-import { getHistory } from "../api/services/historyService";
+import { getHistory, deleteHistory } from "../api/services/historyService";
 
 const firstSelectLabels = {
   background_remove: "حذف پس‌زمینه",
@@ -52,6 +48,7 @@ function HistoryPage() {
   const [history, setHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [deletingId, setDeletingId] = useState("");
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -76,6 +73,33 @@ function HistoryPage() {
 
     fetchHistory();
   }, [user?.id]);
+
+  const handleDelete = async (historyId) => {
+    if (!historyId || !user?.id) return;
+
+    const confirmed = window.confirm(
+      "آیا از حذف این مورد از تاریخچه مطمئن هستید؟",
+    );
+
+    if (!confirmed) return;
+
+    try {
+      setDeletingId(historyId);
+      setError("");
+
+      await deleteHistory(historyId, user.id);
+
+      setHistory((currentHistory) =>
+        currentHistory.filter((item) => item._id !== historyId),
+      );
+    } catch (error) {
+      console.error("Delete history error:", error);
+
+      setError("حذف مورد انتخاب‌شده با مشکل مواجه شد");
+    } finally {
+      setDeletingId("");
+    }
+  };
 
   if (isLoading) {
     return (
@@ -320,25 +344,55 @@ function HistoryPage() {
                     ویرایش تصویر {history.length - index}
                   </h2>
 
-                  <span
-                    className="
-                      flex
-                      w-fit
-                      items-center
-                      gap-1.5
-                      rounded-lg
-                      border border-purple-500/20
-                      bg-gradient-to-r
-                      from-purple-500/10
-                      to-fuchsia-500/10
-                      px-3 py-1.5
-                      text-[11px]
-                      text-purple-200
-                    "
-                  >
-                    <FiClock size={13} />
-                    {new Date(item.createdAt).toLocaleString("fa-IR")}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="
+      flex
+      w-fit
+      items-center
+      gap-1.5
+      rounded-lg
+      border border-purple-500/20
+      bg-gradient-to-r
+      from-purple-500/10
+      to-fuchsia-500/10
+      px-3 py-1.5
+      text-[11px]
+      text-purple-200
+    "
+                    >
+                      <FiClock size={13} />
+                      {new Date(item.createdAt).toLocaleString("fa-IR")}
+                    </span>
+
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(item._id)}
+                      disabled={deletingId === item._id}
+                      title="حذف از تاریخچه"
+                      aria-label="حذف از تاریخچه"
+                      className="
+      inline-flex
+      h-9 w-9
+      shrink-0
+      items-center
+      justify-center
+      rounded-lg
+      border border-red-400/20
+      bg-red-500/10
+      text-red-300
+      transition-all duration-300
+      hover:border-red-400/30
+      hover:bg-red-500/20
+      hover:text-red-200
+      active:scale-95
+      disabled:cursor-not-allowed
+      disabled:opacity-50
+    "
+                    >
+                      <FiTrash2 size={16} />
+                    </button>
+                  </div>
                 </div>
 
                 {/* Images */}
@@ -498,35 +552,36 @@ function HistoryPage() {
                   "
                 >
                   <Info
-  title="نوع ویرایش تصویر"
-  value={firstSelectLabels[item.firstSelect] || item.firstSelect}
-/>
+                    title="نوع ویرایش تصویر"
+                    value={
+                      firstSelectLabels[item.firstSelect] || item.firstSelect
+                    }
+                  />
 
-<Info
-  title="میزان تغییر تصویر"
-  value={secondSelectLabels[item.secondSelect] || item.secondSelect}
-/>
+                  <Info
+                    title="میزان تغییر تصویر"
+                    value={
+                      secondSelectLabels[item.secondSelect] || item.secondSelect
+                    }
+                  />
 
-<Info
-  title="هدف اصلی ویرایش"
-  value={deviceLabels[item.device] || item.device}
-/>
+                  <Info
+                    title="هدف اصلی ویرایش"
+                    value={deviceLabels[item.device] || item.device}
+                  />
 
-<Info
-  title="سبک ویرایش"
-  value={requestLabels[item.request] || item.request}
-/>
+                  <Info
+                    title="سبک ویرایش"
+                    value={requestLabels[item.request] || item.request}
+                  />
 
-<Info
-  title="نوع تصویر"
-  value={brandLabels[item.brand] || item.brand}
-/>
+                  <Info
+                    title="نوع تصویر"
+                    value={brandLabels[item.brand] || item.brand}
+                  />
 
                   {item.description && (
-                    <Info
-                      title="توضیحات"
-                      value={item.description}
-                    />
+                    <Info title="توضیحات" value={item.description} />
                   )}
                 </div>
               </div>
@@ -554,9 +609,7 @@ function Info({ title, value }) {
         hover:bg-purple-500/[0.06]
       "
     >
-      <span className="text-xs text-slate-400">
-        {title}
-      </span>
+      <span className="text-xs text-slate-400">{title}</span>
 
       <p
         className="
