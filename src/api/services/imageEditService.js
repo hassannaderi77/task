@@ -132,6 +132,7 @@ export const editImage = async ({
       return {
         before: image,
         after: response.data?.data?.[0]?.url,
+        generatedPrompt: prompt
       };
     } catch (error) {
       console.error(

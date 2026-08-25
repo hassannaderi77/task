@@ -889,6 +889,33 @@ function UsersManagement({
                           </p>
                         </div>
                       )}
+                      {item.generatedPrompt && (
+                        <div
+                          className="
+      mt-4
+      rounded-xl
+      border border-fuchsia-500/10
+      bg-fuchsia-500/[0.03]
+      p-3
+    "
+                        >
+                          <p className="text-[11px] text-slate-500">
+                            پرامپت تولید شده
+                          </p>
+
+                          <p
+                            className="
+        mt-1
+        break-words
+        text-xs
+        leading-6
+        text-slate-300
+      "
+                          >
+                            {item.generatedPrompt}
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 );

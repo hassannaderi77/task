@@ -10,6 +10,7 @@ export const createHistory = async ({
   request,
   brand,
   description,
+  generatedPrompt
 }) => {
   const formData = new FormData();
 
@@ -23,6 +24,7 @@ export const createHistory = async ({
   formData.append("request", request);
   formData.append("brand", brand);
   formData.append("description", description || "");
+  formData.append("generatedPrompt", generatedPrompt || "");
 
   const response = await apiClient.post("/history", formData);
 

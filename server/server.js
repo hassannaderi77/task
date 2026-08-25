@@ -211,6 +211,7 @@ app.post(
         request,
         brand,
         description,
+        generatedPrompt,
       } = req.body;
 
       if (!userId || !req.file || !afterImage) {
@@ -274,6 +275,7 @@ app.post(
         request,
         brand,
         description,
+        generatedPrompt,
       });
 
       res.status(201).json({

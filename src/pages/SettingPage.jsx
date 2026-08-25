@@ -105,6 +105,8 @@ function SettingPage() {
       console.log("User ID:", user.id);
       console.log("===================================");
 
+      console.log("ITEM BEFORE HISTORY:", item)
+
       const savedHistory = await createHistory({
         userId: user.id,
         beforeImage: item.before,
@@ -115,6 +117,7 @@ function SettingPage() {
         request,
         brand,
         description,
+        generatedPrompt:item.generatedPrompt,
       });
 
       console.log("SAVED HISTORY:", savedHistory);

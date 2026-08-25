@@ -47,6 +47,10 @@ const imageHistorySchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    generatedPrompt: {
+      type: String,
+      default: "",
+    }
   },
   {
     timestamps: true,
