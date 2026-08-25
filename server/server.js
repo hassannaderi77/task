@@ -9,6 +9,7 @@ import fs from "fs";
 import { fileURLToPath } from "url";
 import ImageHistory from "./models/ImageHistory.js";
 import axios from "axios";
+import { generateImagePrompt } from "./services/promptWriterService.js";
 
 dotenv.config();
 
@@ -94,6 +95,98 @@ app.get("/", (req, res) => {
   res.json({
     message: "Backend is running",
   });
+});
+
+
+// =====================================================
+// PROMPT WRITER
+// =====================================================
+
+app.post("/api/prompt-writer", async (req, res) => {
+  try {
+    const {
+      firstSelect,
+      secondSelect,
+      device,
+      request,
+      brand,
+      description,
+    } = req.body;
+
+    const prompt = await generateImagePrompt({
+      firstSelect,
+      secondSelect,
+      device,
+      request,
+      brand,
+      description,
+    });
+
+    res.status(200).json({
+      success: true,
+      prompt,
+    });
+  } catch (error) {
+    console.error(
+      "Prompt Writer Error:",
+      error.response?.data || error
+    );
+
+    res.status(500).json({
+      success: false,
+      message:
+        error.response?.data?.error?.message ||
+        error.response?.data?.message ||
+        error.message ||
+        "Prompt writer failed",
+    });
+  }
+});
+
+
+// =====================================================
+// PROMPT WRITER TEST
+// =====================================================
+
+app.post("/api/prompt-writer/test", async (req, res) => {
+  try {
+    const {
+      firstSelect,
+      secondSelect,
+      device,
+      request,
+      brand,
+      description,
+    } = req.body;
+
+    const generatedPrompt = await generateImagePrompt({
+      firstSelect,
+      secondSelect,
+      device,
+      request,
+      brand,
+      description,
+    });
+
+    res.status(200).json({
+      success: true,
+      prompt: generatedPrompt,
+    });
+  } catch (error) {
+    console.error(
+      "Prompt Writer Test Error:",
+      error.response?.data || error
+    );
+
+    res.status(500).json({
+      success: false,
+      message:
+        error.response?.data?.error?.message ||
+        error.response?.data?.message ||
+        error.message ||
+        "Prompt writer failed",
+    });
+  }
 });
 
 // =====================================================

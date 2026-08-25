@@ -1,12 +1,18 @@
 import avalaiClient from "../avalaiClient";
+import apiClient from "../client";
 
 /*
 |--------------------------------------------------------------------------
 | Auxiliary parameters
 |--------------------------------------------------------------------------
+|
 | These values are ONLY contextual information.
 | They must NEVER override the user's description.
-|--------------------------------------------------------------------------
+|
+| NOTE:
+| Prompt generation is now handled by the backend
+| using the Prompt Writer model.
+|
 */
 
 const operationInstructions = {
@@ -44,50 +50,47 @@ export const editImage = async ({
   brand,
   request,
 }) => {
+  /*
+  |--------------------------------------------------------------------------
+  | Generate prompt ONCE
+  |--------------------------------------------------------------------------
+  |
+  | The prompt does not depend on the individual image.
+  | Therefore, when multiple images are selected, we only call
+  | the Prompt Writer once.
+  |
+  */
+
+  const promptResponse = await apiClient.post("/prompt-writer", {
+    firstSelect,
+    secondSelect,
+    device,
+    request,
+    brand,
+    description,
+  });
+
+  const prompt = promptResponse.data?.prompt;
+
+  if (!prompt) {
+    throw new Error("Prompt writer returned an empty prompt.");
+  }
+
+  console.log(
+    "\n========== PROMPT SENT TO IMAGE MODEL =========="
+  );
+  console.log(prompt);
+  console.log(
+    "=================================================\n"
+  );
+
+  /*
+  |--------------------------------------------------------------------------
+  | Edit a single image
+  |--------------------------------------------------------------------------
+  */
+
   const editSingleImage = async (image) => {
-    /*
-    |--------------------------------------------------------------------------
-    | Prompt
-    |--------------------------------------------------------------------------
-    */
-
-    const prompt = `
-Edit the image according to the USER INSTRUCTION.
-
-USER INSTRUCTION:
-${description?.trim() || "No additional instructions were provided."}
-
-APPLICATION PARAMETERS:
-- Image type: ${brand || "Not specified"}
-- Target: ${device || "Not specified"}
-- Edit type: ${operationInstructions[firstSelect] || "Not specified"}
-- Change intensity: ${intensityInstructions[secondSelect] || "Not specified"}
-- Style: ${styleInstructions[request] || "Not specified"}
-
-The USER INSTRUCTION has absolute priority over the application
-parameters.
-
-Use application parameters only when they directly support the
-USER INSTRUCTION. Ignore any parameter that conflicts with,
-contradicts, or adds an edit not requested by the user.
-
-Make only the requested edits.
-
-Preserve everything else in the original image, including the
-existing objects, shapes, geometry, proportions, depth, perspective,
-position, spatial relationships, camera view, and composition.
-
-When modifying an existing object or surface, change only the
-requested property while preserving its original shape, geometry,
-depth, position, and perspective.
-
-Do not add, remove, redesign, improve, or reinterpret anything
-unless explicitly requested.
-
-The final image should be the original image with only the
-USER INSTRUCTION applied.
-`;
-
     /*
     |--------------------------------------------------------------------------
     | FormData
@@ -96,7 +99,10 @@ USER INSTRUCTION applied.
 
     const formData = new FormData();
 
-    formData.append("model", import.meta.env.VITE_AVALAI_MODEL);
+    formData.append(
+      "model",
+      import.meta.env.VITE_AVALAI_MODEL
+    );
 
     formData.append("prompt", prompt);
 
@@ -113,35 +119,38 @@ USER INSTRUCTION applied.
     */
 
     try {
-  const response = await avalaiClient.post(
-    "/images/edits",
-    formData
-  );
+      const response = await avalaiClient.post(
+        "/images/edits",
+        formData
+      );
 
-  console.log("AVALAI SUCCESS:", response.data);
+      console.log(
+        "AVALAI SUCCESS:",
+        response.data
+      );
 
-  return {
-    before: image,
-    after: response.data?.data?.[0]?.url,
-  };
-} catch (error) {
-  console.error(
-    "AVALAI ERROR STATUS:",
-    error.response?.status
-  );
+      return {
+        before: image,
+        after: response.data?.data?.[0]?.url,
+      };
+    } catch (error) {
+      console.error(
+        "AVALAI ERROR STATUS:",
+        error.response?.status
+      );
 
-  console.error(
-    "AVALAI ERROR DATA:",
-    error.response?.data
-  );
+      console.error(
+        "AVALAI ERROR DATA:",
+        error.response?.data
+      );
 
-  console.error(
-    "AVALAI ERROR HEADERS:",
-    error.response?.headers
-  );
+      console.error(
+        "AVALAI ERROR HEADERS:",
+        error.response?.headers
+      );
 
-  throw error;
-}
+      throw error;
+    }
   };
 
   /*
@@ -151,7 +160,9 @@ USER INSTRUCTION applied.
   */
 
   const results = await Promise.all(
-    images.map((image) => editSingleImage(image)),
+    images.map((image) =>
+      editSingleImage(image)
+    )
   );
 
   return results;
