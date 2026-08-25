@@ -1,18 +1,50 @@
-import { createContext, useState } from "react";
+import {
+  createContext,
+  useEffect,
+  useState,
+} from "react";
+
+import {
+  getCurrentUser,
+  logoutUser,
+} from "../api/services/authService";
 
 export const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const isAuthenticated = Boolean(user);
+
+  useEffect(() => {
+    const restoreUser = async () => {
+      try {
+        const response = await getCurrentUser();
+
+        setUser(response.user);
+      } catch (error) {
+        setUser(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    restoreUser();
+  }, []);
 
   const login = (userData) => {
     setUser(userData);
   };
 
-  const logout = () => {
-    setUser(null);
+  const logout = async () => {
+    try {
+      await logoutUser();
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      setUser(null);
+    }
   };
 
   return (
@@ -20,6 +52,7 @@ export function AuthProvider({ children }) {
       value={{
         user,
         isAuthenticated,
+        isLoading,
         login,
         logout,
       }}

@@ -4,15 +4,12 @@ import { getApiErrorMessage } from "./errorHandler";
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   timeout: 10000,
+  withCredentials: true,
 });
 
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("accessToken");
-
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+    
 
     // فقط برای درخواست‌های معمولی JSON
     if (!(config.data instanceof FormData)) {

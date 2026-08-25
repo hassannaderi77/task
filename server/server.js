@@ -9,6 +9,7 @@ import fs from "fs";
 import { fileURLToPath } from "url";
 import ImageHistory from "./models/ImageHistory.js";
 import axios from "axios";
+import cookieParser from "cookie-parser";
 import { generateImagePrompt } from "./services/promptWriterService.js";
 
 dotenv.config();
@@ -74,9 +75,15 @@ app.use(
   express.static(path.join(__dirname, "uploads"))
 );
 
-app.use(cors());
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+  })
+);
 
 app.use(express.json());
+app.use(cookieParser());
 
 const PORT = process.env.SERVER_PORT || 5000;
 
@@ -526,6 +533,13 @@ app.post("/api/auth/login", async (req, res) => {
       });
     }
 
+    res.cookie("userId", user._id.toString(), {
+  httpOnly: true,
+  sameSite: "lax",
+  secure: false,
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+});
+
     res.status(200).json({
       success: true,
 
@@ -549,6 +563,61 @@ app.post("/api/auth/login", async (req, res) => {
       message: "Ø®Ø·Ø§ Ø¯Ø± ÙˆØ±ÙˆØ¯",
     });
   }
+});
+
+app.get("/api/auth/me", async (req, res) => {
+  try {
+    const userId = req.cookies.userId;
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: "کاربر وارد نشده است",
+      });
+    }
+
+    const user = await User.findById(userId).select("-password");
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "کاربر پیدا نشد",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      user: {
+        id: user._id,
+        name: user.name,
+        family: user.family,
+        phone: user.phone,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    console.error("Get current user error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "خطا در دریافت کاربر",
+    });
+  }
+});
+
+
+app.post("/api/auth/logout", (req, res) => {
+  res.clearCookie("userId", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: false,
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "با موفقیت خارج شدید",
+  });
 });
 
 // =========================
