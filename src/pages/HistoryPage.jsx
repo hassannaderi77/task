@@ -1,6 +1,5 @@
-const API_URL = import.meta.env.VITE_API_URL.replace("/api", "");
 import React, { useContext, useEffect, useState } from "react";
-import { FiDownload, FiClock, FiImage, FiTrash2 } from "react-icons/fi";
+import { FiX } from "react-icons/fi";
 
 import { AuthContext } from "../context/authContext";
 
@@ -8,39 +7,7 @@ import Loading from "../components/ui/Loading";
 import ErrorMessage from "../components/ui/ErrorMessage";
 
 import { getHistory, deleteHistory } from "../api/services/historyService";
-
-const firstSelectLabels = {
-  background_remove: "حذف پس‌زمینه",
-  background_change: "تغییر پس‌زمینه",
-  object_remove: "حذف یک شیء از تصویر",
-  object_add: "اضافه کردن شیء به تصویر",
-};
-
-const secondSelectLabels = {
-  minimal: "تغییر جزئی",
-  moderate: "تغییر متوسط",
-  strong: "تغییر قابل توجه",
-  creative: "ویرایش خلاقانه",
-};
-
-const deviceLabels = {
-  background: "پس‌زمینه",
-  quality: "کیفیت تصویر",
-  appearance: "ظاهر تصویر",
-  object: "جزئیات تصویر",
-};
-
-const requestLabels = {
-  natural: "طبیعی",
-  professional: "حرفه‌ای",
-  creative: "خلاقانه",
-};
-
-const brandLabels = {
-  product: "محصول",
-  person: "شخص",
-  object: "شیء",
-};
+import MainContainerDashboard from "../components/mainContainerDashboard/MainContainerDashboard";
 
 function HistoryPage() {
   const { user } = useContext(AuthContext);
@@ -49,6 +16,8 @@ function HistoryPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [deletingId, setDeletingId] = useState("");
+  const [copiedPromptId, setCopiedPromptId] = useState("");
+  const [previewImage, setPreviewImage] = useState(null);
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -98,6 +67,48 @@ function HistoryPage() {
       setError("حذف مورد انتخاب‌شده با مشکل مواجه شد");
     } finally {
       setDeletingId("");
+    }
+  };
+
+  const handleCopyPrompt = async (text, historyId) => {
+    console.log("COPY CLICKED");
+    console.log("TEXT:", text);
+    console.log("HISTORY ID:", historyId);
+
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        const textArea = document.createElement("textarea");
+
+        textArea.value = text;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-9999px";
+        textArea.style.top = "-9999px";
+
+        document.body.appendChild(textArea);
+
+        textArea.focus();
+        textArea.select();
+
+        const successful = document.execCommand("copy");
+
+        document.body.removeChild(textArea);
+
+        if (!successful) {
+          throw new Error("Clipboard copy failed.");
+        }
+      }
+
+      console.log("COPY SUCCESS");
+
+      setCopiedPromptId(historyId);
+
+      setTimeout(() => {
+        setCopiedPromptId("");
+      }, 2000);
+    } catch (error) {
+      console.error("COPY ERROR:", error);
     }
   };
 
@@ -182,446 +193,99 @@ function HistoryPage() {
       />
 
       {/* Main Container */}
-      <div className="relative mx-auto max-w-4xl">
-        {/* Header */}
-        <div className="mb-8 text-center">
+
+      <MainContainerDashboard
+        history={history}
+        copiedPromptId={copiedPromptId}
+        handleCopyPrompt={handleCopyPrompt}
+        setPreviewImage={setPreviewImage}
+        deletingId={deletingId}
+        handleDelete={handleDelete}
+      />
+
+      {previewImage && (
+        <div
+          className="
+      fixed inset-0 z-50
+      flex items-center justify-center
+      bg-black/80
+      p-4
+      backdrop-blur-sm
+    "
+          onClick={() => setPreviewImage(null)}
+        >
           <div
             className="
-              mx-auto mb-4
-              flex h-16 w-16
-              items-center justify-center
-              rounded-2xl
-              border border-purple-400/20
-              bg-gradient-to-br
-              from-purple-500/20
-              via-violet-500/10
-              to-fuchsia-500/10
-              text-3xl
-              shadow-lg
-              shadow-purple-950/30
-              transition-all duration-500
-              hover:scale-105
-            "
+        relative
+        max-h-[90vh]
+        max-w-5xl
+        overflow-hidden
+        rounded-2xl
+        border border-purple-400/20
+        bg-[#0d0718]
+        p-2
+        shadow-2xl
+        shadow-purple-950/50
+      "
+            onClick={(event) => event.stopPropagation()}
           >
-            <FiClock className="text-purple-200" size={30} />
-          </div>
+            <button
+              type="button"
+              onClick={() => setPreviewImage(null)}
+              className="
+          absolute
+          right-3
+          top-3
+          z-10
+          flex h-9 w-9
+          items-center justify-center
+          rounded-xl
+          border border-white/20
+          bg-black/60
+          text-white
+          backdrop-blur-md
+          transition-all
+          hover:bg-red-500/70
+          active:scale-95
+        "
+              title="بستن"
+              aria-label="بستن پیش‌نمایش"
+            >
+              <FiX size={18} />
+            </button>
 
-          <h1
-            className="
-              bg-gradient-to-r
-              from-purple-200
-              via-fuchsia-300
-              to-purple-300
-              bg-clip-text
-              text-3xl
-              font-black
-              text-transparent
-              sm:text-4xl
-            "
-          >
-            تاریخچه ویرایش تصاویر
-          </h1>
+            <img
+              src={previewImage.src}
+              alt={previewImage.title}
+              className="
+          max-h-[85vh]
+          max-w-full
+          rounded-xl
+          object-contain
+        "
+            />
 
-          <p className="mt-2 text-xs text-slate-400 sm:text-sm">
-            تصاویر ویرایش شده قبلی خود را مشاهده کنید
-          </p>
-
-          <div
-            className="
-              mx-auto mt-4
-              h-1 w-20
-              rounded-full
-              bg-gradient-to-r
-              from-purple-500
-              via-fuchsia-500
-              to-purple-500
-            "
-          />
-        </div>
-
-        {/* Empty State */}
-        {history.length === 0 && (
-          <div
-            className="
-              relative overflow-hidden
-              rounded-3xl
-              border border-purple-500/20
-              bg-gradient-to-br
-              from-[#160d2b]/90
-              via-[#1d1038]/80
-              to-[#0d0718]/90
-              p-7
-              text-center
-              shadow-xl
-              shadow-purple-950/40
-              backdrop-blur-xl
-              sm:p-10
-            "
-          >
             <div
               className="
-                mx-auto mb-4
-                flex h-16 w-16
-                items-center justify-center
-                rounded-2xl
-                bg-gradient-to-br
-                from-purple-500/20
-                to-fuchsia-500/10
-                text-3xl
-              "
-            >
-              <FiImage className="text-purple-200" size={30} />
-            </div>
-
-            <h2 className="text-xl font-bold text-purple-100 sm:text-2xl">
-              هنوز تاریخی ثبت نشده است
-            </h2>
-
-            <p className="mt-2 text-sm text-slate-400">
-              بعد از ویرایش اولین تصویر، نتیجه اینجا نمایش داده می‌شود.
-            </p>
-          </div>
-        )}
-
-        {/* History */}
-        {history.length > 0 && (
-          <div className="space-y-6">
-            {history.map((item, index) => (
-              <div
-                key={item._id || index}
-                className="
-                  group relative overflow-hidden
-                  rounded-3xl
-                  border border-purple-500/20
-                  bg-gradient-to-br
-                  from-[#160d2b]/90
-                  via-[#1d1038]/80
-                  to-[#0d0718]/90
-                  p-4
-                  shadow-xl
-                  shadow-purple-950/30
-                  backdrop-blur-xl
-                  transition-all duration-300
-                  hover:-translate-y-0.5
-                  hover:border-purple-400/30
-                  hover:shadow-purple-900/40
-                  sm:p-5
-                "
-              >
-                {/* Top gradient */}
-                <div
-                  className="
-                    absolute left-0 right-0 top-0
-                    h-[2px]
-                    bg-gradient-to-r
-                    from-transparent
-                    via-purple-500
-                    to-fuchsia-500
-                  "
-                />
-
-                {/* Header */}
-                <div
-                  className="
-                    mb-4
-                    flex flex-col gap-2
-                    sm:flex-row
-                    sm:items-center
-                    sm:justify-between
-                  "
-                >
-                  <h2
-                    className="
-                      bg-gradient-to-r
-                      from-purple-200
-                      to-fuchsia-300
-                      bg-clip-text
-                      text-lg
-                      font-black
-                      text-transparent
-                    "
-                  >
-                    ویرایش تصویر {history.length - index}
-                  </h2>
-
-                  <div className="flex items-center gap-2">
-                    <span
-                      className="
-      flex
-      w-fit
-      items-center
-      gap-1.5
-      rounded-lg
-      border border-purple-500/20
-      bg-gradient-to-r
-      from-purple-500/10
-      to-fuchsia-500/10
-      px-3 py-1.5
-      text-[11px]
-      text-purple-200
-    "
-                    >
-                      <FiClock size={13} />
-                      {new Date(item.createdAt).toLocaleString("fa-IR")}
-                    </span>
-
-                    <button
-                      type="button"
-                      onClick={() => handleDelete(item._id)}
-                      disabled={deletingId === item._id}
-                      title="حذف از تاریخچه"
-                      aria-label="حذف از تاریخچه"
-                      className="
-      inline-flex
-      h-9 w-9
-      shrink-0
-      items-center
-      justify-center
-      rounded-lg
-      border border-red-400/20
-      bg-red-500/10
-      text-red-300
-      transition-all duration-300
-      hover:border-red-400/30
-      hover:bg-red-500/20
-      hover:text-red-200
-      active:scale-95
-      disabled:cursor-not-allowed
-      disabled:opacity-50
-    "
-                    >
-                      <FiTrash2 size={16} />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Images */}
-                <div
-                  className="
-                    flex
-                    flex-col
-                    items-center
-                    justify-center
-                    gap-4
-                    sm:flex-row
-                    sm:items-start
-                  "
-                >
-                  {/* Before */}
-                  <div
-                    className="
-                      w-full
-                      max-w-[240px]
-                      overflow-hidden
-                      rounded-xl
-                      border border-purple-500/10
-                      bg-black/20
-                      p-2
-                    "
-                  >
-                    <div className="mb-2 flex items-center justify-between gap-2">
-                      <h3
-                        className="
-                          text-sm
-                          font-bold
-                          text-slate-300
-                        "
-                      >
-                        تصویر اولیه
-                      </h3>
-
-                      <a
-                        href={`${API_URL}${item.beforeImage}`}
-                        download={`before-image-${index + 1}.png`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="
-                          inline-flex
-                          items-center
-                          gap-1.5
-                          rounded-lg
-                          border border-purple-400/20
-                          bg-purple-500/10
-                          px-2.5 py-1.5
-                          text-[11px]
-                          font-semibold
-                          text-purple-200
-                          transition-all
-                          duration-300
-                          hover:bg-purple-500/20
-                          hover:text-white
-                          active:scale-95
-                        "
-                      >
-                        <FiDownload className="text-sm" />
-                        دانلود
-                      </a>
-                    </div>
-
-                    <img
-                      src={`${API_URL}${item.beforeImage}`}
-                      alt="Before"
-                      className="
-                        aspect-video
-                        w-full
-                        rounded-lg
-                        object-cover
-                        transition-transform duration-500
-                        group-hover:scale-[1.01]
-                      "
-                    />
-                  </div>
-
-                  {/* After */}
-                  <div
-                    className="
-                      w-full
-                      max-w-[240px]
-                      overflow-hidden
-                      rounded-xl
-                      border border-purple-400/20
-                      bg-gradient-to-br
-                      from-purple-500/[0.05]
-                      to-fuchsia-500/[0.03]
-                      p-2
-                      shadow-md
-                      shadow-purple-950/20
-                    "
-                  >
-                    <div className="mb-2 flex items-center justify-between gap-2">
-                      <h3
-                        className="
-                          text-sm
-                          font-bold
-                          text-purple-200
-                        "
-                      >
-                        نتیجه ویرایش
-                      </h3>
-
-                      <a
-                        href={`${API_URL}${item.afterImage}`}
-                        download={`after-image-${index + 1}.png`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="
-                          inline-flex
-                          items-center
-                          gap-1.5
-                          rounded-lg
-                          border border-fuchsia-400/20
-                          bg-fuchsia-500/10
-                          px-2.5 py-1.5
-                          text-[11px]
-                          font-semibold
-                          text-fuchsia-200
-                          transition-all
-                          duration-300
-                          hover:bg-fuchsia-500/20
-                          hover:text-white
-                          active:scale-95
-                        "
-                      >
-                        <FiDownload className="text-sm" />
-                        دانلود
-                      </a>
-                    </div>
-
-                    <img
-                      src={`${API_URL}${item.afterImage}`}
-                      alt="After"
-                      className="
-                        aspect-video
-                        w-full
-                        rounded-lg
-                        object-cover
-                        transition-transform duration-500
-                        group-hover:scale-[1.01]
-                      "
-                    />
-                  </div>
-                </div>
-
-                {/* Information */}
-                <div
-                  className="
-                    mt-4
-                    grid gap-3
-                    sm:grid-cols-2
-                    lg:grid-cols-3
-                  "
-                >
-                  <Info
-                    title="نوع ویرایش تصویر"
-                    value={
-                      firstSelectLabels[item.firstSelect] || item.firstSelect
-                    }
-                  />
-
-                  <Info
-                    title="میزان تغییر تصویر"
-                    value={
-                      secondSelectLabels[item.secondSelect] || item.secondSelect
-                    }
-                  />
-
-                  <Info
-                    title="هدف اصلی ویرایش"
-                    value={deviceLabels[item.device] || item.device}
-                  />
-
-                  <Info
-                    title="سبک ویرایش"
-                    value={requestLabels[item.request] || item.request}
-                  />
-
-                  <Info
-                    title="نوع تصویر"
-                    value={brandLabels[item.brand] || item.brand}
-                  />
-
-                  {item.description && (
-                    <Info title="توضیحات" value={item.description} />
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function Info({ title, value }) {
-  return (
-    <div
-      className="
-        rounded-xl
-        border border-purple-500/10
-        bg-gradient-to-br
-        from-white/[0.04]
-        to-purple-500/[0.03]
-        p-3
-        transition-all duration-300
-        hover:-translate-y-0.5
-        hover:border-purple-400/20
-        hover:bg-purple-500/[0.06]
-      "
-    >
-      <span className="text-xs text-slate-400">{title}</span>
-
-      <p
-        className="
-          mt-1.5
-          break-words
-          text-sm
-          font-bold
-          text-purple-50
+          absolute
+          bottom-4
+          left-1/2
+          -translate-x-1/2
+          rounded-xl
+          border border-purple-400/20
+          bg-black/70
+          px-4 py-2
+          text-xs
+          font-semibold
+          text-purple-100
+          backdrop-blur-md
         "
-      >
-        {value || "-"}
-      </p>
+            >
+              {previewImage.title}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
