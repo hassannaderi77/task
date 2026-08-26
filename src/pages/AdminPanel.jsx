@@ -18,6 +18,7 @@ function AdminPanel() {
 
   const [showRequests, setShowRequests] = useState(false);
   const [requestStats, setRequestStats] = useState([]);
+  const [dailyStats, setDailyStats] = useState([]);
   const [isLoadingRequests, setIsLoadingRequests] = useState(false);
   const [requestsError, setRequestsError] = useState("");
 
@@ -43,6 +44,24 @@ function AdminPanel() {
       setIsLoadingRequests(false);
     }
   };
+
+  const fetchDailyStats = async () => {
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/history/stats/daily`
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch daily request stats");
+    }
+
+    const data = await response.json();
+
+    setDailyStats(data.stats || []);
+  } catch (error) {
+    console.error("Get daily request stats error:", error);
+  }
+};
 
   const fetchUsers = async () => {
     try {
@@ -110,12 +129,18 @@ function AdminPanel() {
   };
 
   const handleRequestsClick = () => {
-    setShowRequests((prev) => !prev);
+  setShowRequests((prev) => !prev);
 
-    if (!showRequests && requestStats.length === 0) {
+  if (!showRequests) {
+    if (requestStats.length === 0) {
       fetchRequestStats();
     }
-  };
+
+    if (dailyStats.length === 0) {
+      fetchDailyStats();
+    }
+  }
+};
 
   return (
     <div
@@ -183,7 +208,8 @@ function AdminPanel() {
         {/* Chart */}
         {showRequests && (
           <ChartManagement
-            requestStats={requestStats}
+            hourlyStats={requestStats}
+            dailyStats={dailyStats}
             isLoadingRequests={isLoadingRequests}
             requestsError={requestsError}
             onClose={() => setShowRequests(false)}

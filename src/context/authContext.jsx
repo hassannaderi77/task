@@ -20,6 +20,7 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const restoreUser = async () => {
       try {
+        console.log("🔄 Checking current session...");
         const response = await getCurrentUser();
 
         setUser(response.user);

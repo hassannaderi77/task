@@ -1,4 +1,5 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
+
 import {
   BarChart,
   Bar,
@@ -9,6 +10,7 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts";
+
 import {
   FiBarChart2,
   FiX,
@@ -17,63 +19,111 @@ import {
   FiClock,
   FiActivity,
   FiAlertTriangle,
+  FiCalendar,
 } from "react-icons/fi";
 
 import Loading from "../ui/Loading";
 
 function ChartManagement({
-  requestStats = [],
+  hourlyStats = [],
+  dailyStats = [],
   isLoadingRequests,
   requestsError,
   onClose,
 }) {
-  // ساخت تمام ساعت‌های روز
-  const chartData = useMemo(() => {
+  const [viewMode, setViewMode] = useState("hour");
+
+  // =========================
+  // Hourly chart data
+  // =========================
+
+  const hourlyChartData = useMemo(() => {
     const statsMap = new Map(
-      requestStats.map((item) => [item.hour, item.requests])
+      hourlyStats.map((item) => [item.hour, Number(item.requests || 0)])
     );
 
     return Array.from({ length: 24 }, (_, hour) => {
       const formattedHour = `${String(hour).padStart(2, "0")}:00`;
 
       return {
-        hour: formattedHour,
+        label: formattedHour,
         requests: statsMap.get(formattedHour) || 0,
       };
     });
-  }, [requestStats]);
+  }, [hourlyStats]);
 
-  // آمار کلی
+  // =========================
+  // Daily chart data
+  // =========================
+
+  const dailyChartData = useMemo(() => {
+    return dailyStats.map((item) => ({
+      label: item.date,
+      requests: Number(item.requests || 0),
+    }));
+  }, [dailyStats]);
+
+  // =========================
+  // Current chart data
+  // =========================
+
+  const chartData =
+    viewMode === "hour" ? hourlyChartData : dailyChartData;
+
+  const currentStats =
+    viewMode === "hour" ? hourlyStats : dailyStats;
+
+  // =========================
+  // Total requests
+  // =========================
+
   const totalRequests = useMemo(() => {
-    return requestStats.reduce(
+    return currentStats.reduce(
       (total, item) => total + Number(item.requests || 0),
       0
     );
-  }, [requestStats]);
+  }, [currentStats]);
+
+  // =========================
+  // Maximum requests
+  // =========================
 
   const maxRequests = useMemo(() => {
-    if (!requestStats.length) return 0;
+    if (!currentStats.length) return 0;
 
     return Math.max(
-      ...requestStats.map((item) => Number(item.requests || 0))
+      ...currentStats.map((item) => Number(item.requests || 0))
     );
-  }, [requestStats]);
+  }, [currentStats]);
 
-  const busiestHour = useMemo(() => {
-    if (!requestStats.length) return "-";
+  // =========================
+  // Busiest period
+  // =========================
 
-    const busiest = requestStats.reduce((prev, current) =>
-      Number(current.requests) > Number(prev.requests) ? current : prev
+  const busiestPeriod = useMemo(() => {
+    if (!currentStats.length) return "-";
+
+    const busiest = currentStats.reduce((prev, current) =>
+      Number(current.requests || 0) >
+      Number(prev.requests || 0)
+        ? current
+        : prev
     );
 
-    return busiest.hour;
-  }, [requestStats]);
+    return viewMode === "hour"
+      ? busiest.hour
+      : busiest.date;
+  }, [currentStats, viewMode]);
+
+  // =========================
+  // Average
+  // =========================
 
   const averageRequests = useMemo(() => {
-    if (!requestStats.length) return 0;
+    if (!currentStats.length) return 0;
 
-    return (totalRequests / requestStats.length).toFixed(1);
-  }, [requestStats, totalRequests]);
+    return (totalRequests / currentStats.length).toFixed(1);
+  }, [currentStats, totalRequests]);
 
   return (
     <div
@@ -92,6 +142,7 @@ function ChartManagement({
       "
     >
       {/* Decorative glow */}
+
       <div
         className="
           pointer-events-none absolute
@@ -115,6 +166,7 @@ function ChartManagement({
       />
 
       {/* Top gradient line */}
+
       <div
         className="
           absolute left-0 right-0 top-0
@@ -127,7 +179,10 @@ function ChartManagement({
       />
 
       <div className="relative">
-        {/* Header */}
+        {/* =========================
+            Header
+        ========================= */}
+
         <div
           className="
             mb-7 flex flex-col gap-5
@@ -158,26 +213,28 @@ function ChartManagement({
             <div>
               <h2
                 className="
-                  text-xl font-black
-                  text-transparent
                   bg-gradient-to-r
                   from-purple-200
                   via-fuchsia-300
                   to-purple-300
                   bg-clip-text
+                  text-xl
+                  font-black
+                  text-transparent
                   sm:text-2xl
                 "
               >
-                آمار درخواست‌های امروز
+                آمار درخواست‌ها
               </h2>
 
               <p className="mt-1 text-xs text-slate-500 sm:text-sm">
-                تعداد درخواست‌های پردازش شده بر اساس ساعت
+                تعداد درخواست‌های پردازش شده در بازه‌های زمانی
               </p>
             </div>
           </div>
 
-          {/* Close button */}
+          {/* Close */}
+
           <button
             type="button"
             onClick={onClose}
@@ -203,7 +260,76 @@ function ChartManagement({
           </button>
         </div>
 
-        {/* Stats */}
+        {/* =========================
+            View mode selector
+        ========================= */}
+
+        {!isLoadingRequests && !requestsError && (
+          <div className="mb-7 flex justify-center">
+            <div
+              className="
+                flex w-full max-w-md
+                rounded-2xl
+                border border-white/5
+                bg-black/20
+                p-1
+              "
+            >
+              <button
+                type="button"
+                onClick={() => setViewMode("hour")}
+                className={`
+                  flex flex-1
+                  items-center
+                  justify-center
+                  gap-2
+                  rounded-xl
+                  px-4 py-3
+                  text-sm
+                  font-semibold
+                  transition
+                  ${
+                    viewMode === "hour"
+                      ? "bg-purple-500/20 text-purple-300 shadow-lg"
+                      : "text-slate-500 hover:bg-white/[0.03] hover:text-slate-300"
+                  }
+                `}
+              >
+                <FiClock className="h-4 w-4" />
+                ساعتی
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setViewMode("day")}
+                className={`
+                  flex flex-1
+                  items-center
+                  justify-center
+                  gap-2
+                  rounded-xl
+                  px-4 py-3
+                  text-sm
+                  font-semibold
+                  transition
+                  ${
+                    viewMode === "day"
+                      ? "bg-purple-500/20 text-purple-300 shadow-lg"
+                      : "text-slate-500 hover:bg-white/[0.03] hover:text-slate-300"
+                  }
+                `}
+              >
+                <FiCalendar className="h-4 w-4" />
+                روزانه
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* =========================
+            Stats
+        ========================= */}
+
         {!isLoadingRequests && !requestsError && (
           <div
             className="
@@ -212,6 +338,7 @@ function ChartManagement({
             "
           >
             {/* Total */}
+
             <div
               className="
                 rounded-2xl
@@ -246,11 +373,14 @@ function ChartManagement({
               </p>
 
               <p className="mt-1 text-[11px] text-slate-600">
-                درخواست امروز
+                {viewMode === "hour"
+                  ? "درخواست‌های امروز"
+                  : "درخواست‌های بازه نمایش داده شده"}
               </p>
             </div>
 
             {/* Max */}
+
             <div
               className="
                 rounded-2xl
@@ -285,11 +415,12 @@ function ChartManagement({
               </p>
 
               <p className="mt-1 text-[11px] text-slate-600">
-                در یک ساعت
+                در {viewMode === "hour" ? "یک ساعت" : "یک روز"}
               </p>
             </div>
 
-            {/* Busiest hour */}
+            {/* Busiest */}
+
             <div
               className="
                 rounded-2xl
@@ -303,7 +434,9 @@ function ChartManagement({
             >
               <div className="mb-3 flex items-center justify-between">
                 <span className="text-xs text-slate-500">
-                  شلوغ‌ترین ساعت
+                  {viewMode === "hour"
+                    ? "شلوغ‌ترین ساعت"
+                    : "شلوغ‌ترین روز"}
                 </span>
 
                 <span
@@ -315,12 +448,16 @@ function ChartManagement({
                     text-violet-300
                   "
                 >
-                  <FiClock className="h-4 w-4" />
+                  {viewMode === "hour" ? (
+                    <FiClock className="h-4 w-4" />
+                  ) : (
+                    <FiCalendar className="h-4 w-4" />
+                  )}
                 </span>
               </div>
 
-              <p className="text-2xl font-black text-white">
-                {busiestHour}
+              <p className="truncate text-2xl font-black text-white">
+                {busiestPeriod}
               </p>
 
               <p className="mt-1 text-[11px] text-slate-600">
@@ -329,6 +466,7 @@ function ChartManagement({
             </div>
 
             {/* Average */}
+
             <div
               className="
                 rounded-2xl
@@ -342,7 +480,7 @@ function ChartManagement({
             >
               <div className="mb-3 flex items-center justify-between">
                 <span className="text-xs text-slate-500">
-                  میانگین ساعتی
+                  میانگین
                 </span>
 
                 <span
@@ -363,13 +501,16 @@ function ChartManagement({
               </p>
 
               <p className="mt-1 text-[11px] text-slate-600">
-                درخواست در ساعت
+                درخواست در {viewMode === "hour" ? "ساعت" : "روز"}
               </p>
             </div>
           </div>
         )}
 
-        {/* Loading */}
+        {/* =========================
+            Loading
+        ========================= */}
+
         {isLoadingRequests && (
           <div
             className="
@@ -381,7 +522,10 @@ function ChartManagement({
           </div>
         )}
 
-        {/* Error */}
+        {/* =========================
+            Error
+        ========================= */}
+
         {!isLoadingRequests && requestsError && (
           <div
             className="
@@ -410,10 +554,13 @@ function ChartManagement({
           </div>
         )}
 
-        {/* Chart */}
+        {/* =========================
+            Chart
+        ========================= */}
+
         {!isLoadingRequests &&
           !requestsError &&
-          requestStats.length > 0 && (
+          chartData.length > 0 && (
             <div
               className="
                 rounded-3xl
@@ -423,14 +570,20 @@ function ChartManagement({
                 sm:p-5
               "
             >
+              {/* Chart header */}
+
               <div className="mb-4 flex items-center justify-between px-2">
                 <div>
                   <p className="text-sm font-bold text-slate-300">
-                    فعالیت ساعتی
+                    {viewMode === "hour"
+                      ? "فعالیت ساعتی"
+                      : "فعالیت روزانه"}
                   </p>
 
                   <p className="mt-1 text-[11px] text-slate-600">
-                    ۲۴ ساعت گذشته
+                    {viewMode === "hour"
+                      ? "۲۴ ساعت امروز"
+                      : "تعداد درخواست‌ها در روزهای مختلف"}
                   </p>
                 </div>
 
@@ -442,6 +595,8 @@ function ChartManagement({
                   </span>
                 </div>
               </div>
+
+              {/* Chart */}
 
               <div className="h-[320px] w-full sm:h-[380px]">
                 <ResponsiveContainer width="100%" height="100%">
@@ -461,11 +616,11 @@ function ChartManagement({
                     />
 
                     <XAxis
-                      dataKey="hour"
-                      interval={1}
+                      dataKey="label"
+                      interval={viewMode === "hour" ? 1 : 0}
                       tick={{
                         fill: "#64748b",
-                        fontSize: 10,
+                        fontSize: viewMode === "hour" ? 10 : 11,
                       }}
                       axisLine={false}
                       tickLine={false}
@@ -487,7 +642,8 @@ function ChartManagement({
                       }}
                       contentStyle={{
                         background: "#12091f",
-                        border: "1px solid rgba(168,85,247,0.25)",
+                        border:
+                          "1px solid rgba(168,85,247,0.25)",
                         borderRadius: "14px",
                         boxShadow:
                           "0 15px 40px rgba(0,0,0,0.35)",
@@ -511,7 +667,7 @@ function ChartManagement({
                       dataKey="requests"
                       radius={[7, 7, 3, 3]}
                       animationDuration={900}
-                      maxBarSize={28}
+                      maxBarSize={viewMode === "hour" ? 28 : 45}
                     >
                       {chartData.map((entry, index) => (
                         <Cell
@@ -534,10 +690,13 @@ function ChartManagement({
             </div>
           )}
 
-        {/* Empty */}
+        {/* =========================
+            Empty
+        ========================= */}
+
         {!isLoadingRequests &&
           !requestsError &&
-          requestStats.length === 0 && (
+          chartData.length === 0 && (
             <div
               className="
                 flex min-h-[320px]
@@ -577,3 +736,4 @@ function ChartManagement({
 }
 
 export default ChartManagement;
+

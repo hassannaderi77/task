@@ -1,4 +1,5 @@
 import React, { useContext, useRef, useState } from "react";
+
 import ImageEditor from "../components/ui/ImageEditor";
 
 import { AuthContext } from "../context/authContext";
@@ -19,6 +20,8 @@ import FormSetting from "../components/formSetting/FormSetting";
 const API_URL = import.meta.env.VITE_API_URL.replace("/api", "");
 
 function SettingPage() {
+
+
   const [firstSelect, setFirstSelect] = useState("");
   const [secondSelect, setSecondSelect] = useState("");
   const [device, setDevice] = useState("");
@@ -509,3 +512,7 @@ function SettingPage() {
 }
 
 export default SettingPage;
+
+
+
+

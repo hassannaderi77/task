@@ -1,7 +1,7 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-
 import {
   FiArrowLeft,
   FiCheckCircle,
@@ -17,53 +17,187 @@ function Demo() {
   const [code, setCode] = useState("");
   const [step, setStep] = useState(1);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handlePhoneSubmit = (e) => {
+  // =====================================================
+  // STEP 1 - Request OTP
+  // =====================================================
+  const handlePhoneSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
-    if (!phone.trim()) {
+    const cleanPhone = phone.trim();
+
+    // Validate phone
+    if (!cleanPhone) {
       setError("لطفاً شماره موبایل خود را وارد کنید");
       return;
     }
 
-    if (!/^09\d{9}$/.test(phone)) {
+    if (!/^09\d{9}$/.test(cleanPhone)) {
       setError("شماره موبایل معتبر نیست");
       return;
     }
 
-    setStep(2);
+    try {
+      setLoading(true);
+
+      console.log("========================================");
+      console.log("📱 OTP REQUEST");
+      console.log("========================================");
+      console.log("Phone:", cleanPhone);
+      console.log("Endpoint:", "/dev/api/auth/otpsms");
+
+      const response = await fetch("/dev/api/auth/otpsms", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          phone: cleanPhone,
+        }),
+      });
+
+      console.log("OTP response status:", response.status);
+
+      // Try to read JSON response
+      let data = null;
+
+      try {
+        data = await response.json();
+      } catch {
+        // Response may have no JSON body
+      }
+
+      console.log("OTP response:", data);
+
+      if (!response.ok) {
+        const message =
+          data?.message ||
+          data?.error ||
+          "ارسال کد تایید ناموفق بود";
+
+        throw new Error(message);
+      }
+
+      console.log("✅ OTP request successful");
+
+      // Move to OTP step
+      setStep(2);
+      setCode("");
+    } catch (error) {
+      console.error("🔥 OTP request error:", error);
+
+      setError(
+        error?.message || "خطا در ارسال کد تایید. لطفاً دوباره تلاش کنید."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleCodeSubmit = (e) => {
+  // =====================================================
+  // STEP 2 - Verify OTP
+  // =====================================================
+  const handleCodeSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
-    if (!code.trim()) {
+    const cleanPhone = phone.trim();
+    const cleanCode = code.trim();
+
+    // Validate OTP
+    if (!cleanCode) {
       setError("لطفاً کد تایید را وارد کنید");
       return;
     }
 
-    if (code !== "123456") {
-      setError("کد تایید اشتباه است");
+    if (!/^\d{4,6}$/.test(cleanCode)) {
+      setError("کد تایید باید عددی باشد");
       return;
     }
 
-    console.log("Demo login successful:", {
-      phone,
-      role: "demo",
-    });
+    try {
+      setLoading(true);
 
-    login({
-      phone,
-      role: "demo",
-      isDemo: true,
-    });
+      console.log("========================================");
+      console.log("🔐 OTP VERIFY");
+      console.log("========================================");
+      console.log("Phone:", cleanPhone);
+      console.log("OTP:", cleanCode);
+      console.log("Endpoint:", "/dev/api/auth/otpsms");
 
-    navigate("/setting");
+      const response = await fetch("/dev/api/auth/otpsms", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          phone: cleanPhone,
+          otp: cleanCode,
+          redirect: "/dev/panel",
+        }),
+      });
+
+      console.log("Verify response status:", response.status);
+
+      // Try to read JSON response
+      let data = null;
+
+      try {
+        data = await response.json();
+      } catch {
+        // Response may have no JSON body
+      }
+
+      console.log("Verify response:", data);
+
+      if (!response.ok) {
+        const message =
+          data?.message ||
+          data?.error ||
+          "کد تایید اشتباه است یا اعتبار آن تمام شده است";
+
+        throw new Error(message);
+      }
+
+      console.log("✅ OTP verification successful");
+
+      // Save authentication state
+      login({
+        phone: cleanPhone,
+        role: "demo",
+        isDemo: true,
+      });
+
+      // Go to setting page
+      navigate("/setting");
+    } catch (error) {
+      console.error("🔥 OTP verification error:", error);
+
+      setError(
+        error?.message ||
+          "خطا در تایید کد. لطفاً کد وارد شده را بررسی کنید."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // =====================================================
+  // Change phone number
+  // =====================================================
+  const handleChangePhone = () => {
+    if (loading) return;
+
+    setStep(1);
+    setCode("");
+    setError("");
   };
 
   return (
@@ -237,7 +371,9 @@ function Demo() {
               </div>
             </div>
 
-            {/* Step 1 */}
+            {/* =================================================
+                STEP 1 - PHONE
+            ================================================= */}
             {step === 1 && (
               <form onSubmit={handlePhoneSubmit}>
                 <label className="mb-2 block text-sm font-bold text-purple-100">
@@ -261,6 +397,7 @@ function Demo() {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="09123456789"
+                    disabled={loading}
                     className="
                       w-full
                       rounded-2xl
@@ -279,6 +416,8 @@ function Demo() {
                       focus:ring-purple-500/15
                       focus:shadow-lg
                       focus:shadow-purple-950/20
+                      disabled:cursor-not-allowed
+                      disabled:opacity-50
                     "
                     dir="ltr"
                   />
@@ -311,6 +450,7 @@ function Demo() {
                 {/* Submit */}
                 <button
                   type="submit"
+                  disabled={loading}
                   className="
                     group/button relative mt-5 w-full
                     overflow-hidden
@@ -329,6 +469,8 @@ function Demo() {
                     hover:shadow-xl
                     hover:shadow-purple-500/40
                     active:scale-95
+                    disabled:cursor-not-allowed
+                    disabled:opacity-60
                   "
                 >
                   {/* Shine */}
@@ -355,23 +497,44 @@ function Demo() {
                       gap-2
                     "
                   >
-                    <FiMessageSquare />
+                    {loading ? (
+                      <>
+                        <span
+                          className="
+                            h-5 w-5
+                            animate-spin
+                            rounded-full
+                            border-2
+                            border-white/30
+                            border-t-white
+                          "
+                        />
 
-                    <span>دریافت کد تایید</span>
+                        <span>در حال ارسال...</span>
+                      </>
+                    ) : (
+                      <>
+                        <FiMessageSquare />
 
-                    <FiArrowLeft
-                      className="
-                        transition-transform
-                        duration-300
-                        group-hover/button:-translate-x-1
-                      "
-                    />
+                        <span>دریافت کد تایید</span>
+
+                        <FiArrowLeft
+                          className="
+                            transition-transform
+                            duration-300
+                            group-hover/button:-translate-x-1
+                          "
+                        />
+                      </>
+                    )}
                   </span>
                 </button>
               </form>
             )}
 
-            {/* Step 2 */}
+            {/* =================================================
+                STEP 2 - OTP
+            ================================================= */}
             {step === 2 && (
               <form onSubmit={handleCodeSubmit}>
                 {/* Phone info */}
@@ -425,10 +588,17 @@ function Demo() {
 
                   <input
                     type="text"
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
                     value={code}
-                    onChange={(e) => setCode(e.target.value)}
+                    onChange={(e) =>
+                      setCode(
+                        e.target.value.replace(/\D/g, "").slice(0, 6)
+                      )
+                    }
                     placeholder="- - - - - -"
                     maxLength={6}
+                    disabled={loading}
                     className="
                       w-full
                       rounded-2xl
@@ -449,30 +619,11 @@ function Demo() {
                       focus:ring-purple-500/15
                       focus:shadow-lg
                       focus:shadow-purple-950/20
+                      disabled:cursor-not-allowed
+                      disabled:opacity-50
                     "
                     dir="ltr"
                   />
-                </div>
-
-                {/* Demo code hint */}
-                <div
-                  className="
-                    mt-3
-                    flex items-center
-                    justify-center
-                    gap-2
-                    text-xs
-                    text-slate-500
-                  "
-                >
-                  <FiCheckCircle className="text-purple-400" />
-
-                  <span>
-                    کد ورود دمو:
-                    <span className="mr-1 font-bold text-purple-300">
-                      123456
-                    </span>
-                  </span>
                 </div>
 
                 {/* Error */}
@@ -495,6 +646,7 @@ function Demo() {
                     "
                   >
                     <FiMessageSquare className="shrink-0" />
+
                     <span>{error}</span>
                   </div>
                 )}
@@ -502,6 +654,7 @@ function Demo() {
                 {/* Login button */}
                 <button
                   type="submit"
+                  disabled={loading}
                   className="
                     group/button relative mt-5 w-full
                     overflow-hidden
@@ -520,6 +673,8 @@ function Demo() {
                     hover:shadow-xl
                     hover:shadow-purple-500/40
                     active:scale-95
+                    disabled:cursor-not-allowed
+                    disabled:opacity-60
                   "
                 >
                   {/* Shine */}
@@ -546,28 +701,44 @@ function Demo() {
                       gap-2
                     "
                   >
-                    <FiSend />
+                    {loading ? (
+                      <>
+                        <span
+                          className="
+                            h-5 w-5
+                            animate-spin
+                            rounded-full
+                            border-2
+                            border-white/30
+                            border-t-white
+                          "
+                        />
 
-                    <span>ورود به نسخه دمو</span>
+                        <span>در حال بررسی...</span>
+                      </>
+                    ) : (
+                      <>
+                        <FiSend />
 
-                    <FiArrowLeft
-                      className="
-                        transition-transform
-                        duration-300
-                        group-hover/button:-translate-x-1
-                      "
-                    />
+                        <span>ورود به نسخه دمو</span>
+
+                        <FiArrowLeft
+                          className="
+                            transition-transform
+                            duration-300
+                            group-hover/button:-translate-x-1
+                          "
+                        />
+                      </>
+                    )}
                   </span>
                 </button>
 
                 {/* Change phone */}
                 <button
                   type="button"
-                  onClick={() => {
-                    setStep(1);
-                    setCode("");
-                    setError("");
-                  }}
+                  onClick={handleChangePhone}
+                  disabled={loading}
                   className="
                     mt-3
                     flex w-full
@@ -583,6 +754,8 @@ function Demo() {
                     hover:border-purple-500/10
                     hover:bg-purple-500/[0.05]
                     hover:text-purple-200
+                    disabled:cursor-not-allowed
+                    disabled:opacity-50
                   "
                 >
                   <FiEdit3 />
@@ -613,3 +786,5 @@ function Demo() {
 }
 
 export default Demo;
+
+

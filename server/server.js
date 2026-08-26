@@ -383,6 +383,80 @@ app.get("/api/history/stats/today", async (req, res) => {
   }
 });
 
+
+js
+// =========================
+// Request statistics - Daily
+// =========================
+
+app.get("/api/history/stats/daily", async (req, res) => {
+  try {
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 29);
+    startDate.setHours(0, 0, 0, 0);
+
+    const endDate = new Date();
+    endDate.setHours(23, 59, 59, 999);
+
+    const stats = await ImageHistory.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: startDate,
+            $lte: endDate,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: "$createdAt" },
+            month: { $month: "$createdAt" },
+            day: { $dayOfMonth: "$createdAt" },
+          },
+          requests: {
+            $sum: 1,
+          },
+        },
+      },
+      {
+        $sort: {
+          "_id.year": 1,
+          "_id.month": 1,
+          "_id.day": 1,
+        },
+      },
+    ]);
+
+    const formattedStats = stats.map((item) => {
+      const date = new Date(
+        item._id.year,
+        item._id.month - 1,
+        item._id.day
+      );
+
+      return {
+        date: date.toISOString().split("T")[0],
+        requests: item.requests,
+      };
+    });
+
+    res.status(200).json({
+      success: true,
+      stats: formattedStats,
+    });
+  } catch (error) {
+    console.error("Get daily request stats error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "خطا در دریافت آمار روزانه درخواست‌ها",
+    });
+  }
+});
+
+
+
 // =========================
 // Get user history
 // =========================
