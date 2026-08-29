@@ -237,6 +237,7 @@ function Login() {
                     text-sm
                     font-bold
                     text-purple-100
+                    font-medium
                   "
                 >
                   شماره همراه
@@ -292,6 +293,7 @@ function Login() {
                     text-sm
                     font-bold
                     text-purple-100
+                    font-medium
                   "
                 >
                   رمز ورود

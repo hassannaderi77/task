@@ -376,7 +376,7 @@ function Demo() {
             ================================================= */}
             {step === 1 && (
               <form onSubmit={handlePhoneSubmit}>
-                <label className="mb-2 block text-sm font-bold text-purple-100">
+                <label className="font-medium mb-2 block text-sm font-bold text-purple-100">
                   شماره موبایل
                 </label>
 
@@ -570,7 +570,7 @@ function Demo() {
                   </p>
                 </div>
 
-                <label className="mb-2 block text-sm font-bold text-purple-100">
+                <label className="font-medium mb-2 block text-sm font-bold text-purple-100">
                   کد تایید
                 </label>
 

@@ -384,7 +384,7 @@ app.get("/api/history/stats/today", async (req, res) => {
 });
 
 
-js
+
 // =========================
 // Request statistics - Daily
 // =========================

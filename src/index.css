@@ -16,3 +16,28 @@
     transform: translateX(350%) skewX(-20deg);
   }
 }
+
+
+@font-face {
+  font-family: "IranYekan";
+  src: url("./assets/fonts/iranyekanwebregular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "IranYekan";
+  src: url("./assets/fonts/iranyekanwebmedium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-iran: "IranYekan", sans-serif;
+}
+
+body {
+  font-family: "IranYekan", sans-serif;
+}
