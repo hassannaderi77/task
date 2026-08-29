@@ -179,7 +179,7 @@ function HistoryUserCard({
             <FiImage size={42} />
           </div>
 
-          <p className="mt-4 font-bold text-purple-100">
+          <p className="mt-4 font-medium text-purple-100">
             این کاربر هنوز تصویری ویرایش نکرده است
           </p>
 
@@ -397,7 +397,7 @@ function HistoryUserCard({
         border border-purple-400/20
         bg-purple-500/10
         px-2.5 py-1
-        text-xs font-bold
+        text-xs font-medium
         text-purple-200
       "
                         >
@@ -427,7 +427,7 @@ function HistoryUserCard({
                                           border border-purple-400/20
                                           bg-purple-500/10
                                           px-2.5 py-1
-                                          text-xs font-bold
+                                          text-xs font-medium
                                           text-purple-200
                                         "
                         >
@@ -464,7 +464,7 @@ function HistoryUserCard({
                                     border border-fuchsia-400/20
                                     bg-fuchsia-500/10
                                     px-2.5 py-1
-                                    text-xs font-bold
+                                    text-xs font-medium
                                     text-fuchsia-200
                                   "
                         >
@@ -499,7 +499,7 @@ function HistoryUserCard({
                                 border border-violet-400/20
                                 bg-violet-500/10
                                 px-2.5 py-1
-                                text-xs font-bold
+                                text-xs font-medium
                                 text-violet-200
                               "
                         >
@@ -534,7 +534,7 @@ function HistoryUserCard({
                                         border border-purple-400/20
                                         bg-purple-500/10
                                         px-2.5 py-1
-                                        text-xs font-bold
+                                        text-xs font-medium
                                         text-purple-200
                                       "
                         >

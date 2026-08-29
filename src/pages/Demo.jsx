@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import {
@@ -21,6 +21,17 @@ function Demo() {
 
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  const errorRef = useRef(null);
+
+  useEffect(() => {
+      if (error) {
+        errorRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    }, [error]);
 
   // =====================================================
   // STEP 1 - Request OTP
@@ -376,7 +387,7 @@ function Demo() {
             ================================================= */}
             {step === 1 && (
               <form onSubmit={handlePhoneSubmit}>
-                <label className="font-medium mb-2 block text-sm font-bold text-purple-100">
+                <label className="font-medium mb-2 block text-sm font-medium text-purple-100">
                   شماره موبایل
                 </label>
 
@@ -426,6 +437,7 @@ function Demo() {
                 {/* Error */}
                 {error && (
                   <div
+                  ref={errorRef}
                     className="
                       mt-3
                       flex items-center
@@ -460,7 +472,7 @@ function Demo() {
                     via-violet-600
                     to-fuchsia-600
                     py-4
-                    font-bold
+                    font-medium
                     text-white
                     shadow-lg
                     shadow-purple-600/30
@@ -561,7 +573,7 @@ function Demo() {
                   <p
                     className="
                       mt-2
-                      font-bold
+                      font-medium
                       text-purple-200
                     "
                     dir="ltr"
@@ -570,7 +582,7 @@ function Demo() {
                   </p>
                 </div>
 
-                <label className="font-medium mb-2 block text-sm font-bold text-purple-100">
+                <label className="mb-2 block text-sm font-medium text-purple-100">
                   کد تایید
                 </label>
 
@@ -629,6 +641,7 @@ function Demo() {
                 {/* Error */}
                 {error && (
                   <div
+                  ref={errorRef}
                     className="
                       mt-3
                       flex items-center
@@ -664,7 +677,7 @@ function Demo() {
                     via-violet-600
                     to-fuchsia-600
                     py-4
-                    font-bold
+                    font-medium
                     text-white
                     shadow-lg
                     shadow-purple-600/30

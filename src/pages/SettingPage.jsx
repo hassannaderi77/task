@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useRef, useState, useEffect } from "react";
 
 import ImageEditor from "../components/ui/ImageEditor";
 
@@ -8,7 +8,6 @@ import { getApiErrorMessage } from "../api/errorHandler";
 
 import { FiDownload } from "react-icons/fi";
 import { HiSparkles } from "react-icons/hi2";
-
 
 import ErrorMessage from "../components/ui/ErrorMessage";
 
@@ -20,8 +19,6 @@ import FormSetting from "../components/formSetting/FormSetting";
 const API_URL = import.meta.env.VITE_API_URL.replace("/api", "");
 
 function SettingPage() {
-
-
   const [firstSelect, setFirstSelect] = useState("");
   const [secondSelect, setSecondSelect] = useState("");
   const [device, setDevice] = useState("");
@@ -39,7 +36,29 @@ function SettingPage() {
   const galleryRef = useRef(null);
   const cameraRef = useRef(null);
 
+  const errorRef = useRef(null);
+  const apiErrorRef = useRef(null);
+  const resultRef = useRef(null);
+
   const { mutateAsync: editImage, isPending } = useImageEdit();
+
+  useEffect(() => {
+    if (error) {
+      errorRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (apiError) {
+      apiErrorRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [apiError]);
 
   const check = firstSelect && secondSelect && device && request && brand;
 
@@ -134,6 +153,12 @@ function SettingPage() {
         setEditedImages(historyResults);
 
         console.log("Image history saved successfully");
+        setTimeout(() => {
+          resultRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }, 100);
       } catch (historyError) {
         console.error("History save error:", historyError);
       }
@@ -277,12 +302,37 @@ function SettingPage() {
 
         {/* Main Form Card */}
 
-        <FormSetting firstSelect={firstSelect} setFirstSelect={setFirstSelect} secondSelect={secondSelect} setSecondSelect={setSecondSelect} device={device} setDevice={setDevice} request={request} setRequest={setRequest} brand={brand} setBrand={setBrand} description={description} setDescription={setDescription} error={error} check={check} galleryRef={galleryRef} cameraRef={cameraRef} setImages={setImages} images={images} editSelectedImage={editSelectedImage} removeImage={removeImage} clickHnadler={clickHnadler} isPending={isPending} />
+        <FormSetting
+          firstSelect={firstSelect}
+          setFirstSelect={setFirstSelect}
+          secondSelect={secondSelect}
+          setSecondSelect={setSecondSelect}
+          device={device}
+          setDevice={setDevice}
+          request={request}
+          setRequest={setRequest}
+          brand={brand}
+          setBrand={setBrand}
+          description={description}
+          setDescription={setDescription}
+          error={error}
+          check={check}
+          galleryRef={galleryRef}
+          cameraRef={cameraRef}
+          setImages={setImages}
+          images={images}
+          editSelectedImage={editSelectedImage}
+          removeImage={removeImage}
+          clickHnadler={clickHnadler}
+          isPending={isPending}
+          errorRef={errorRef}
+        />
 
         {/* API Error */}
 
         {apiError && (
           <div
+            ref={apiErrorRef}
             className="
               mt-8
               overflow-hidden
@@ -304,7 +354,7 @@ function SettingPage() {
         {/* Edited Images */}
 
         {editedImages.length > 0 && (
-          <div className="mt-10">
+          <div ref={resultRef} className="mt-10">
             <div className="mb-6 text-center">
               <div
                 className="
@@ -373,7 +423,7 @@ function SettingPage() {
                     className="
                       relative mb-6
                       text-center
-                      text-lg font-bold
+                      text-lg font-medium
                       text-purple-100
                     "
                   >
@@ -396,7 +446,7 @@ function SettingPage() {
                         className="
                           mb-3
                           text-center
-                          font-bold
+                          font-medium
                           text-slate-300
                         "
                       >
@@ -435,7 +485,7 @@ function SettingPage() {
                       <div className="mb-3 flex items-center justify-between gap-3">
                         <h4
                           className="
-                            font-bold
+                            font-medium
                             text-purple-200
                           "
                         >
@@ -512,7 +562,3 @@ function SettingPage() {
 }
 
 export default SettingPage;
-
-
-
-

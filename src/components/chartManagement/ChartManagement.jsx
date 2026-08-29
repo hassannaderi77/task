@@ -574,7 +574,7 @@ function ChartManagement({
 
               <div className="mb-4 flex items-center justify-between px-2">
                 <div>
-                  <p className="text-sm font-bold text-slate-300">
+                  <p className="text-sm font-medium text-slate-300">
                     {viewMode === "hour"
                       ? "فعالیت ساعتی"
                       : "فعالیت روزانه"}
@@ -721,7 +721,7 @@ function ChartManagement({
                 <FiBarChart2 className="h-10 w-10" />
               </div>
 
-              <p className="mt-5 font-bold text-slate-300">
+              <p className="mt-5 font-medium text-slate-300">
                 هنوز درخواستی ثبت نشده است
               </p>
 

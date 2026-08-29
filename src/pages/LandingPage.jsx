@@ -196,7 +196,7 @@ function LandingPage() {
                 via-violet-600
                 to-fuchsia-600
                 px-9 py-4
-                font-bold
+                font-medium
                 text-white
                 shadow-xl
                 shadow-purple-600/30
@@ -243,7 +243,7 @@ function LandingPage() {
                 from-purple-500/[0.08]
                 to-fuchsia-500/[0.05]
                 px-9 py-4
-                font-bold
+                font-medium
                 text-purple-100
                 shadow-lg
                 shadow-purple-950/20

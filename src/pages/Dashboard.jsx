@@ -181,7 +181,7 @@ function Dashboard() {
                 className="
                   text-center
                   text-2xl
-                  font-bold
+                  font-medium
                   text-transparent
                   bg-gradient-to-r
                   from-purple-300
@@ -276,7 +276,7 @@ function Dashboard() {
                         relative
                         break-all
                         text-lg
-                        font-bold
+                        font-medium
                         text-white
                         transition-colors duration-300
                         group-hover:text-purple-100

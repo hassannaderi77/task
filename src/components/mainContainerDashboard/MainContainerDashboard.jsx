@@ -137,7 +137,7 @@ copiedPromptId
                   <FiImage className="text-purple-200" size={30} />
                 </div>
     
-                <h2 className="text-xl font-bold text-purple-100 sm:text-2xl">
+                <h2 className="text-xl font-medium text-purple-100 sm:text-2xl">
                   هنوز تاریخی ثبت نشده است
                 </h2>
     
@@ -287,7 +287,7 @@ copiedPromptId
                           <h3
                             className="
                               text-sm
-                              font-bold
+                              font-medium
                               text-slate-300
                             "
                           >
@@ -364,7 +364,7 @@ copiedPromptId
                           <h3
                             className="
                               text-sm
-                              font-bold
+                              font-medium
                               text-purple-200
                             "
                           >
@@ -556,7 +556,7 @@ function Info({ title, value }) {
           mt-1.5
           break-words
           text-sm
-          font-bold
+          font-medium
           text-purple-50
         "
       >

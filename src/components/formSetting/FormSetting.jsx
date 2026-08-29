@@ -30,7 +30,8 @@ images,
 editSelectedImage,
 removeImage,
 clickHnadler,
-isPending
+isPending,
+errorRef
 }) {
   return (
     <div
@@ -105,6 +106,7 @@ isPending
 
             {error && (
               <div
+              ref={errorRef}
                 className="
                   mt-6
                   rounded-2xl
@@ -167,7 +169,7 @@ isPending
                     🖼️
                   </div>
 
-                  <h3 className="text-lg font-bold text-purple-100">
+                  <h3 className="text-lg font-medium text-purple-100">
                     تصاویر انتخاب شده
                   </h3>
                 </div>
@@ -245,7 +247,7 @@ isPending
                           to-rose-600
                           p-0
                           text-lg
-                          font-bold
+                          font-medium
                           leading-none
                           text-white
                           shadow-lg
@@ -284,7 +286,7 @@ isPending
     via-violet-600
     to-fuchsia-600
     py-4
-    font-bold
+    font-medium
     text-white
     shadow-xl
     shadow-purple-600/30

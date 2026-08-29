@@ -71,7 +71,7 @@ function Request({ request, setRequest }) {
         className="
           relative mb-5
           flex items-center gap-2
-          text-right text-lg font-bold
+          text-right text-lg font-medium
           text-white
         "
       >
@@ -233,7 +233,7 @@ function Request({ request, setRequest }) {
                     bg-gradient-to-br
                     from-purple-500
                     to-fuchsia-600
-                    text-sm font-bold
+                    text-sm font-medium
                     text-white
                     shadow-lg
                     shadow-purple-500/30

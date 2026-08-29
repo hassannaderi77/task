@@ -43,7 +43,7 @@ function Numbertwo({ secondSelect, setSecondSelect }) {
       <label
         className="
           relative mb-3 block
-          text-right text-sm font-bold
+          text-right text-sm font-medium
           text-purple-100
         "
       >

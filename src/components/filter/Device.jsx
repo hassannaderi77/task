@@ -76,7 +76,7 @@ function Device({ device, setDevice }) {
         className="
           relative mb-5
           flex items-center gap-2
-          text-right text-lg font-bold text-white
+          text-right text-lg font-medium text-white
         "
       >
         <span
@@ -231,7 +231,7 @@ function Device({ device, setDevice }) {
                     bg-gradient-to-br
                     from-purple-500
                     to-fuchsia-600
-                    text-sm font-bold text-white
+                    text-sm font-medium text-white
                     shadow-lg shadow-purple-500/30
                     animate-[pulse_2s_ease-in-out_infinite]
                   "

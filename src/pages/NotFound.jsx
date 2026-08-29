@@ -162,7 +162,7 @@ function NotFound() {
             via-violet-600
             to-fuchsia-600
             px-8 py-3.5
-            font-bold
+            font-medium
             text-white
             shadow-xl
             shadow-purple-600/30

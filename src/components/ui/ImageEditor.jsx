@@ -574,7 +574,7 @@ function ImageEditor({ image, onSave, onClose }) {
           "
         >
           <div>
-            <h2 className="text-base font-bold text-purple-100 sm:text-lg">
+            <h2 className="text-base font-medium text-purple-100 sm:text-lg">
               ویرایش تصویر
             </h2>
 
@@ -905,7 +905,7 @@ function ImageEditor({ image, onSave, onClose }) {
                   px-3
                   py-2.5
                   text-xs
-                  font-bold
+                  font-medium
                   text-white
                   transition
                   hover:bg-purple-500
@@ -987,7 +987,7 @@ function ImageEditor({ image, onSave, onClose }) {
                   px-3
                   py-2.5
                   text-xs
-                  font-bold
+                  font-medium
                   text-white
                   shadow-lg
                   shadow-purple-950/30

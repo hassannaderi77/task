@@ -6,7 +6,7 @@ function Description({ description, setDescription }) {
       <div className="mb-3 flex items-center justify-between">
         <label
           className="
-            text-sm font-bold
+            text-sm font-medium
             text-purple-200
           "
         >

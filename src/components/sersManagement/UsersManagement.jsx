@@ -212,7 +212,7 @@ function UsersManagement({
             <FiUsers size={42} />
           </div>
 
-          <p className="mt-4 font-bold text-purple-100">
+          <p className="mt-4 font-medium text-purple-100">
             هنوز کاربری ثبت نشده است
           </p>
 

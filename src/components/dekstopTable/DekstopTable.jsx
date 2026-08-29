@@ -120,7 +120,7 @@ function DekstopTable({users, onHistoryClick,}) {
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="font-bold text-purple-50">
+                    <p className="font-medium text-purple-50">
                       {user.name || "-"} {user.family || ""}
                     </p>
 

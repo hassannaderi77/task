@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   FiArrowLeft,
@@ -18,6 +18,18 @@ function Login() {
   const [phone, setPhone] = useState("");
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
+
+  const errorRef = useRef(null)
+
+
+  useEffect(() => {
+        if (error) {
+          errorRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        }
+      }, [error]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -235,7 +247,6 @@ function Login() {
                   className="
                     mb-2 block
                     text-sm
-                    font-bold
                     text-purple-100
                     font-medium
                   "
@@ -291,7 +302,6 @@ function Login() {
                   className="
                     mb-2 block
                     text-sm
-                    font-bold
                     text-purple-100
                     font-medium
                   "
@@ -344,6 +354,7 @@ function Login() {
               {/* Error */}
               {error && (
                 <div
+                ref={errorRef}
                   className="
                     flex items-center
                     justify-center
@@ -380,7 +391,7 @@ function Login() {
                   via-violet-600
                   to-fuchsia-600
                   px-6 py-4
-                  font-bold
+                  font-medium
                   text-white
                   shadow-xl
                   shadow-purple-600/30
@@ -443,7 +454,7 @@ function Login() {
               <Link
                 to="/register"
                 className="
-                  font-bold
+                  font-medium
                   text-transparent
                   bg-gradient-to-r
                   from-purple-300

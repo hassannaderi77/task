@@ -64,7 +64,7 @@ function Gallery({ cameraRef, galleryRef, check, setImages }) {
           className="
             relative z-10 mb-4
             flex items-center justify-between
-            text-right text-lg font-bold text-white
+            text-right text-lg font-medium text-white
           "
           dir="rtl"
         >
@@ -212,7 +212,7 @@ function Gallery({ cameraRef, galleryRef, check, setImages }) {
           className="
             relative z-10 mb-4
             flex items-center justify-between
-            text-right text-lg font-bold text-white
+            text-right text-lg font-medium text-white
           "
           dir="rtl"
         >

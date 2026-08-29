@@ -69,7 +69,7 @@ function Brand({ brand, setBrand }) {
           relative mb-5
           flex items-center gap-2
           text-right text-lg
-          font-bold text-white
+          font-medium text-white
         "
       >
         <span
@@ -234,7 +234,7 @@ function Brand({ brand, setBrand }) {
                     from-purple-500
                     to-fuchsia-600
                     text-sm
-                    font-bold
+                    font-medium
                     text-white
                     shadow-lg
                     shadow-purple-500/30
