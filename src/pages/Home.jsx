@@ -149,7 +149,7 @@ function Home() {
               to-purple-300
               bg-clip-text
               text-4xl
-              font-black
+              font-medium
               text-transparent
               sm:text-5xl
             "
@@ -254,7 +254,7 @@ function Home() {
                 to-fuchsia-300
                 bg-clip-text
                 text-2xl
-                font-black
+                font-medium
                 text-transparent
               "
             >

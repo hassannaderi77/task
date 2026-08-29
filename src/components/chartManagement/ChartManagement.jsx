@@ -39,7 +39,7 @@ function ChartManagement({
 
   const hourlyChartData = useMemo(() => {
     const statsMap = new Map(
-      hourlyStats.map((item) => [item.hour, Number(item.requests || 0)])
+      hourlyStats.map((item) => [item.hour, Number(item.requests || 0)]),
     );
 
     return Array.from({ length: 24 }, (_, hour) => {
@@ -67,11 +67,9 @@ function ChartManagement({
   // Current chart data
   // =========================
 
-  const chartData =
-    viewMode === "hour" ? hourlyChartData : dailyChartData;
+  const chartData = viewMode === "hour" ? hourlyChartData : dailyChartData;
 
-  const currentStats =
-    viewMode === "hour" ? hourlyStats : dailyStats;
+  const currentStats = viewMode === "hour" ? hourlyStats : dailyStats;
 
   // =========================
   // Total requests
@@ -80,7 +78,7 @@ function ChartManagement({
   const totalRequests = useMemo(() => {
     return currentStats.reduce(
       (total, item) => total + Number(item.requests || 0),
-      0
+      0,
     );
   }, [currentStats]);
 
@@ -91,9 +89,7 @@ function ChartManagement({
   const maxRequests = useMemo(() => {
     if (!currentStats.length) return 0;
 
-    return Math.max(
-      ...currentStats.map((item) => Number(item.requests || 0))
-    );
+    return Math.max(...currentStats.map((item) => Number(item.requests || 0)));
   }, [currentStats]);
 
   // =========================
@@ -104,15 +100,12 @@ function ChartManagement({
     if (!currentStats.length) return "-";
 
     const busiest = currentStats.reduce((prev, current) =>
-      Number(current.requests || 0) >
-      Number(prev.requests || 0)
+      Number(current.requests || 0) > Number(prev.requests || 0)
         ? current
-        : prev
+        : prev,
     );
 
-    return viewMode === "hour"
-      ? busiest.hour
-      : busiest.date;
+    return viewMode === "hour" ? busiest.hour : busiest.date;
   }, [currentStats, viewMode]);
 
   // =========================
@@ -219,7 +212,7 @@ function ChartManagement({
                   to-purple-300
                   bg-clip-text
                   text-xl
-                  font-black
+                  font-medium
                   text-transparent
                   sm:text-2xl
                 "
@@ -351,9 +344,7 @@ function ChartManagement({
               "
             >
               <div className="mb-3 flex items-center justify-between">
-                <span className="text-xs text-slate-500">
-                  مجموع درخواست‌ها
-                </span>
+                <span className="text-xs text-slate-500">مجموع درخواست‌ها</span>
 
                 <span
                   className="
@@ -368,9 +359,7 @@ function ChartManagement({
                 </span>
               </div>
 
-              <p className="text-2xl font-black text-white">
-                {totalRequests}
-              </p>
+              <p className="text-2xl font-medium text-white">{totalRequests}</p>
 
               <p className="mt-1 text-[11px] text-slate-600">
                 {viewMode === "hour"
@@ -393,9 +382,7 @@ function ChartManagement({
               "
             >
               <div className="mb-3 flex items-center justify-between">
-                <span className="text-xs text-slate-500">
-                  بیشترین درخواست
-                </span>
+                <span className="text-xs text-slate-500">بیشترین درخواست</span>
 
                 <span
                   className="
@@ -410,9 +397,7 @@ function ChartManagement({
                 </span>
               </div>
 
-              <p className="text-2xl font-black text-white">
-                {maxRequests}
-              </p>
+              <p className="text-2xl font-medium text-white">{maxRequests}</p>
 
               <p className="mt-1 text-[11px] text-slate-600">
                 در {viewMode === "hour" ? "یک ساعت" : "یک روز"}
@@ -434,9 +419,7 @@ function ChartManagement({
             >
               <div className="mb-3 flex items-center justify-between">
                 <span className="text-xs text-slate-500">
-                  {viewMode === "hour"
-                    ? "شلوغ‌ترین ساعت"
-                    : "شلوغ‌ترین روز"}
+                  {viewMode === "hour" ? "شلوغ‌ترین ساعت" : "شلوغ‌ترین روز"}
                 </span>
 
                 <span
@@ -456,13 +439,11 @@ function ChartManagement({
                 </span>
               </div>
 
-              <p className="truncate text-2xl font-black text-white">
+              <p className="truncate text-2xl font-medium text-white">
                 {busiestPeriod}
               </p>
 
-              <p className="mt-1 text-[11px] text-slate-600">
-                بیشترین فعالیت
-              </p>
+              <p className="mt-1 text-[11px] text-slate-600">بیشترین فعالیت</p>
             </div>
 
             {/* Average */}
@@ -479,9 +460,7 @@ function ChartManagement({
               "
             >
               <div className="mb-3 flex items-center justify-between">
-                <span className="text-xs text-slate-500">
-                  میانگین
-                </span>
+                <span className="text-xs text-slate-500">میانگین</span>
 
                 <span
                   className="
@@ -496,7 +475,7 @@ function ChartManagement({
                 </span>
               </div>
 
-              <p className="text-2xl font-black text-white">
+              <p className="text-2xl font-medium text-white">
                 {averageRequests}
               </p>
 
@@ -558,147 +537,132 @@ function ChartManagement({
             Chart
         ========================= */}
 
-        {!isLoadingRequests &&
-          !requestsError &&
-          chartData.length > 0 && (
-            <div
-              className="
+        {!isLoadingRequests && !requestsError && chartData.length > 0 && (
+          <div
+            className="
                 rounded-3xl
                 border border-white/[0.05]
                 bg-black/10
                 p-3
                 sm:p-5
               "
-            >
-              {/* Chart header */}
+          >
+            {/* Chart header */}
 
-              <div className="mb-4 flex items-center justify-between px-2">
-                <div>
-                  <p className="text-sm font-medium text-slate-300">
-                    {viewMode === "hour"
-                      ? "فعالیت ساعتی"
-                      : "فعالیت روزانه"}
-                  </p>
+            <div className="mb-4 flex items-center justify-between px-2">
+              <div>
+                <p className="text-sm font-medium text-slate-300">
+                  {viewMode === "hour" ? "فعالیت ساعتی" : "فعالیت روزانه"}
+                </p>
 
-                  <p className="mt-1 text-[11px] text-slate-600">
-                    {viewMode === "hour"
-                      ? "۲۴ ساعت امروز"
-                      : "تعداد درخواست‌ها در روزهای مختلف"}
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-purple-400" />
-
-                  <span className="text-[11px] text-slate-500">
-                    درخواست
-                  </span>
-                </div>
+                <p className="mt-1 text-[11px] text-slate-600">
+                  {viewMode === "hour"
+                    ? "۲۴ ساعت امروز"
+                    : "تعداد درخواست‌ها در روزهای مختلف"}
+                </p>
               </div>
 
-              {/* Chart */}
+              <div className="flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-purple-400" />
 
-              <div className="h-[320px] w-full sm:h-[380px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                    data={chartData}
-                    margin={{
-                      top: 15,
-                      right: 5,
-                      left: -15,
-                      bottom: 5,
-                    }}
-                  >
-                    <CartesianGrid
-                      vertical={false}
-                      strokeDasharray="4 4"
-                      stroke="rgba(148,163,184,0.08)"
-                    />
-
-                    <XAxis
-                      dataKey="label"
-                      interval={viewMode === "hour" ? 1 : 0}
-                      tick={{
-                        fill: "#64748b",
-                        fontSize: viewMode === "hour" ? 10 : 11,
-                      }}
-                      axisLine={false}
-                      tickLine={false}
-                    />
-
-                    <YAxis
-                      allowDecimals={false}
-                      tick={{
-                        fill: "#64748b",
-                        fontSize: 10,
-                      }}
-                      axisLine={false}
-                      tickLine={false}
-                    />
-
-                    <Tooltip
-                      cursor={{
-                        fill: "rgba(168,85,247,0.05)",
-                      }}
-                      contentStyle={{
-                        background: "#12091f",
-                        border:
-                          "1px solid rgba(168,85,247,0.25)",
-                        borderRadius: "14px",
-                        boxShadow:
-                          "0 15px 40px rgba(0,0,0,0.35)",
-                      }}
-                      labelStyle={{
-                        color: "#c4b5fd",
-                        fontWeight: 700,
-                        marginBottom: 5,
-                      }}
-                      itemStyle={{
-                        color: "#e9d5ff",
-                        fontSize: 13,
-                      }}
-                      formatter={(value) => [
-                        `${value} درخواست`,
-                        "تعداد",
-                      ]}
-                    />
-
-                    <Bar
-                      dataKey="requests"
-                      radius={[7, 7, 3, 3]}
-                      animationDuration={900}
-                      maxBarSize={viewMode === "hour" ? 28 : 45}
-                    >
-                      {chartData.map((entry, index) => (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={
-                            entry.requests === maxRequests &&
-                            entry.requests > 0
-                              ? "#d946ef"
-                              : "#9333ea"
-                          }
-                          fillOpacity={
-                            entry.requests === 0 ? 0.15 : 0.85
-                          }
-                        />
-                      ))}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
+                <span className="text-[11px] text-slate-500">درخواست</span>
               </div>
             </div>
-          )}
+
+            {/* Chart */}
+
+            <div className="h-[320px] w-full sm:h-[380px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={chartData}
+                  margin={{
+                    top: 15,
+                    right: 5,
+                    left: -15,
+                    bottom: 5,
+                  }}
+                >
+                  <CartesianGrid
+                    vertical={false}
+                    strokeDasharray="4 4"
+                    stroke="rgba(148,163,184,0.08)"
+                  />
+
+                  <XAxis
+                    dataKey="label"
+                    interval={viewMode === "hour" ? 2 : "preserveStartEnd"}
+                    tick={{
+                      fill: "#64748b",
+                      fontSize: viewMode === "hour" ? 9 : 11,
+                    }}
+                    axisLine={false}
+                    tickLine={false}
+                    tickMargin={8}
+                  />
+
+                  <YAxis
+                    allowDecimals={false}
+                    tick={{
+                      fill: "#64748b",
+                      fontSize: 10,
+                    }}
+                    axisLine={false}
+                    tickLine={false}
+                  />
+
+                  <Tooltip
+                    cursor={{
+                      fill: "rgba(168,85,247,0.05)",
+                    }}
+                    contentStyle={{
+                      background: "#12091f",
+                      border: "1px solid rgba(168,85,247,0.25)",
+                      borderRadius: "14px",
+                      boxShadow: "0 15px 40px rgba(0,0,0,0.35)",
+                    }}
+                    labelStyle={{
+                      color: "#c4b5fd",
+                      fontWeight: 700,
+                      marginBottom: 5,
+                    }}
+                    itemStyle={{
+                      color: "#e9d5ff",
+                      fontSize: 13,
+                    }}
+                    formatter={(value) => [`${value} درخواست`, "تعداد"]}
+                  />
+
+                  <Bar
+                    dataKey="requests"
+                    radius={[7, 7, 3, 3]}
+                    animationDuration={900}
+                    maxBarSize={viewMode === "hour" ? 28 : 45}
+                  >
+                    {chartData.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={
+                          entry.requests === maxRequests && entry.requests > 0
+                            ? "#d946ef"
+                            : "#9333ea"
+                        }
+                        fillOpacity={entry.requests === 0 ? 0.15 : 0.85}
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        )}
 
         {/* =========================
             Empty
         ========================= */}
 
-        {!isLoadingRequests &&
-          !requestsError &&
-          chartData.length === 0 && (
-            <div
-              className="
+        {!isLoadingRequests && !requestsError && chartData.length === 0 && (
+          <div
+            className="
                 flex min-h-[320px]
                 flex-col items-center
                 justify-center
@@ -708,32 +672,31 @@ function ChartManagement({
                 bg-black/10
                 text-center
               "
-            >
-              <div
-                className="
+          >
+            <div
+              className="
                   flex h-20 w-20
                   items-center justify-center
                   rounded-3xl
                   bg-purple-500/10
                   text-purple-300
                 "
-              >
-                <FiBarChart2 className="h-10 w-10" />
-              </div>
-
-              <p className="mt-5 font-medium text-slate-300">
-                هنوز درخواستی ثبت نشده است
-              </p>
-
-              <p className="mt-2 text-xs text-slate-600">
-                با ثبت اولین درخواست، آمار اینجا نمایش داده می‌شود
-              </p>
+            >
+              <FiBarChart2 className="h-10 w-10" />
             </div>
-          )}
+
+            <p className="mt-5 font-medium text-slate-300">
+              هنوز درخواستی ثبت نشده است
+            </p>
+
+            <p className="mt-2 text-xs text-slate-600">
+              با ثبت اولین درخواست، آمار اینجا نمایش داده می‌شود
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
 export default ChartManagement;
-

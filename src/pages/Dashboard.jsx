@@ -121,12 +121,12 @@ function Dashboard() {
               to-purple-300
               bg-clip-text
               text-4xl
-              font-black
+              font-medium
               text-transparent
               sm:text-5xl
             "
           >
-            Dashboard
+            داشبورد
           </h1>
 
           <p className="mt-3 text-slate-400">

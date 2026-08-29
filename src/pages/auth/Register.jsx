@@ -156,7 +156,7 @@ function Register() {
 
             <h1
               className="
-                text-3xl font-black
+                text-3xl font-medium
                 text-transparent
                 bg-gradient-to-r
                 from-purple-200

@@ -117,7 +117,7 @@ function HistoryUserCard({
             </div>
 
             <div>
-              <h2 className="text-xl font-black text-fuchsia-100">
+              <h2 className="text-xl font-medium text-fuchsia-100">
                 تاریخچه کاربر
               </h2>
 

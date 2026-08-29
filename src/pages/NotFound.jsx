@@ -43,7 +43,6 @@ function NotFound() {
       />
 
       <div className="relative w-full max-w-2xl text-center">
-
         {/* 404 */}
 
         <div className="relative mb-8">
@@ -62,7 +61,7 @@ function NotFound() {
             className="
               relative
               text-[120px]
-              font-black
+              font-medium
               leading-none
               tracking-tighter
               text-transparent
@@ -106,7 +105,7 @@ function NotFound() {
 
         <h2
           className="
-            text-2xl font-black
+            text-2xl font-medium
             text-transparent
             bg-gradient-to-r
             from-purple-200
@@ -128,8 +127,8 @@ function NotFound() {
             text-slate-400
           "
         >
-          متأسفانه صفحه‌ای که به دنبال آن هستید وجود ندارد یا ممکن است
-          جابه‌جا شده باشد.
+          متأسفانه صفحه‌ای که به دنبال آن هستید وجود ندارد یا ممکن است جابه‌جا
+          شده باشد.
         </p>
 
         {/* Divider */}

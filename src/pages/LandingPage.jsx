@@ -142,7 +142,7 @@ function LandingPage() {
           {/* Heading */}
           <h1
             className="
-              text-4xl font-black
+              text-4xl font-medium
               tracking-tight
               text-transparent
               bg-gradient-to-r

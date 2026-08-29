@@ -29,7 +29,6 @@ function UsersManagement({
   const [copiedItem, setCopiedItem] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
 
-
   const downloadImage = async (imageUrl, fileName) => {
     try {
       const response = await fetch(imageUrl);
@@ -143,7 +142,7 @@ function UsersManagement({
             </div>
 
             <div>
-              <h2 className="text-xl font-black text-purple-100">
+              <h2 className="text-xl font-medium text-purple-100">
                 مدیریت کاربران
               </h2>
 

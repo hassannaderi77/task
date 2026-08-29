@@ -212,7 +212,7 @@ function Login() {
                   to-purple-300
                   bg-clip-text
                   text-3xl
-                  font-black
+                  font-medium
                   text-transparent
                   sm:text-4xl
                 "

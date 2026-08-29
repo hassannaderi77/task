@@ -1,48 +1,78 @@
-
 import { useEffect, useRef, useState } from "react";
+
 import { useNavigate } from "react-router-dom";
+
 import { useAuth } from "../hooks/useAuth";
-import {
-  FiArrowLeft,
-  FiCheckCircle,
-  FiEdit3,
-  FiLock,
-  FiMessageSquare,
-  FiPhone,
-  FiSend,
-} from "react-icons/fi";
+
+import { FiSend } from "react-icons/fi";
+import StepOne from "../components/stepOne/StepOne";
+import StepTwo from "../components/twoStep/StepTwo";
 
 function Demo() {
   const [phone, setPhone] = useState("");
-  const [code, setCode] = useState("");
+  const [code, setCode] = useState(["", "", "", ""]);
   const [step, setStep] = useState(1);
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
+
+  const [otpStatus, setOtpStatus] = useState("idle");
+  // idle | loading | success | error
+
+  const [resendTimer, setResendTimer] = useState(0);
+
+  const inputRefs = useRef([]);
+  const errorRef = useRef(null);
 
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const errorRef = useRef(null);
+  // =====================================================
+  // Scroll to error
+  // =====================================================
 
   useEffect(() => {
-      if (error) {
-        errorRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-      }
-    }, [error]);
+    if (error) {
+      errorRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [error]);
+
+  // =====================================================
+  // Resend countdown
+  // =====================================================
+
+  useEffect(() => {
+    if (resendTimer <= 0) return;
+
+    const timer = setInterval(() => {
+      setResendTimer((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [resendTimer]);
 
   // =====================================================
   // STEP 1 - Request OTP
   // =====================================================
+
   const handlePhoneSubmit = async (e) => {
     e.preventDefault();
+
     setError("");
 
     const cleanPhone = phone.trim();
 
-    // Validate phone
     if (!cleanPhone) {
       setError("لطفاً شماره موبایل خود را وارد کنید");
       return;
@@ -75,7 +105,6 @@ function Demo() {
 
       console.log("OTP response status:", response.status);
 
-      // Try to read JSON response
       let data = null;
 
       try {
@@ -88,23 +117,29 @@ function Demo() {
 
       if (!response.ok) {
         const message =
-          data?.message ||
-          data?.error ||
-          "ارسال کد تایید ناموفق بود";
+          data?.message || data?.error || "ارسال کد تایید ناموفق بود";
 
         throw new Error(message);
       }
 
       console.log("✅ OTP request successful");
 
-      // Move to OTP step
       setStep(2);
-      setCode("");
+      setCode(["", "", "", ""]);
+      setOtpStatus("idle");
+
+      // شروع تایمر ارسال مجدد
+      setResendTimer(60);
+
+      // فوکوس روی اولین باکس
+      setTimeout(() => {
+        inputRefs.current[0]?.focus();
+      }, 100);
     } catch (error) {
       console.error("🔥 OTP request error:", error);
 
       setError(
-        error?.message || "خطا در ارسال کد تایید. لطفاً دوباره تلاش کنید."
+        error?.message || "خطا در ارسال کد تایید. لطفاً دوباره تلاش کنید.",
       );
     } finally {
       setLoading(false);
@@ -112,28 +147,95 @@ function Demo() {
   };
 
   // =====================================================
-  // STEP 2 - Verify OTP
+  // OTP input change
   // =====================================================
-  const handleCodeSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
 
-    const cleanPhone = phone.trim();
-    const cleanCode = code.trim();
+  const handleCodeChange = (index, value) => {
+    // فقط عدد
+    const numericValue = value.replace(/\D/g, "");
 
-    // Validate OTP
-    if (!cleanCode) {
-      setError("لطفاً کد تایید را وارد کنید");
+    if (!numericValue) {
+      const newCode = [...code];
+      newCode[index] = "";
+
+      setCode(newCode);
+      setOtpStatus("idle");
+
       return;
     }
 
-    if (!/^\d{4,6}$/.test(cleanCode)) {
-      setError("کد تایید باید عددی باشد");
+    const digit = numericValue.slice(-1);
+
+    const newCode = [...code];
+    newCode[index] = digit;
+
+    setCode(newCode);
+    setError("");
+    setOtpStatus("idle");
+
+    // رفتن به باکس بعدی
+    if (index < 3) {
+      inputRefs.current[index + 1]?.focus();
+    }
+  };
+
+  // =====================================================
+  // OTP keyboard handling
+  // =====================================================
+
+  const handleCodeKeyDown = (index, e) => {
+    if (e.key === "Backspace") {
+      if (code[index]) {
+        const newCode = [...code];
+        newCode[index] = "";
+
+        setCode(newCode);
+        setOtpStatus("idle");
+
+        return;
+      }
+
+      if (index > 0) {
+        inputRefs.current[index - 1]?.focus();
+
+        const newCode = [...code];
+        newCode[index - 1] = "";
+
+        setCode(newCode);
+        setOtpStatus("idle");
+      }
+    }
+
+    if (e.key === "ArrowLeft" && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    }
+
+    if (e.key === "ArrowRight" && index < 3) {
+      inputRefs.current[index + 1]?.focus();
+    }
+  };
+
+  // =====================================================
+  // STEP 2 - Verify OTP
+  // =====================================================
+
+  const handleCodeSubmit = async (e) => {
+    e.preventDefault();
+
+    setError("");
+
+    const cleanPhone = phone.trim();
+    const cleanCode = code.join("");
+
+    if (cleanCode.length !== 4) {
+      setError("لطفاً کد تایید ۴ رقمی را کامل وارد کنید");
+      setOtpStatus("error");
       return;
     }
 
     try {
       setLoading(true);
+      setOtpStatus("loading");
 
       console.log("========================================");
       console.log("🔐 OTP VERIFY");
@@ -157,7 +259,6 @@ function Demo() {
 
       console.log("Verify response status:", response.status);
 
-      // Try to read JSON response
       let data = null;
 
       try {
@@ -179,21 +280,26 @@ function Demo() {
 
       console.log("✅ OTP verification successful");
 
-      // Save authentication state
-      login({
-        phone: cleanPhone,
-        role: "demo",
-        isDemo: true,
-      });
+      // سبز شدن باکس‌ها
+      setOtpStatus("success");
 
-      // Go to setting page
-      navigate("/setting");
+      // کمی مکث برای نمایش موفقیت
+      setTimeout(() => {
+        login({
+          phone: cleanPhone,
+          role: "demo",
+          isDemo: true,
+        });
+
+        navigate("/setting");
+      }, 600);
     } catch (error) {
       console.error("🔥 OTP verification error:", error);
 
+      setOtpStatus("error");
+
       setError(
-        error?.message ||
-          "خطا در تایید کد. لطفاً کد وارد شده را بررسی کنید."
+        error?.message || "خطا در تایید کد. لطفاً کد وارد شده را بررسی کنید.",
       );
     } finally {
       setLoading(false);
@@ -201,14 +307,158 @@ function Demo() {
   };
 
   // =====================================================
+  // Resend OTP
+  // =====================================================
+
+  const handleResendCode = async () => {
+    if (resendTimer > 0 || resendLoading || loading) {
+      return;
+    }
+
+    const cleanPhone = phone.trim();
+
+    if (!cleanPhone) {
+      setError("شماره موبایل وارد نشده است");
+      return;
+    }
+
+    try {
+      setResendLoading(true);
+      setError("");
+      setOtpStatus("idle");
+
+      console.log("========================================");
+      console.log("🔄 RESEND OTP");
+      console.log("========================================");
+      console.log("Phone:", cleanPhone);
+
+      const response = await fetch("/dev/api/auth/otpsms", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          phone: cleanPhone,
+        }),
+      });
+
+      let data = null;
+
+      try {
+        data = await response.json();
+      } catch {
+        // Response may have no JSON body
+      }
+
+      if (!response.ok) {
+        const message =
+          data?.message || data?.error || "ارسال مجدد کد تایید ناموفق بود";
+
+        throw new Error(message);
+      }
+
+      console.log("✅ OTP resent successfully");
+
+      // پاک کردن کد قبلی
+      setCode(["", "", "", ""]);
+
+      // شروع مجدد تایمر
+      setResendTimer(60);
+
+      // فوکوس روی اولین input
+      setTimeout(() => {
+        inputRefs.current[0]?.focus();
+      }, 100);
+    } catch (error) {
+      console.error("🔥 Resend OTP error:", error);
+
+      setError(error?.message || "ارسال مجدد کد تایید با مشکل مواجه شد");
+    } finally {
+      setResendLoading(false);
+    }
+  };
+
+  // =====================================================
   // Change phone number
   // =====================================================
+
   const handleChangePhone = () => {
-    if (loading) return;
+    if (loading || resendLoading) return;
 
     setStep(1);
-    setCode("");
+    setCode(["", "", "", ""]);
     setError("");
+    setOtpStatus("idle");
+    setResendTimer(0);
+  };
+
+  // =====================================================
+  // OTP box class
+  // =====================================================
+
+  const getOtpBoxClass = () => {
+    let base = `
+      h-16
+      w-14
+      rounded-2xl
+      border
+      bg-white/[0.04]
+      text-center
+      text-2xl
+      font-bold
+      text-white
+      outline-none
+      backdrop-blur-md
+      transition-all
+      duration-300
+      sm:h-[68px]
+      sm:w-[60px]
+    `;
+
+    if (otpStatus === "success") {
+      return `
+        ${base}
+        border-emerald-400/80
+        bg-emerald-500/10
+        text-emerald-300
+        shadow-lg
+        shadow-emerald-500/20
+      `;
+    }
+
+    if (otpStatus === "error") {
+      return `
+        ${base}
+        border-red-400/70
+        bg-red-500/10
+        text-red-300
+        animate-[shake_0.4s_ease-in-out]
+      `;
+    }
+
+    if (otpStatus === "loading") {
+      return `
+        ${base}
+        border-purple-400/60
+        bg-purple-500/[0.08]
+        text-purple-200
+        animate-pulse
+        shadow-lg
+        shadow-purple-500/20
+      `;
+    }
+
+    return `
+      ${base}
+      border-purple-500/20
+      focus:border-fuchsia-400/70
+      focus:bg-purple-500/[0.08]
+      focus:ring-4
+      focus:ring-purple-500/15
+      focus:shadow-lg
+      focus:shadow-purple-950/30
+    `;
   };
 
   return (
@@ -227,6 +477,7 @@ function Demo() {
       "
     >
       {/* Background glows */}
+
       <div
         className="
           pointer-events-none absolute
@@ -252,6 +503,7 @@ function Demo() {
       />
 
       {/* Main */}
+
       <div
         className="
           relative mx-auto
@@ -262,6 +514,7 @@ function Demo() {
         "
       >
         {/* Card */}
+
         <div
           className="
             group relative w-full
@@ -280,6 +533,7 @@ function Demo() {
           "
         >
           {/* Top gradient */}
+
           <div
             className="
               absolute left-0 right-0 top-0
@@ -292,6 +546,7 @@ function Demo() {
           />
 
           {/* Decorative glow */}
+
           <div
             className="
               pointer-events-none absolute
@@ -307,6 +562,7 @@ function Demo() {
 
           <div className="relative">
             {/* Header */}
+
             <div className="mb-8 text-center">
               <div
                 className="
@@ -345,7 +601,7 @@ function Demo() {
                   to-purple-300
                   bg-clip-text
                   text-3xl
-                  font-black
+                  font-medium
                   text-transparent
                 "
               >
@@ -357,6 +613,7 @@ function Demo() {
               </p>
 
               {/* Step Indicator */}
+
               <div className="mt-6 flex items-center justify-center gap-2">
                 <span
                   className={`
@@ -383,403 +640,45 @@ function Demo() {
             </div>
 
             {/* =================================================
-                STEP 1 - PHONE
+                STEP 1
             ================================================= */}
-            {step === 1 && (
-              <form onSubmit={handlePhoneSubmit}>
-                <label className="font-medium mb-2 block text-sm font-medium text-purple-100">
-                  شماره موبایل
-                </label>
 
-                <div className="relative">
-                  <FiPhone
-                    className="
-                      pointer-events-none
-                      absolute
-                      right-4 top-1/2
-                      -translate-y-1/2
-                      text-lg
-                      text-purple-300
-                    "
-                  />
-
-                  <input
-                    type="tel"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="09123456789"
-                    disabled={loading}
-                    className="
-                      w-full
-                      rounded-2xl
-                      border border-purple-500/15
-                      bg-white/[0.04]
-                      px-12 py-4
-                      text-left
-                      text-white
-                      placeholder:text-slate-600
-                      outline-none
-                      backdrop-blur-md
-                      transition-all duration-300
-                      focus:border-purple-400/60
-                      focus:bg-purple-500/[0.06]
-                      focus:ring-4
-                      focus:ring-purple-500/15
-                      focus:shadow-lg
-                      focus:shadow-purple-950/20
-                      disabled:cursor-not-allowed
-                      disabled:opacity-50
-                    "
-                    dir="ltr"
-                  />
-                </div>
-
-                {/* Error */}
-                {error && (
-                  <div
-                  ref={errorRef}
-                    className="
-                      mt-3
-                      flex items-center
-                      justify-center
-                      gap-2
-                      rounded-2xl
-                      border border-red-500/15
-                      bg-gradient-to-r
-                      from-red-500/10
-                      to-purple-500/[0.05]
-                      p-3
-                      text-center
-                      text-sm
-                      text-red-300
-                    "
-                  >
-                    <FiMessageSquare className="shrink-0" />
-                    <span>{error}</span>
-                  </div>
-                )}
-
-                {/* Submit */}
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="
-                    group/button relative mt-5 w-full
-                    overflow-hidden
-                    rounded-2xl
-                    bg-gradient-to-r
-                    from-purple-600
-                    via-violet-600
-                    to-fuchsia-600
-                    py-4
-                    font-medium
-                    text-white
-                    shadow-lg
-                    shadow-purple-600/30
-                    transition-all duration-300
-                    hover:-translate-y-0.5
-                    hover:shadow-xl
-                    hover:shadow-purple-500/40
-                    active:scale-95
-                    disabled:cursor-not-allowed
-                    disabled:opacity-60
-                  "
-                >
-                  {/* Shine */}
-                  <span
-                    className="
-                      absolute inset-y-0 -left-full
-                      w-1/2
-                      skew-x-[-20deg]
-                      bg-gradient-to-r
-                      from-transparent
-                      via-white/20
-                      to-transparent
-                      transition-all duration-700
-                      group-hover/button:left-[130%]
-                    "
-                  />
-
-                  <span
-                    className="
-                      relative
-                      flex
-                      items-center
-                      justify-center
-                      gap-2
-                    "
-                  >
-                    {loading ? (
-                      <>
-                        <span
-                          className="
-                            h-5 w-5
-                            animate-spin
-                            rounded-full
-                            border-2
-                            border-white/30
-                            border-t-white
-                          "
-                        />
-
-                        <span>در حال ارسال...</span>
-                      </>
-                    ) : (
-                      <>
-                        <FiMessageSquare />
-
-                        <span>دریافت کد تایید</span>
-
-                        <FiArrowLeft
-                          className="
-                            transition-transform
-                            duration-300
-                            group-hover/button:-translate-x-1
-                          "
-                        />
-                      </>
-                    )}
-                  </span>
-                </button>
-              </form>
-            )}
+            <StepOne
+              handlePhoneSubmit={handlePhoneSubmit}
+              step={step}
+              phone={phone}
+              setPhone={setPhone}
+              loading={loading}
+              error={error}
+              errorRef={errorRef}
+            />
 
             {/* =================================================
-                STEP 2 - OTP
+                STEP 2
             ================================================= */}
-            {step === 2 && (
-              <form onSubmit={handleCodeSubmit}>
-                {/* Phone info */}
-                <div
-                  className="
-                    mb-5
-                    rounded-2xl
-                    border border-purple-500/15
-                    bg-gradient-to-r
-                    from-purple-500/[0.08]
-                    to-fuchsia-500/[0.05]
-                    p-4
-                    text-center
-                  "
-                >
-                  <div className="mb-2 flex items-center justify-center gap-2">
-                    <FiCheckCircle className="text-purple-300" />
 
-                    <p className="text-sm text-slate-400">
-                      کد تایید برای شماره
-                    </p>
-                  </div>
-
-                  <p
-                    className="
-                      mt-2
-                      font-medium
-                      text-purple-200
-                    "
-                    dir="ltr"
-                  >
-                    {phone}
-                  </p>
-                </div>
-
-                <label className="mb-2 block text-sm font-medium text-purple-100">
-                  کد تایید
-                </label>
-
-                <div className="relative">
-                  <FiLock
-                    className="
-                      pointer-events-none
-                      absolute
-                      right-4 top-1/2
-                      -translate-y-1/2
-                      text-lg
-                      text-fuchsia-300
-                    "
-                  />
-
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    autoComplete="one-time-code"
-                    value={code}
-                    onChange={(e) =>
-                      setCode(
-                        e.target.value.replace(/\D/g, "").slice(0, 6)
-                      )
-                    }
-                    placeholder="- - - - - -"
-                    maxLength={6}
-                    disabled={loading}
-                    className="
-                      w-full
-                      rounded-2xl
-                      border border-purple-500/15
-                      bg-white/[0.04]
-                      px-12 py-4
-                      text-center
-                      text-xl
-                      tracking-[0.5em]
-                      text-white
-                      placeholder:text-slate-600
-                      outline-none
-                      backdrop-blur-md
-                      transition-all duration-300
-                      focus:border-fuchsia-400/60
-                      focus:bg-purple-500/[0.06]
-                      focus:ring-4
-                      focus:ring-purple-500/15
-                      focus:shadow-lg
-                      focus:shadow-purple-950/20
-                      disabled:cursor-not-allowed
-                      disabled:opacity-50
-                    "
-                    dir="ltr"
-                  />
-                </div>
-
-                {/* Error */}
-                {error && (
-                  <div
-                  ref={errorRef}
-                    className="
-                      mt-3
-                      flex items-center
-                      justify-center
-                      gap-2
-                      rounded-2xl
-                      border border-red-500/15
-                      bg-gradient-to-r
-                      from-red-500/10
-                      to-purple-500/[0.05]
-                      p-3
-                      text-center
-                      text-sm
-                      text-red-300
-                    "
-                  >
-                    <FiMessageSquare className="shrink-0" />
-
-                    <span>{error}</span>
-                  </div>
-                )}
-
-                {/* Login button */}
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="
-                    group/button relative mt-5 w-full
-                    overflow-hidden
-                    rounded-2xl
-                    bg-gradient-to-r
-                    from-purple-600
-                    via-violet-600
-                    to-fuchsia-600
-                    py-4
-                    font-medium
-                    text-white
-                    shadow-lg
-                    shadow-purple-600/30
-                    transition-all duration-300
-                    hover:-translate-y-0.5
-                    hover:shadow-xl
-                    hover:shadow-purple-500/40
-                    active:scale-95
-                    disabled:cursor-not-allowed
-                    disabled:opacity-60
-                  "
-                >
-                  {/* Shine */}
-                  <span
-                    className="
-                      absolute inset-y-0 -left-full
-                      w-1/2
-                      skew-x-[-20deg]
-                      bg-gradient-to-r
-                      from-transparent
-                      via-white/20
-                      to-transparent
-                      transition-all duration-700
-                      group-hover/button:left-[130%]
-                    "
-                  />
-
-                  <span
-                    className="
-                      relative
-                      flex
-                      items-center
-                      justify-center
-                      gap-2
-                    "
-                  >
-                    {loading ? (
-                      <>
-                        <span
-                          className="
-                            h-5 w-5
-                            animate-spin
-                            rounded-full
-                            border-2
-                            border-white/30
-                            border-t-white
-                          "
-                        />
-
-                        <span>در حال بررسی...</span>
-                      </>
-                    ) : (
-                      <>
-                        <FiSend />
-
-                        <span>ورود به نسخه دمو</span>
-
-                        <FiArrowLeft
-                          className="
-                            transition-transform
-                            duration-300
-                            group-hover/button:-translate-x-1
-                          "
-                        />
-                      </>
-                    )}
-                  </span>
-                </button>
-
-                {/* Change phone */}
-                <button
-                  type="button"
-                  onClick={handleChangePhone}
-                  disabled={loading}
-                  className="
-                    mt-3
-                    flex w-full
-                    items-center
-                    justify-center
-                    gap-2
-                    rounded-2xl
-                    border border-transparent
-                    py-3
-                    text-sm
-                    text-slate-400
-                    transition-all duration-300
-                    hover:border-purple-500/10
-                    hover:bg-purple-500/[0.05]
-                    hover:text-purple-200
-                    disabled:cursor-not-allowed
-                    disabled:opacity-50
-                  "
-                >
-                  <FiEdit3 />
-
-                  <span>تغییر شماره موبایل</span>
-                </button>
-              </form>
-            )}
+            <StepTwo
+              step={step}
+              handleCodeSubmit={handleCodeSubmit}
+              phone={phone}
+              code={code}
+              inputRefs={inputRefs}
+              loading={loading}
+              handleCodeChange={handleCodeChange}
+              handleCodeKeyDown={handleCodeKeyDown}
+              getOtpBoxClass={getOtpBoxClass}
+              otpStatus={otpStatus}
+              error={error}
+              errorRef={errorRef}
+              resendTimer={resendTimer}
+              resendLoading={resendLoading}
+              handleResendCode={handleResendCode}
+              handleChangePhone={handleChangePhone}
+            />
           </div>
 
           {/* Bottom gradient */}
+
           <div
             className="
               absolute bottom-0 left-1/2
@@ -799,5 +698,3 @@ function Demo() {
 }
 
 export default Demo;
-
-

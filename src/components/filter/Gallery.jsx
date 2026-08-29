@@ -1,9 +1,7 @@
+
 import React from "react";
-import {
-  FiImage,
-  FiCamera,
-  FiCheck,
-} from "react-icons/fi";
+
+import { FiImage, FiCamera, FiCheck } from "react-icons/fi";
 
 function Gallery({ cameraRef, galleryRef, check, setImages }) {
   const handleImageChange = (e) => {
@@ -22,69 +20,65 @@ function Gallery({ cameraRef, galleryRef, check, setImages }) {
 
   const boxStyle = `
     group
-    flex cursor-pointer flex-col items-center justify-center
-    rounded-3xl border-2 border-dashed p-8
+    flex cursor-pointer items-center gap-4
+    rounded-2xl border border-dashed
+    px-4 py-3
     transition-all duration-300 ease-out
   `;
 
   return (
-    <div className="mt-8 grid gap-5 md:grid-cols-2">
+    <div className="mt-6 grid gap-4 md:grid-cols-2">
       {/* Gallery */}
       <div
         className="
           group/card relative overflow-hidden
-          rounded-3xl
+          rounded-2xl
           border border-purple-500/20
           bg-gradient-to-br
           from-[#160d2b]
           via-[#1d1038]
           to-[#0d0718]
-          p-5
-          shadow-xl shadow-purple-950/20
+          p-3
+          shadow-lg shadow-purple-950/15
           transition-all duration-300
           hover:border-purple-400/30
-          hover:shadow-2xl hover:shadow-purple-950/30
+          hover:shadow-xl
         "
       >
         {/* Decorative gradient */}
         <div
           className="
             pointer-events-none absolute
-            -right-16 -top-16
-            h-36 w-36
+            -right-12 -top-12
+            h-28 w-28
             rounded-full
             bg-purple-600/15
             blur-3xl
-            transition-all duration-500
-            group-hover/card:bg-purple-500/25
           "
         />
 
         <h3
           className="
-            relative z-10 mb-4
-            flex items-center justify-between
-            text-right text-lg font-medium text-white
+            relative z-10 mb-2
+            flex items-center gap-2
+            text-right text-base font-medium text-white
           "
           dir="rtl"
         >
-          <span className="flex items-center gap-2">
-            <span
-              className="
-                flex h-9 w-9 items-center justify-center
-                rounded-xl
-                bg-gradient-to-br
-                from-purple-500
-                to-fuchsia-600
-                text-sm
-                shadow-lg shadow-purple-500/20
-              "
-            >
-              <FiImage />
-            </span>
-
-            انتخاب از گالری
+          <span
+            className="
+              flex h-8 w-8 items-center justify-center
+              rounded-xl
+              bg-gradient-to-br
+              from-purple-500
+              to-fuchsia-600
+              text-sm
+            "
+          >
+            <FiImage />
           </span>
+
+          انتخاب از گالری
         </h3>
 
         <label
@@ -95,13 +89,9 @@ function Gallery({ cameraRef, galleryRef, check, setImages }) {
               check
                 ? `
                   border-purple-500/30
-                  bg-gradient-to-br
-                  from-purple-500/[0.06]
-                  to-fuchsia-500/[0.03]
-                  hover:border-purple-400/70
-                  hover:bg-purple-500/[0.10]
-                  hover:shadow-lg
-                  hover:shadow-purple-900/20
+                  bg-purple-500/[0.04]
+                  hover:border-purple-400/60
+                  hover:bg-purple-500/[0.08]
                 `
                 : `
                   cursor-not-allowed
@@ -114,54 +104,53 @@ function Gallery({ cameraRef, galleryRef, check, setImages }) {
         >
           <span
             className="
-              mb-4 flex h-20 w-20
+              flex h-11 w-11 shrink-0
               items-center justify-center
-              rounded-3xl
+              rounded-2xl
               bg-gradient-to-br
               from-purple-500/20
               to-fuchsia-500/10
-              text-4xl
+              text-xl
               text-purple-300
-              shadow-inner
-              transition-all duration-300
-              group-hover:scale-110
-              group-hover:rotate-2
+              transition-transform duration-300
+              group-hover:scale-105
             "
           >
             <FiImage />
           </span>
 
-          <span
-            className="
-              text-sm font-semibold
-              text-slate-200
-              transition-colors duration-300
-              group-hover:text-purple-200
-            "
-          >
-            انتخاب تصاویر
-          </span>
+          <span className="flex flex-1 flex-col text-right">
+            <span
+              className="
+                text-sm font-semibold
+                text-slate-200
+                transition-colors
+                group-hover:text-purple-200
+              "
+            >
+              انتخاب تصاویر
+            </span>
 
-          <span className="mt-2 text-xs text-slate-500">
-            JPG / PNG / WEBP
+            <span className="mt-1 text-xs text-slate-500">
+              JPG / PNG / WEBP
+            </span>
           </span>
 
           {check && (
             <span
               className="
-                mt-4 flex items-center gap-1.5
+                hidden items-center gap-1
                 rounded-full
                 border border-purple-500/20
-                bg-gradient-to-r
-                from-purple-500/10
-                to-fuchsia-500/10
-                px-4 py-1.5
-                text-[11px]
+                bg-purple-500/10
+                px-3 py-1.5
+                text-[10px]
                 text-purple-300
+                sm:flex
               "
             >
               <FiCheck />
-              کلیک کنید
+              انتخاب
             </span>
           )}
 
@@ -181,58 +170,53 @@ function Gallery({ cameraRef, galleryRef, check, setImages }) {
       <div
         className="
           group/card relative overflow-hidden
-          rounded-3xl
+          rounded-2xl
           border border-purple-500/20
           bg-gradient-to-br
           from-[#160d2b]
           via-[#1d1038]
           to-[#0d0718]
-          p-5
-          shadow-xl shadow-purple-950/20
+          p-3
+          shadow-lg shadow-purple-950/15
           transition-all duration-300
           hover:border-purple-400/30
-          hover:shadow-2xl hover:shadow-purple-950/30
+          hover:shadow-xl
         "
       >
         {/* Decorative gradient */}
         <div
           className="
             pointer-events-none absolute
-            -left-16 -bottom-16
-            h-36 w-36
+            -left-12 -bottom-12
+            h-28 w-28
             rounded-full
             bg-fuchsia-600/10
             blur-3xl
-            transition-all duration-500
-            group-hover/card:bg-fuchsia-500/20
           "
         />
 
         <h3
           className="
-            relative z-10 mb-4
-            flex items-center justify-between
-            text-right text-lg font-medium text-white
+            relative z-10 mb-2
+            flex items-center gap-2
+            text-right text-base font-medium text-white
           "
           dir="rtl"
         >
-          <span className="flex items-center gap-2">
-            <span
-              className="
-                flex h-9 w-9 items-center justify-center
-                rounded-xl
-                bg-gradient-to-br
-                from-fuchsia-500
-                to-purple-600
-                text-sm
-                shadow-lg shadow-fuchsia-500/20
-              "
-            >
-              <FiCamera />
-            </span>
-
-            دوربین
+          <span
+            className="
+              flex h-8 w-8 items-center justify-center
+              rounded-xl
+              bg-gradient-to-br
+              from-fuchsia-500
+              to-purple-600
+              text-sm
+            "
+          >
+            <FiCamera />
           </span>
+
+          دوربین
         </h3>
 
         <label
@@ -243,13 +227,9 @@ function Gallery({ cameraRef, galleryRef, check, setImages }) {
               check
                 ? `
                   border-purple-500/30
-                  bg-gradient-to-br
-                  from-purple-500/[0.06]
-                  to-fuchsia-500/[0.03]
-                  hover:border-fuchsia-400/70
-                  hover:bg-fuchsia-500/[0.08]
-                  hover:shadow-lg
-                  hover:shadow-fuchsia-900/20
+                  bg-purple-500/[0.04]
+                  hover:border-fuchsia-400/60
+                  hover:bg-fuchsia-500/[0.06]
                 `
                 : `
                   cursor-not-allowed
@@ -262,54 +242,53 @@ function Gallery({ cameraRef, galleryRef, check, setImages }) {
         >
           <span
             className="
-              mb-4 flex h-20 w-20
+              flex h-11 w-11 shrink-0
               items-center justify-center
-              rounded-3xl
+              rounded-2xl
               bg-gradient-to-br
               from-fuchsia-500/20
               to-purple-500/10
-              text-4xl
+              text-xl
               text-fuchsia-300
-              shadow-inner
-              transition-all duration-300
-              group-hover:scale-110
-              group-hover:-rotate-2
+              transition-transform duration-300
+              group-hover:scale-105
             "
           >
             <FiCamera />
           </span>
 
-          <span
-            className="
-              text-sm font-semibold
-              text-slate-200
-              transition-colors duration-300
-              group-hover:text-purple-200
-            "
-          >
-            گرفتن عکس جدید
-          </span>
+          <span className="flex flex-1 flex-col text-right">
+            <span
+              className="
+                text-sm font-semibold
+                text-slate-200
+                transition-colors
+                group-hover:text-purple-200
+              "
+            >
+              گرفتن عکس جدید
+            </span>
 
-          <span className="mt-2 text-xs text-slate-500">
-            باز کردن دوربین دستگاه
+            <span className="mt-1 text-xs text-slate-500">
+              باز کردن دوربین دستگاه
+            </span>
           </span>
 
           {check && (
             <span
               className="
-                mt-4 flex items-center gap-1.5
+                hidden items-center gap-1
                 rounded-full
                 border border-fuchsia-500/20
-                bg-gradient-to-r
-                from-fuchsia-500/10
-                to-purple-500/10
-                px-4 py-1.5
-                text-[11px]
+                bg-fuchsia-500/10
+                px-3 py-1.5
+                text-[10px]
                 text-fuchsia-300
+                sm:flex
               "
             >
               <FiCamera />
-              استفاده از دوربین
+              دوربین
             </span>
           )}
 
@@ -329,3 +308,4 @@ function Gallery({ cameraRef, galleryRef, check, setImages }) {
 }
 
 export default Gallery;
+

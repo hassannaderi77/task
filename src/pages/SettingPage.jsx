@@ -42,6 +42,41 @@ function SettingPage() {
 
   const { mutateAsync: editImage, isPending } = useImageEdit();
 
+ const selectLabels = {
+  firstSelect: {
+    background_remove: "حذف پس‌زمینه",
+    background_change: "تغییر پس‌زمینه",
+    object_remove: "حذف یک شیء از تصویر",
+    object_add: "اضافه کردن شیء به تصویر",
+  },
+
+  secondSelect: {
+    minimal: "تغییر جزئی",
+    moderate: "تغییر متوسط",
+    strong: "تغییر قابل توجه",
+    creative: "ویرایش خلاقانه",
+  },
+
+  device: {
+    background: "پس‌زمینه",
+    quality: "کیفیت تصویر",
+    appearance: "ظاهر تصویر",
+    object: "جزئیات تصویر",
+  },
+
+  request: {
+    natural: "طبیعی",
+    professional: "حرفه‌ای",
+    creative: "خلاقانه",
+  },
+
+  brand: {
+    product: "محصول",
+    person: "شخص",
+    object: "شیء",
+  },
+};
+
   useEffect(() => {
     if (error) {
       errorRef.current?.scrollIntoView({
@@ -263,7 +298,7 @@ function SettingPage() {
 
           <h1
             className="
-              text-4xl font-black
+              text-4xl font-medium
               text-transparent
               bg-gradient-to-r
               from-purple-200
@@ -376,7 +411,7 @@ function SettingPage() {
 
               <h2
                 className="
-      text-2xl font-black
+      text-2xl font-medium
       text-transparent
       bg-gradient-to-r
       from-purple-200
@@ -394,61 +429,63 @@ function SettingPage() {
                 <div
                   key={index}
                   className="
-                    relative overflow-hidden
-                    rounded-[2rem]
-                    border border-purple-500/20
-                    bg-gradient-to-br
-                    from-[#160d2b]/90
-                    via-[#1d1038]/80
-                    to-[#0d0718]/90
-                    p-5
-                    shadow-2xl
-                    shadow-purple-950/30
-                    backdrop-blur-xl
-                    sm:p-6
-                  "
+      relative overflow-hidden
+      rounded-[2rem]
+      border border-purple-500/20
+      bg-gradient-to-br
+      from-[#160d2b]/90
+      via-[#1d1038]/80
+      to-[#0d0718]/90
+      p-5
+      shadow-2xl
+      shadow-purple-950/30
+      backdrop-blur-xl
+      sm:p-6
+    "
                 >
+                  {/* Top Gradient */}
                   <div
                     className="
-                      absolute left-0 right-0 top-0
-                      h-[2px]
-                      bg-gradient-to-r
-                      from-purple-500
-                      via-fuchsia-500
-                      to-purple-500
-                    "
+        absolute left-0 right-0 top-0
+        h-[2px]
+        bg-gradient-to-r
+        from-purple-500
+        via-fuchsia-500
+        to-purple-500
+      "
                   />
 
+                  {/* Title */}
                   <h3
                     className="
-                      relative mb-6
-                      text-center
-                      text-lg font-medium
-                      text-purple-100
-                    "
+        relative mb-6
+        text-center
+        text-lg font-medium
+        text-purple-100
+      "
                   >
                     تصویر {index + 1}
                   </h3>
 
+                  {/* Images */}
                   <div className="grid gap-6 md:grid-cols-2">
                     {/* Before */}
-
                     <div
                       className="
-                        overflow-hidden
-                        rounded-2xl
-                        border border-purple-500/10
-                        bg-black/20
-                        p-3
-                      "
+          overflow-hidden
+          rounded-2xl
+          border border-purple-500/10
+          bg-black/20
+          p-3
+        "
                     >
                       <h4
                         className="
-                          mb-3
-                          text-center
-                          font-medium
-                          text-slate-300
-                        "
+            mb-3
+            text-center
+            font-medium
+            text-slate-300
+          "
                       >
                         Before
                       </h4>
@@ -457,64 +494,69 @@ function SettingPage() {
                         src={URL.createObjectURL(item.before)}
                         alt={`Before ${index + 1}`}
                         className="
-                          w-full
-                          rounded-xl
-                          object-cover
-                          transition-transform
-                          duration-500
-                          hover:scale-[1.02]
-                        "
+            w-full
+            rounded-xl
+            object-cover
+            transition-transform
+            duration-500
+            hover:scale-[1.02]
+          "
                       />
                     </div>
 
                     {/* After */}
-
                     <div
                       className="
-                        overflow-hidden
-                        rounded-2xl
-                        border border-purple-400/20
-                        bg-gradient-to-br
-                        from-purple-500/[0.05]
-                        to-fuchsia-500/[0.03]
-                        p-3
-                        shadow-lg
-                        shadow-purple-950/20
-                      "
+          overflow-hidden
+          rounded-2xl
+          border border-purple-400/20
+          bg-gradient-to-br
+          from-purple-500/[0.05]
+          to-fuchsia-500/[0.03]
+          p-3
+          shadow-lg
+          shadow-purple-950/20
+        "
                     >
-                      <div className="mb-3 flex items-center justify-between gap-3">
+                      <div
+                        className="
+            mb-3
+            flex items-center
+            justify-between
+            gap-3
+          "
+                      >
                         <h4
                           className="
-                            font-medium
-                            text-purple-200
-                          "
+              font-medium
+              text-purple-200
+            "
                         >
                           After
                         </h4>
 
                         <a
-                          href={`${API_URL}${item.after}`}
+                          href={item.after}
                           download={`edited-image-${index + 1}.png`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="
-                            inline-flex
-                            items-center
-                            gap-2
-                            rounded-xl
-                            border border-purple-400/20
-                            bg-purple-500/10
-                            px-3
-                            py-2
-                            text-xs
-                            font-semibold
-                            text-purple-200
-                            transition-all
-                            duration-300
-                            hover:bg-purple-500/20
-                            hover:text-white
-                            active:scale-95
-                          "
+              inline-flex
+              items-center
+              gap-2
+              rounded-xl
+              border border-purple-400/20
+              bg-purple-500/10
+              px-3 py-2
+              text-xs
+              font-semibold
+              text-purple-200
+              transition-all
+              duration-300
+              hover:bg-purple-500/20
+              hover:text-white
+              active:scale-95
+            "
                         >
                           <FiDownload className="text-base" />
                           دانلود
@@ -522,19 +564,165 @@ function SettingPage() {
                       </div>
 
                       <img
-                        src={`${API_URL}${item.after}`}
+                        src={item.after}
                         alt={`After ${index + 1}`}
                         className="
-                          w-full
-                          rounded-xl
-                          object-cover
-                          transition-transform
-                          duration-500
-                          hover:scale-[1.02]
-                        "
+            w-full
+            rounded-xl
+            object-cover
+            transition-transform
+            duration-500
+            hover:scale-[1.02]
+          "
                       />
                     </div>
                   </div>
+
+                 {/* Request Information */}
+<div
+  className="
+    mt-6
+    rounded-2xl
+    border border-purple-500/15
+    bg-black/20
+    p-4
+  "
+  dir="rtl"
+>
+  <h4
+    className="
+      mb-4
+      text-sm
+      font-semibold
+      text-purple-200
+    "
+  >
+    اطلاعات درخواست
+  </h4>
+
+  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+
+    {/* نوع ویرایش تصویر */}
+    <div
+      className="
+        rounded-xl
+        border border-purple-500/10
+        bg-purple-500/[0.04]
+        p-3
+      "
+    >
+      <span className="block text-xs text-slate-500">
+        نوع ویرایش تصویر
+      </span>
+
+      <span className="mt-1 block text-sm text-slate-200">
+        {selectLabels.firstSelect[firstSelect] || firstSelect || "-"}
+      </span>
+    </div>
+
+    {/* میزان تغییر تصویر */}
+    <div
+      className="
+        rounded-xl
+        border border-purple-500/10
+        bg-purple-500/[0.04]
+        p-3
+      "
+    >
+      <span className="block text-xs text-slate-500">
+        میزان تغییر تصویر
+      </span>
+
+      <span className="mt-1 block text-sm text-slate-200">
+        {selectLabels.secondSelect[secondSelect] ||
+          secondSelect ||
+          "-"}
+      </span>
+    </div>
+
+    {/* هدف اصلی ویرایش */}
+    <div
+      className="
+        rounded-xl
+        border border-purple-500/10
+        bg-purple-500/[0.04]
+        p-3
+      "
+    >
+      <span className="block text-xs text-slate-500">
+        هدف اصلی ویرایش
+      </span>
+
+      <span className="mt-1 block text-sm text-slate-200">
+        {selectLabels.device[device] || device || "-"}
+      </span>
+    </div>
+
+    {/* سبک ویرایش */}
+    <div
+      className="
+        rounded-xl
+        border border-purple-500/10
+        bg-purple-500/[0.04]
+        p-3
+      "
+    >
+      <span className="block text-xs text-slate-500">
+        سبک ویرایش
+      </span>
+
+      <span className="mt-1 block text-sm text-slate-200">
+        {selectLabels.request[request] || request || "-"}
+      </span>
+    </div>
+
+    {/* نوع تصویر */}
+    <div
+      className="
+        rounded-xl
+        border border-purple-500/10
+        bg-purple-500/[0.04]
+        p-3
+      "
+    >
+      <span className="block text-xs text-slate-500">
+        نوع تصویر
+      </span>
+
+      <span className="mt-1 block text-sm text-slate-200">
+        {selectLabels.brand[brand] || brand || "-"}
+      </span>
+    </div>
+  </div>
+
+  {/* توضیحات */}
+  {description && (
+    <div
+      className="
+        mt-3
+        rounded-xl
+        border border-fuchsia-500/10
+        bg-fuchsia-500/[0.04]
+        p-3
+      "
+    >
+      <span className="block text-xs text-slate-500">
+        توضیحات کاربر
+      </span>
+
+      <p
+        className="
+          mt-2
+          text-sm
+          leading-7
+          text-slate-200
+        "
+      >
+        {description}
+      </p>
+    </div>
+  )}
+</div>
                 </div>
               ))}
             </div>

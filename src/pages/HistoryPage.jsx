@@ -1,74 +1,47 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { FiX } from "react-icons/fi";
 
 import { AuthContext } from "../context/authContext";
 
 import Loading from "../components/ui/Loading";
 import ErrorMessage from "../components/ui/ErrorMessage";
-
-import { getHistory, deleteHistory } from "../api/services/historyService";
+import { useHistory } from "../hooks/useHistory";
 import MainContainerDashboard from "../components/mainContainerDashboard/MainContainerDashboard";
 
 function HistoryPage() {
   const { user } = useContext(AuthContext);
+  const { historyQuery, deleteMutation } = useHistory(user?.id);
 
-  const [history, setHistory] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
+  const { data: history = [], isLoading, isError } = historyQuery;
+
   const [deletingId, setDeletingId] = useState("");
   const [copiedPromptId, setCopiedPromptId] = useState("");
   const [previewImage, setPreviewImage] = useState(null);
 
-  useEffect(() => {
-    const fetchHistory = async () => {
-      if (!user?.id) {
-        setIsLoading(false);
-        return;
-      }
-
-      try {
-        setIsLoading(true);
-        setError("");
-
-        const data = await getHistory(user.id);
-        setHistory(data);
-      } catch (error) {
-        console.error("Get history error:", error);
-        setError("دریافت تاریخچه با مشکل مواجه شد");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchHistory();
-  }, [user?.id]);
+  
 
   const handleDelete = async (historyId) => {
-    if (!historyId || !user?.id) return;
+  if (!historyId || !user?.id) return;
 
-    const confirmed = window.confirm(
-      "آیا از حذف این مورد از تاریخچه مطمئن هستید؟",
-    );
+  const confirmed = window.confirm(
+    "آیا از حذف این مورد از تاریخچه مطمئن هستید؟",
+  );
 
-    if (!confirmed) return;
+  if (!confirmed) return;
 
-    try {
-      setDeletingId(historyId);
-      setError("");
+  try {
+    setDeletingId(historyId);
 
-      await deleteHistory(historyId, user.id);
-
-      setHistory((currentHistory) =>
-        currentHistory.filter((item) => item._id !== historyId),
-      );
-    } catch (error) {
-      console.error("Delete history error:", error);
-
-      setError("حذف مورد انتخاب‌شده با مشکل مواجه شد");
-    } finally {
-      setDeletingId("");
-    }
-  };
+    await deleteMutation.mutateAsync({
+      historyId,
+      userId: user.id,
+    });
+  } catch (error) {
+    console.error("Delete history error:", error);
+  } finally {
+    setDeletingId("");
+  }
+};
 
   const handleCopyPrompt = async (text, historyId) => {
     console.log("COPY CLICKED");
@@ -113,45 +86,45 @@ function HistoryPage() {
   };
 
   if (isLoading) {
-    return (
-      <div
-        dir="rtl"
-        className="
-          flex min-h-screen
-          items-center justify-center
-          bg-gradient-to-br
-          from-[#08040f]
-          via-[#160d2b]
-          to-[#0d0718]
-          px-4
-          text-white
-        "
-      >
-        <Loading />
-      </div>
-    );
-  }
+  return (
+    <div
+      dir="rtl"
+      className="
+        flex min-h-screen
+        items-center justify-center
+        bg-gradient-to-br
+        from-[#08040f]
+        via-[#160d2b]
+        to-[#0d0718]
+        px-4
+        text-white
+      "
+    >
+      <Loading />
+    </div>
+  );
+}
 
-  if (error) {
-    return (
-      <div
-        dir="rtl"
-        className="
-          min-h-screen
-          bg-gradient-to-br
-          from-[#08040f]
-          via-[#160d2b]
-          to-[#0d0718]
-          px-4 py-10
-          text-white
-        "
-      >
-        <div className="mx-auto max-w-4xl">
-          <ErrorMessage message={error} />
-        </div>
+if (isError) {
+  return (
+    <div
+      dir="rtl"
+      className="
+        min-h-screen
+        bg-gradient-to-br
+        from-[#08040f]
+        via-[#160d2b]
+        to-[#0d0718]
+        px-4 py-10
+        text-white
+      "
+    >
+      <div className="mx-auto max-w-4xl">
+        <ErrorMessage message="دریافت تاریخچه با مشکل مواجه شد" />
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   return (
     <div

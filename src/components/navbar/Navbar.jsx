@@ -37,11 +37,6 @@ function Navbar() {
 
   const privateLinks = [
     {
-      title: "خانه",
-      path: "/",
-      icon: FiHome,
-    },
-    {
       title: user?.role === "admin" ? "پنل مدیریت" : "داشبورد",
       path: user?.role === "admin" ? "/admin" : "/dashboard",
       icon: user?.role === "admin" ? FiTool : FiGrid,
@@ -149,7 +144,7 @@ function Navbar() {
               to-purple-400
               bg-clip-text
               text-sm
-              font-black
+              font-medium
               text-transparent
               sm:block
             "

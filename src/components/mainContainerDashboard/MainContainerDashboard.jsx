@@ -1,8 +1,14 @@
-import React from 'react'
-import { FiCheck, FiClock, FiCopy, FiDownload, FiImage, FiTrash2 } from 'react-icons/fi';
+import React from "react";
+import {
+  FiCheck,
+  FiClock,
+  FiCopy,
+  FiDownload,
+  FiImage,
+  FiTrash2,
+} from "react-icons/fi";
 
 const API_URL = import.meta.env.VITE_API_URL.replace("/api", "");
-
 
 const firstSelectLabels = {
   background_remove: "حذف پس‌زمینه",
@@ -38,19 +44,19 @@ const brandLabels = {
 };
 
 function MainContainerDashboard({
-history,
-handleDelete,
-deletingId,
-setPreviewImage,
-handleCopyPrompt,
-copiedPromptId
+  history,
+  handleDelete,
+  deletingId,
+  setPreviewImage,
+  handleCopyPrompt,
+  copiedPromptId,
 }) {
   return (
     <div className="relative mx-auto max-w-4xl">
-            {/* Header */}
-            <div className="mb-8 text-center">
-              <div
-                className="
+      {/* Header */}
+      <div className="mb-8 text-center">
+        <div
+          className="
                   mx-auto mb-4
                   flex h-16 w-16
                   items-center justify-center
@@ -66,32 +72,32 @@ copiedPromptId
                   transition-all duration-500
                   hover:scale-105
                 "
-              >
-                <FiClock className="text-purple-200" size={30} />
-              </div>
-    
-              <h1
-                className="
+        >
+          <FiClock className="text-purple-200" size={30} />
+        </div>
+
+        <h1
+          className="
                   bg-gradient-to-r
                   from-purple-200
                   via-fuchsia-300
                   to-purple-300
                   bg-clip-text
                   text-3xl
-                  font-black
+                  font-medium
                   text-transparent
                   sm:text-4xl
                 "
-              >
-                تاریخچه ویرایش تصاویر
-              </h1>
-    
-              <p className="mt-2 text-xs text-slate-400 sm:text-sm">
-                تصاویر ویرایش شده قبلی خود را مشاهده کنید
-              </p>
-    
-              <div
-                className="
+        >
+          تاریخچه ویرایش تصاویر
+        </h1>
+
+        <p className="mt-2 text-xs text-slate-400 sm:text-sm">
+          تصاویر ویرایش شده قبلی خود را مشاهده کنید
+        </p>
+
+        <div
+          className="
                   mx-auto mt-4
                   h-1 w-20
                   rounded-full
@@ -100,13 +106,13 @@ copiedPromptId
                   via-fuchsia-500
                   to-purple-500
                 "
-              />
-            </div>
-    
-            {/* Empty State */}
-            {history.length === 0 && (
-              <div
-                className="
+        />
+      </div>
+
+      {/* Empty State */}
+      {history.length === 0 && (
+        <div
+          className="
                   relative overflow-hidden
                   rounded-3xl
                   border border-purple-500/20
@@ -121,9 +127,9 @@ copiedPromptId
                   backdrop-blur-xl
                   sm:p-10
                 "
-              >
-                <div
-                  className="
+        >
+          <div
+            className="
                     mx-auto mb-4
                     flex h-16 w-16
                     items-center justify-center
@@ -133,27 +139,27 @@ copiedPromptId
                     to-fuchsia-500/10
                     text-3xl
                   "
-                >
-                  <FiImage className="text-purple-200" size={30} />
-                </div>
-    
-                <h2 className="text-xl font-medium text-purple-100 sm:text-2xl">
-                  هنوز تاریخی ثبت نشده است
-                </h2>
-    
-                <p className="mt-2 text-sm text-slate-400">
-                  بعد از ویرایش اولین تصویر، نتیجه اینجا نمایش داده می‌شود.
-                </p>
-              </div>
-            )}
-    
-            {/* History */}
-            {history.length > 0 && (
-              <div className="space-y-6">
-                {history.map((item, index) => (
-                  <div
-                    key={item._id || index}
-                    className="
+          >
+            <FiImage className="text-purple-200" size={30} />
+          </div>
+
+          <h2 className="text-xl font-medium text-purple-100 sm:text-2xl">
+            هنوز تاریخی ثبت نشده است
+          </h2>
+
+          <p className="mt-2 text-sm text-slate-400">
+            بعد از ویرایش اولین تصویر، نتیجه اینجا نمایش داده می‌شود.
+          </p>
+        </div>
+      )}
+
+      {/* History */}
+      {history.length > 0 && (
+        <div className="space-y-6">
+          {history.map((item, index) => (
+            <div
+              key={item._id || index}
+              className="
                       group relative overflow-hidden
                       rounded-3xl
                       border border-purple-500/20
@@ -171,10 +177,10 @@ copiedPromptId
                       hover:shadow-purple-900/40
                       sm:p-5
                     "
-                  >
-                    {/* Top gradient */}
-                    <div
-                      className="
+            >
+              {/* Top gradient */}
+              <div
+                className="
                         absolute left-0 right-0 top-0
                         h-[2px]
                         bg-gradient-to-r
@@ -182,35 +188,35 @@ copiedPromptId
                         via-purple-500
                         to-fuchsia-500
                       "
-                    />
-    
-                    {/* Header */}
-                    <div
-                      className="
+              />
+
+              {/* Header */}
+              <div
+                className="
                         mb-4
                         flex flex-col gap-2
                         sm:flex-row
                         sm:items-center
                         sm:justify-between
                       "
-                    >
-                      <h2
-                        className="
+              >
+                <h2
+                  className="
                           bg-gradient-to-r
                           from-purple-200
                           to-fuchsia-300
                           bg-clip-text
                           text-lg
-                          font-black
+                          font-medium
                           text-transparent
                         "
-                      >
-                        ویرایش تصویر {history.length - index}
-                      </h2>
-    
-                      <div className="flex items-center gap-2">
-                        <span
-                          className="
+                >
+                  ویرایش تصویر {history.length - index}
+                </h2>
+
+                <div className="flex items-center gap-2">
+                  <span
+                    className="
           flex
           w-fit
           items-center
@@ -224,18 +230,18 @@ copiedPromptId
           text-[11px]
           text-purple-200
         "
-                        >
-                          <FiClock size={13} />
-                          {new Date(item.createdAt).toLocaleString("fa-IR")}
-                        </span>
-    
-                        <button
-                          type="button"
-                          onClick={() => handleDelete(item._id)}
-                          disabled={deletingId === item._id}
-                          title="حذف از تاریخچه"
-                          aria-label="حذف از تاریخچه"
-                          className="
+                  >
+                    <FiClock size={13} />
+                    {new Date(item.createdAt).toLocaleString("fa-IR")}
+                  </span>
+
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(item._id)}
+                    disabled={deletingId === item._id}
+                    title="حذف از تاریخچه"
+                    aria-label="حذف از تاریخچه"
+                    className="
           inline-flex
           h-9 w-9
           shrink-0
@@ -253,15 +259,15 @@ copiedPromptId
           disabled:cursor-not-allowed
           disabled:opacity-50
         "
-                        >
-                          <FiTrash2 size={16} />
-                        </button>
-                      </div>
-                    </div>
-    
-                    {/* Images */}
-                    <div
-                      className="
+                  >
+                    <FiTrash2 size={16} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Images */}
+              <div
+                className="
                         flex
                         flex-col
                         items-center
@@ -270,10 +276,10 @@ copiedPromptId
                         sm:flex-row
                         sm:items-start
                       "
-                    >
-                      {/* Before */}
-                      <div
-                        className="
+              >
+                {/* Before */}
+                <div
+                  className="
                           w-full
                           max-w-[240px]
                           overflow-hidden
@@ -282,24 +288,24 @@ copiedPromptId
                           bg-black/20
                           p-2
                         "
-                      >
-                        <div className="mb-2 flex items-center justify-between gap-2">
-                          <h3
-                            className="
+                >
+                  <div className="mb-2 flex items-center justify-between gap-2">
+                    <h3
+                      className="
                               text-sm
                               font-medium
                               text-slate-300
                             "
-                          >
-                            تصویر اولیه
-                          </h3>
-    
-                          <a
-                            href={`${API_URL}${item.beforeImage}`}
-                            download={`before-image-${index + 1}.png`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="
+                    >
+                      تصویر اولیه
+                    </h3>
+
+                    <a
+                      href={`${API_URL}${item.beforeImage}`}
+                      download={`before-image-${index + 1}.png`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="
                               inline-flex
                               items-center
                               gap-1.5
@@ -316,22 +322,22 @@ copiedPromptId
                               hover:text-white
                               active:scale-95
                             "
-                          >
-                            <FiDownload className="text-sm" />
-                            دانلود
-                          </a>
-                        </div>
-    
-                        <img
-                          src={`${API_URL}${item.beforeImage}`}
-                          alt="Before"
-                          onClick={() =>
-                            setPreviewImage({
-                              src: `${API_URL}${item.beforeImage}`,
-                              title: "تصویر اولیه",
-                            })
-                          }
-                          className="
+                    >
+                      <FiDownload className="text-sm" />
+                      دانلود
+                    </a>
+                  </div>
+
+                  <img
+                    src={`${API_URL}${item.beforeImage}`}
+                    alt="Before"
+                    onClick={() =>
+                      setPreviewImage({
+                        src: `${API_URL}${item.beforeImage}`,
+                        title: "تصویر اولیه",
+                      })
+                    }
+                    className="
         aspect-video
         w-full
         cursor-pointer
@@ -341,12 +347,12 @@ copiedPromptId
         hover:scale-[1.02]
         hover:opacity-90
       "
-                        />
-                      </div>
-    
-                      {/* After */}
-                      <div
-                        className="
+                  />
+                </div>
+
+                {/* After */}
+                <div
+                  className="
                           w-full
                           max-w-[240px]
                           overflow-hidden
@@ -359,24 +365,24 @@ copiedPromptId
                           shadow-md
                           shadow-purple-950/20
                         "
-                      >
-                        <div className="mb-2 flex items-center justify-between gap-2">
-                          <h3
-                            className="
+                >
+                  <div className="mb-2 flex items-center justify-between gap-2">
+                    <h3
+                      className="
                               text-sm
                               font-medium
                               text-purple-200
                             "
-                          >
-                            نتیجه ویرایش
-                          </h3>
-    
-                          <a
-                            href={`${API_URL}${item.afterImage}`}
-                            download={`after-image-${index + 1}.png`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="
+                    >
+                      نتیجه ویرایش
+                    </h3>
+
+                    <a
+                      href={`${API_URL}${item.afterImage}`}
+                      download={`after-image-${index + 1}.png`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="
                               inline-flex
                               items-center
                               gap-1.5
@@ -393,22 +399,22 @@ copiedPromptId
                               hover:text-white
                               active:scale-95
                             "
-                          >
-                            <FiDownload className="text-sm" />
-                            دانلود
-                          </a>
-                        </div>
-    
-                        <img
-                          src={`${API_URL}${item.afterImage}`}
-                          alt="After"
-                          onClick={() =>
-                            setPreviewImage({
-                              src: `${API_URL}${item.afterImage}`,
-                              title: "نتیجه ویرایش",
-                            })
-                          }
-                          className="
+                    >
+                      <FiDownload className="text-sm" />
+                      دانلود
+                    </a>
+                  </div>
+
+                  <img
+                    src={`${API_URL}${item.afterImage}`}
+                    alt="After"
+                    onClick={() =>
+                      setPreviewImage({
+                        src: `${API_URL}${item.afterImage}`,
+                        title: "نتیجه ویرایش",
+                      })
+                    }
+                    className="
         aspect-video
         w-full
         cursor-pointer
@@ -418,51 +424,51 @@ copiedPromptId
         hover:scale-[1.02]
         hover:opacity-90
       "
-                        />
-                      </div>
-                    </div>
-    
-                    {/* Information */}
-                    <div
-                      className="
+                  />
+                </div>
+              </div>
+
+              {/* Information */}
+              <div
+                className="
                         mt-4
                         grid gap-3
                         sm:grid-cols-2
                         lg:grid-cols-3
                       "
-                    >
-                      <Info
-                        title="نوع ویرایش تصویر"
-                        value={
-                          firstSelectLabels[item.firstSelect] || item.firstSelect
-                        }
-                      />
-    
-                      <Info
-                        title="میزان تغییر تصویر"
-                        value={
-                          secondSelectLabels[item.secondSelect] || item.secondSelect
-                        }
-                      />
-    
-                      <Info
-                        title="هدف اصلی ویرایش"
-                        value={deviceLabels[item.device] || item.device}
-                      />
-    
-                      <Info
-                        title="سبک ویرایش"
-                        value={requestLabels[item.request] || item.request}
-                      />
-    
-                      <Info
-                        title="نوع تصویر"
-                        value={brandLabels[item.brand] || item.brand}
-                      />
-    
-                      {item.description && (
-                        <div
-                          className="
+              >
+                <Info
+                  title="نوع ویرایش تصویر"
+                  value={
+                    firstSelectLabels[item.firstSelect] || item.firstSelect
+                  }
+                />
+
+                <Info
+                  title="میزان تغییر تصویر"
+                  value={
+                    secondSelectLabels[item.secondSelect] || item.secondSelect
+                  }
+                />
+
+                <Info
+                  title="هدف اصلی ویرایش"
+                  value={deviceLabels[item.device] || item.device}
+                />
+
+                <Info
+                  title="سبک ویرایش"
+                  value={requestLabels[item.request] || item.request}
+                />
+
+                <Info
+                  title="نوع تصویر"
+                  value={brandLabels[item.brand] || item.brand}
+                />
+
+                {item.description && (
+                  <div
+                    className="
           flex
           flex-col
           gap-2
@@ -471,21 +477,21 @@ copiedPromptId
           bg-white/[0.02]
           p-3
         "
-                        >
-                          <div className="flex items-center justify-between gap-3">
-                            <span className="text-xs font-medium text-slate-500">
-                              توضیحات
-                            </span>
-    
-                            <button
-                              type="button"
-                              onClick={() => {
-                                console.log("BUTTON CLICKED:", item._id);
-                                handleCopyPrompt(item.description, item._id);
-                              }}
-                              title="کپی"
-                              aria-label="کپی توضیحات"
-                              className="
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="text-xs font-medium text-slate-500">
+                        توضیحات
+                      </span>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          console.log("BUTTON CLICKED:", item._id);
+                          handleCopyPrompt(item.description, item._id);
+                        }}
+                        title="کپی"
+                        aria-label="کپی توضیحات"
+                        className="
         inline-flex
         h-8
         w-8
@@ -503,34 +509,34 @@ copiedPromptId
         hover:text-white
         active:scale-95
       "
-                            >
-                              {copiedPromptId === item._id ? (
-                                <FiCheck size={15} />
-                              ) : (
-                                <FiCopy size={15} />
-                              )}
-                            </button>
-                          </div>
-    
-                          <p
-                            className="
+                      >
+                        {copiedPromptId === item._id ? (
+                          <FiCheck size={15} />
+                        ) : (
+                          <FiCopy size={15} />
+                        )}
+                      </button>
+                    </div>
+
+                    <p
+                      className="
             break-words
             text-xs
             leading-6
             text-slate-300
           "
-                          >
-                            {item.description}
-                          </p>
-                        </div>
-                      )}
-                    </div>
+                    >
+                      {item.description}
+                    </p>
                   </div>
-                ))}
+                )}
               </div>
-            )}
-          </div>
-  )
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
 
 function Info({ title, value }) {
@@ -566,4 +572,4 @@ function Info({ title, value }) {
   );
 }
 
-export default MainContainerDashboard
+export default MainContainerDashboard;
