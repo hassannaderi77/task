@@ -1,6 +1,4 @@
-function ErrorMessage({
-  message = "خطایی در دریافت اطلاعات رخ داده است.",
-}) {
+function ErrorMessage({ message = "خطایی در دریافت اطلاعات رخ داده است." }) {
   return (
     <div
       dir="rtl"
@@ -71,7 +69,7 @@ function ErrorMessage({
       <p
         className="
           relative
-          text-sm font-semibold
+          text-sm font-medium
           leading-7
           text-red-300
           transition-colors duration-300

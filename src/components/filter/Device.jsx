@@ -1,4 +1,3 @@
-
 import React from "react";
 
 import {
@@ -39,9 +38,7 @@ function Device({ device, setDevice }) {
     },
   ];
 
-  const selectedDevice = devices.find(
-    (item) => item.value === device
-  );
+  const selectedDevice = devices.find((item) => item.value === device);
 
   return (
     <div
@@ -109,7 +106,6 @@ function Device({ device, setDevice }) {
         >
           <FiTarget />
         </span>
-
         هدف اصلی ویرایش
       </h3>
 
@@ -165,7 +161,7 @@ function Device({ device, setDevice }) {
                 block
                 truncate
                 text-sm
-                font-semibold
+                font-medium
                 text-purple-200
               "
             >
@@ -325,15 +321,11 @@ function Device({ device, setDevice }) {
                     className={`
                       block
                       text-sm
-                      font-semibold
+                      font-medium
                       transition-colors
                       duration-300
 
-                      ${
-                        isSelected
-                          ? "text-purple-300"
-                          : "text-slate-200"
-                      }
+                      ${isSelected ? "text-purple-300" : "text-slate-200"}
                     `}
                   >
                     {item.title}
@@ -492,7 +484,7 @@ function Device({ device, setDevice }) {
                 <span
                   className={`
                     text-sm
-                    font-semibold
+                    font-medium
                     transition-colors
                     duration-300
 
@@ -552,4 +544,3 @@ function Device({ device, setDevice }) {
 }
 
 export default Device;
-

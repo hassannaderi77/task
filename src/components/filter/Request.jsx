@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 
 import {
@@ -33,9 +32,7 @@ function Request({ request, setRequest }) {
     },
   ];
 
-  const selectedRequest = requests.find(
-    (item) => item.value === request
-  );
+  const selectedRequest = requests.find((item) => item.value === request);
 
   return (
     <div
@@ -115,9 +112,7 @@ function Request({ request, setRequest }) {
           <FiEdit3 />
         </span>
 
-        <h3 className="text-lg font-medium text-white">
-          سبک ویرایش
-        </h3>
+        <h3 className="text-lg font-medium text-white">سبک ویرایش</h3>
       </div>
 
       {/* ========================= */}
@@ -176,9 +171,7 @@ function Request({ request, setRequest }) {
             </span>
 
             <span className="mt-0.5 block truncate text-xs text-purple-300">
-              {selectedRequest
-                ? selectedRequest.title
-                : "انتخاب کنید"}
+              {selectedRequest ? selectedRequest.title : "انتخاب کنید"}
             </span>
           </div>
         </div>
@@ -341,7 +334,7 @@ function Request({ request, setRequest }) {
                 <span
                   className={`
                     text-sm
-                    font-semibold
+                    font-medium
                     transition-colors
                     duration-200
 
@@ -404,4 +397,3 @@ function Request({ request, setRequest }) {
 }
 
 export default Request;
-

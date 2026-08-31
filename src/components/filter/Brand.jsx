@@ -342,7 +342,7 @@ function Brand({ brand, setBrand }) {
                 <span
                   className={`
                     text-sm
-                    font-semibold
+                    font-medium
                     transition-colors
                     duration-300
 

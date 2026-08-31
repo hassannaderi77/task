@@ -12,7 +12,6 @@ function Register() {
   });
 
   const navigate = useNavigate();
-  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -175,10 +174,7 @@ function Register() {
           </div>
 
           {/* Form */}
-          <form
-            onSubmit={clickHandler}
-            className="flex flex-col gap-4"
-          >
+          <form onSubmit={clickHandler} className="flex flex-col gap-4">
             <input
               type="text"
               name="name"
@@ -260,9 +256,7 @@ function Register() {
                 "
               />
 
-              <span className="relative">
-                ثبت نام
-              </span>
+              <span className="relative">ثبت نام</span>
             </button>
           </form>
 
@@ -270,9 +264,7 @@ function Register() {
           <div className="my-6 flex items-center gap-3">
             <div className="h-px flex-1 bg-gradient-to-r from-transparent to-purple-500/20" />
 
-            <span className="text-xs text-slate-500">
-              یا
-            </span>
+            <span className="text-xs text-slate-500">یا</span>
 
             <div className="h-px flex-1 bg-gradient-to-l from-transparent to-purple-500/20" />
           </div>
@@ -289,7 +281,7 @@ function Register() {
               to-fuchsia-500/[0.04]
               px-6 py-3.5
               text-center
-              font-semibold
+              font-medium
               text-purple-200
               transition-all duration-300
 

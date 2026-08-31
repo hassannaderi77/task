@@ -18,30 +18,28 @@ function HistoryPage() {
   const [copiedPromptId, setCopiedPromptId] = useState("");
   const [previewImage, setPreviewImage] = useState(null);
 
-  
-
   const handleDelete = async (historyId) => {
-  if (!historyId || !user?.id) return;
+    if (!historyId || !user?.id) return;
 
-  const confirmed = window.confirm(
-    "آیا از حذف این مورد از تاریخچه مطمئن هستید؟",
-  );
+    const confirmed = window.confirm(
+      "آیا از حذف این مورد از تاریخچه مطمئن هستید؟",
+    );
 
-  if (!confirmed) return;
+    if (!confirmed) return;
 
-  try {
-    setDeletingId(historyId);
+    try {
+      setDeletingId(historyId);
 
-    await deleteMutation.mutateAsync({
-      historyId,
-      userId: user.id,
-    });
-  } catch (error) {
-    console.error("Delete history error:", error);
-  } finally {
-    setDeletingId("");
-  }
-};
+      await deleteMutation.mutateAsync({
+        historyId,
+        userId: user.id,
+      });
+    } catch (error) {
+      console.error("Delete history error:", error);
+    } finally {
+      setDeletingId("");
+    }
+  };
 
   const handleCopyPrompt = async (text, historyId) => {
     console.log("COPY CLICKED");
@@ -86,10 +84,10 @@ function HistoryPage() {
   };
 
   if (isLoading) {
-  return (
-    <div
-      dir="rtl"
-      className="
+    return (
+      <div
+        dir="rtl"
+        className="
         flex min-h-screen
         items-center justify-center
         bg-gradient-to-br
@@ -99,17 +97,17 @@ function HistoryPage() {
         px-4
         text-white
       "
-    >
-      <Loading />
-    </div>
-  );
-}
+      >
+        <Loading />
+      </div>
+    );
+  }
 
-if (isError) {
-  return (
-    <div
-      dir="rtl"
-      className="
+  if (isError) {
+    return (
+      <div
+        dir="rtl"
+        className="
         min-h-screen
         bg-gradient-to-br
         from-[#08040f]
@@ -118,13 +116,13 @@ if (isError) {
         px-4 py-10
         text-white
       "
-    >
-      <div className="mx-auto max-w-4xl">
-        <ErrorMessage message="دریافت تاریخچه با مشکل مواجه شد" />
+      >
+        <div className="mx-auto max-w-4xl">
+          <ErrorMessage message="دریافت تاریخچه با مشکل مواجه شد" />
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
   return (
     <div
@@ -249,7 +247,7 @@ if (isError) {
           bg-black/70
           px-4 py-2
           text-xs
-          font-semibold
+          font-medium
           text-purple-100
           backdrop-blur-md
         "

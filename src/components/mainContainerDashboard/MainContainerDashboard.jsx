@@ -314,7 +314,7 @@ function MainContainerDashboard({
                               bg-purple-500/10
                               px-2.5 py-1.5
                               text-[11px]
-                              font-semibold
+                              font-medium
                               text-purple-200
                               transition-all
                               duration-300
@@ -391,7 +391,7 @@ function MainContainerDashboard({
                               bg-fuchsia-500/10
                               px-2.5 py-1.5
                               text-[11px]
-                              font-semibold
+                              font-medium
                               text-fuchsia-200
                               transition-all
                               duration-300

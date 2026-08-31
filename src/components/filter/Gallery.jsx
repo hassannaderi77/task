@@ -1,4 +1,3 @@
-
 import React from "react";
 
 import { FiImage, FiCamera, FiCheck } from "react-icons/fi";
@@ -7,9 +6,7 @@ function Gallery({ cameraRef, galleryRef, check, setImages }) {
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
 
-    const imageFiles = files.filter((file) =>
-      file.type.startsWith("image/")
-    );
+    const imageFiles = files.filter((file) => file.type.startsWith("image/"));
 
     if (imageFiles.length > 0) {
       setImages((prev) => [...prev, ...imageFiles]);
@@ -77,7 +74,6 @@ function Gallery({ cameraRef, galleryRef, check, setImages }) {
           >
             <FiImage />
           </span>
-
           انتخاب از گالری
         </h3>
 
@@ -122,7 +118,7 @@ function Gallery({ cameraRef, galleryRef, check, setImages }) {
           <span className="flex flex-1 flex-col text-right">
             <span
               className="
-                text-sm font-semibold
+                text-sm font-medium
                 text-slate-200
                 transition-colors
                 group-hover:text-purple-200
@@ -215,7 +211,6 @@ function Gallery({ cameraRef, galleryRef, check, setImages }) {
           >
             <FiCamera />
           </span>
-
           دوربین
         </h3>
 
@@ -260,7 +255,7 @@ function Gallery({ cameraRef, galleryRef, check, setImages }) {
           <span className="flex flex-1 flex-col text-right">
             <span
               className="
-                text-sm font-semibold
+                text-sm font-medium
                 text-slate-200
                 transition-colors
                 group-hover:text-purple-200
@@ -308,4 +303,3 @@ function Gallery({ cameraRef, galleryRef, check, setImages }) {
 }
 
 export default Gallery;
-

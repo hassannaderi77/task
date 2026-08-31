@@ -113,7 +113,7 @@ function HeadersPanelAdmin() {
                   "
             />
 
-            <span className="text-sm font-semibold text-emerald-300">فعال</span>
+            <span className="text-sm font-medium text-emerald-300">فعال</span>
           </div>
         </div>
       </div>

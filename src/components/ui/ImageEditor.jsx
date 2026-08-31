@@ -499,24 +499,24 @@ function ImageEditor({ image, onSave, onClose }) {
   /* ---------------------------------- */
 
   const getCropStyle = () => {
-  const canvas = canvasRef.current;
+    const canvas = canvasRef.current;
 
-  if (!canvas || !cropMode) {
-    return {};
-  }
+    if (!canvas || !cropMode) {
+      return {};
+    }
 
-  const rect = canvas.getBoundingClientRect();
+    const rect = canvas.getBoundingClientRect();
 
-  const scaleX = rect.width / canvas.width;
-  const scaleY = rect.height / canvas.height;
+    const scaleX = rect.width / canvas.width;
+    const scaleY = rect.height / canvas.height;
 
-  return {
-    left: `${crop.x * scaleX}px`,
-    top: `${crop.y * scaleY}px`,
-    width: `${crop.width * scaleX}px`,
-    height: `${crop.height * scaleY}px`,
+    return {
+      left: `${crop.x * scaleX}px`,
+      top: `${crop.y * scaleY}px`,
+      width: `${crop.width * scaleX}px`,
+      height: `${crop.height * scaleY}px`,
+    };
   };
-};
 
   /* ---------------------------------- */
   /* Handle Selection Overlay            */
@@ -828,7 +828,7 @@ function ImageEditor({ image, onSave, onClose }) {
               <div className="flex items-center gap-2">
                 <FiSun className="h-4 w-4 text-purple-300" />
 
-                <span className="text-xs font-semibold text-slate-300">
+                <span className="text-xs font-medium text-slate-300">
                   روشنایی
                 </span>
               </div>
@@ -858,7 +858,7 @@ function ImageEditor({ image, onSave, onClose }) {
               <div className="flex items-center gap-2">
                 <FiSun className="h-4 w-4 text-fuchsia-300" />
 
-                <span className="text-xs font-semibold text-slate-300">
+                <span className="text-xs font-medium text-slate-300">
                   کنتراست
                 </span>
               </div>
@@ -932,7 +932,7 @@ function ImageEditor({ image, onSave, onClose }) {
                   px-3
                   py-2.5
                   text-xs
-                  font-semibold
+                  font-medium
                   text-slate-300
                   transition
                   hover:bg-white/[0.06]
@@ -961,7 +961,7 @@ function ImageEditor({ image, onSave, onClose }) {
                   px-3
                   py-2.5
                   text-xs
-                  font-semibold
+                  font-medium
                   text-slate-300
                   transition
                   hover:bg-white/[0.06]

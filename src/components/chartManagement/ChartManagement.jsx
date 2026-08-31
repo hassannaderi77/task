@@ -237,7 +237,7 @@ function ChartManagement({
               border border-white/5
               bg-white/[0.03]
               px-4 py-2
-              text-xs font-semibold
+              text-xs font-medium
               text-slate-400
               transition
               hover:border-red-400/20
@@ -279,7 +279,7 @@ function ChartManagement({
                   rounded-xl
                   px-4 py-3
                   text-sm
-                  font-semibold
+                  font-medium
                   transition
                   ${
                     viewMode === "hour"
@@ -303,7 +303,7 @@ function ChartManagement({
                   rounded-xl
                   px-4 py-3
                   text-sm
-                  font-semibold
+                  font-medium
                   transition
                   ${
                     viewMode === "day"
@@ -526,7 +526,7 @@ function ChartManagement({
                 <FiAlertTriangle className="h-8 w-8" />
               </div>
 
-              <p className="mt-3 text-sm font-semibold text-red-300">
+              <p className="mt-3 text-sm font-medium text-red-300">
                 {requestsError}
               </p>
             </div>

@@ -116,7 +116,7 @@ function PageLoading() {
 
           <p
             className="
-              text-sm font-semibold
+              text-sm font-medium
               text-slate-300
               transition-colors duration-300
             "

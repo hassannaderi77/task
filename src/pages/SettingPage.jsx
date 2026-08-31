@@ -42,40 +42,40 @@ function SettingPage() {
 
   const { mutateAsync: editImage, isPending } = useImageEdit();
 
- const selectLabels = {
-  firstSelect: {
-    background_remove: "حذف پس‌زمینه",
-    background_change: "تغییر پس‌زمینه",
-    object_remove: "حذف یک شیء از تصویر",
-    object_add: "اضافه کردن شیء به تصویر",
-  },
+  const selectLabels = {
+    firstSelect: {
+      background_remove: "حذف پس‌زمینه",
+      background_change: "تغییر پس‌زمینه",
+      object_remove: "حذف یک شیء از تصویر",
+      object_add: "اضافه کردن شیء به تصویر",
+    },
 
-  secondSelect: {
-    minimal: "تغییر جزئی",
-    moderate: "تغییر متوسط",
-    strong: "تغییر قابل توجه",
-    creative: "ویرایش خلاقانه",
-  },
+    secondSelect: {
+      minimal: "تغییر جزئی",
+      moderate: "تغییر متوسط",
+      strong: "تغییر قابل توجه",
+      creative: "ویرایش خلاقانه",
+    },
 
-  device: {
-    background: "پس‌زمینه",
-    quality: "کیفیت تصویر",
-    appearance: "ظاهر تصویر",
-    object: "جزئیات تصویر",
-  },
+    device: {
+      background: "پس‌زمینه",
+      quality: "کیفیت تصویر",
+      appearance: "ظاهر تصویر",
+      object: "جزئیات تصویر",
+    },
 
-  request: {
-    natural: "طبیعی",
-    professional: "حرفه‌ای",
-    creative: "خلاقانه",
-  },
+    request: {
+      natural: "طبیعی",
+      professional: "حرفه‌ای",
+      creative: "خلاقانه",
+    },
 
-  brand: {
-    product: "محصول",
-    person: "شخص",
-    object: "شیء",
-  },
-};
+    brand: {
+      product: "محصول",
+      person: "شخص",
+      object: "شیء",
+    },
+  };
 
   useEffect(() => {
     if (error) {
@@ -549,7 +549,7 @@ function SettingPage() {
               bg-purple-500/10
               px-3 py-2
               text-xs
-              font-semibold
+              font-medium
               text-purple-200
               transition-all
               duration-300
@@ -578,151 +578,152 @@ function SettingPage() {
                     </div>
                   </div>
 
-                 {/* Request Information */}
-<div
-  className="
+                  {/* Request Information */}
+                  <div
+                    className="
     mt-6
     rounded-2xl
     border border-purple-500/15
     bg-black/20
     p-4
   "
-  dir="rtl"
->
-  <h4
-    className="
+                    dir="rtl"
+                  >
+                    <h4
+                      className="
       mb-4
       text-sm
-      font-semibold
+      font-medium
       text-purple-200
     "
-  >
-    اطلاعات درخواست
-  </h4>
+                    >
+                      اطلاعات درخواست
+                    </h4>
 
-  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-
-    {/* نوع ویرایش تصویر */}
-    <div
-      className="
+                    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                      {/* نوع ویرایش تصویر */}
+                      <div
+                        className="
         rounded-xl
         border border-purple-500/10
         bg-purple-500/[0.04]
         p-3
       "
-    >
-      <span className="block text-xs text-slate-500">
-        نوع ویرایش تصویر
-      </span>
+                      >
+                        <span className="block text-xs text-slate-500">
+                          نوع ویرایش تصویر
+                        </span>
 
-      <span className="mt-1 block text-sm text-slate-200">
-        {selectLabels.firstSelect[firstSelect] || firstSelect || "-"}
-      </span>
-    </div>
+                        <span className="mt-1 block text-sm text-slate-200">
+                          {selectLabels.firstSelect[firstSelect] ||
+                            firstSelect ||
+                            "-"}
+                        </span>
+                      </div>
 
-    {/* میزان تغییر تصویر */}
-    <div
-      className="
+                      {/* میزان تغییر تصویر */}
+                      <div
+                        className="
         rounded-xl
         border border-purple-500/10
         bg-purple-500/[0.04]
         p-3
       "
-    >
-      <span className="block text-xs text-slate-500">
-        میزان تغییر تصویر
-      </span>
+                      >
+                        <span className="block text-xs text-slate-500">
+                          میزان تغییر تصویر
+                        </span>
 
-      <span className="mt-1 block text-sm text-slate-200">
-        {selectLabels.secondSelect[secondSelect] ||
-          secondSelect ||
-          "-"}
-      </span>
-    </div>
+                        <span className="mt-1 block text-sm text-slate-200">
+                          {selectLabels.secondSelect[secondSelect] ||
+                            secondSelect ||
+                            "-"}
+                        </span>
+                      </div>
 
-    {/* هدف اصلی ویرایش */}
-    <div
-      className="
+                      {/* هدف اصلی ویرایش */}
+                      <div
+                        className="
         rounded-xl
         border border-purple-500/10
         bg-purple-500/[0.04]
         p-3
       "
-    >
-      <span className="block text-xs text-slate-500">
-        هدف اصلی ویرایش
-      </span>
+                      >
+                        <span className="block text-xs text-slate-500">
+                          هدف اصلی ویرایش
+                        </span>
 
-      <span className="mt-1 block text-sm text-slate-200">
-        {selectLabels.device[device] || device || "-"}
-      </span>
-    </div>
+                        <span className="mt-1 block text-sm text-slate-200">
+                          {selectLabels.device[device] || device || "-"}
+                        </span>
+                      </div>
 
-    {/* سبک ویرایش */}
-    <div
-      className="
+                      {/* سبک ویرایش */}
+                      <div
+                        className="
         rounded-xl
         border border-purple-500/10
         bg-purple-500/[0.04]
         p-3
       "
-    >
-      <span className="block text-xs text-slate-500">
-        سبک ویرایش
-      </span>
+                      >
+                        <span className="block text-xs text-slate-500">
+                          سبک ویرایش
+                        </span>
 
-      <span className="mt-1 block text-sm text-slate-200">
-        {selectLabels.request[request] || request || "-"}
-      </span>
-    </div>
+                        <span className="mt-1 block text-sm text-slate-200">
+                          {selectLabels.request[request] || request || "-"}
+                        </span>
+                      </div>
 
-    {/* نوع تصویر */}
-    <div
-      className="
+                      {/* نوع تصویر */}
+                      <div
+                        className="
         rounded-xl
         border border-purple-500/10
         bg-purple-500/[0.04]
         p-3
       "
-    >
-      <span className="block text-xs text-slate-500">
-        نوع تصویر
-      </span>
+                      >
+                        <span className="block text-xs text-slate-500">
+                          نوع تصویر
+                        </span>
 
-      <span className="mt-1 block text-sm text-slate-200">
-        {selectLabels.brand[brand] || brand || "-"}
-      </span>
-    </div>
-  </div>
+                        <span className="mt-1 block text-sm text-slate-200">
+                          {selectLabels.brand[brand] || brand || "-"}
+                        </span>
+                      </div>
+                    </div>
 
-  {/* توضیحات */}
-  {description && (
-    <div
-      className="
+                    {/* توضیحات */}
+                    {description && (
+                      <div
+                        className="
         mt-3
         rounded-xl
         border border-fuchsia-500/10
         bg-fuchsia-500/[0.04]
         p-3
       "
-    >
-      <span className="block text-xs text-slate-500">
-        توضیحات کاربر
-      </span>
+                      >
+                        <span className="block text-xs text-slate-500">
+                          توضیحات کاربر
+                        </span>
 
-      <p
-        className="
+                        <p
+                          className="
           mt-2
           text-sm
           leading-7
           text-slate-200
         "
-      >
-        {description}
-      </p>
-    </div>
-  )}
-</div>
+                        >
+                          {description}
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>

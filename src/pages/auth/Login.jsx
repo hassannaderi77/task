@@ -19,17 +19,16 @@ function Login() {
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
 
-  const errorRef = useRef(null)
-
+  const errorRef = useRef(null);
 
   useEffect(() => {
-        if (error) {
-          errorRef.current?.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-          });
-        }
-      }, [error]);
+    if (error) {
+      errorRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [error]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -50,9 +49,7 @@ function Login() {
       login(response.user);
       navigate("/dashboard");
     } catch (error) {
-      setError(
-        error.response?.data?.message || "ورود ناموفق بود"
-      );
+      setError(error.response?.data?.message || "ورود ناموفق بود");
     }
   };
 
@@ -237,10 +234,7 @@ function Login() {
             </div>
 
             {/* Login Form */}
-            <form
-              onSubmit={handleLogin}
-              className="flex flex-col gap-4"
-            >
+            <form onSubmit={handleLogin} className="flex flex-col gap-4">
               {/* Phone */}
               <div>
                 <label
@@ -354,7 +348,7 @@ function Login() {
               {/* Error */}
               {error && (
                 <div
-                ref={errorRef}
+                  ref={errorRef}
                   className="
                     flex items-center
                     justify-center
@@ -426,8 +420,6 @@ function Login() {
                     gap-2
                   "
                 >
-                  
-
                   <span>ورود</span>
 
                   <FiArrowLeft
@@ -441,32 +433,27 @@ function Login() {
             </form>
 
             {/* Register */}
-            <div
-              className="
-                mt-7
-                text-center
-                text-sm
-                text-slate-400
-              "
-            >
-              حساب کاربری ندارید؟{" "}
-
+            <div className=" mt-7 flex flex-col items-center gap-4 text-center text-sm text-slate-400 ">
+              {" "}
+              <div>
+                {" "}
+                حساب کاربری ندارید؟{" "}
+                <Link
+                  to="/register"
+                  className=" font-medium text-transparent bg-gradient-to-r from-purple-300 to-fuchsia-300 bg-clip-text transition-all duration-300 hover:from-purple-200 hover:to-fuchsia-200 "
+                >
+                  {" "}
+                  ثبت نام کنید{" "}
+                </Link>{" "}
+              </div>{" "}
               <Link
-                to="/register"
-                className="
-                  font-medium
-                  text-transparent
-                  bg-gradient-to-r
-                  from-purple-300
-                  to-fuchsia-300
-                  bg-clip-text
-                  transition-all duration-300
-                  hover:from-purple-200
-                  hover:to-fuchsia-200
-                "
+                to="/"
+                className=" flex items-center gap-2 text-xs text-slate-500 transition-all duration-300 hover:text-purple-300 hover:-translate-y-0.5 "
               >
-                ثبت نام کنید
-              </Link>
+                {" "}
+                <FiArrowLeft className="text-sm transition-transform duration-300" />{" "}
+                بازگشت به صفحه اصلی{" "}
+              </Link>{" "}
             </div>
           </div>
 
