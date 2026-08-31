@@ -6,6 +6,7 @@ import {
   FiArrowLeft,
   FiStar,
 } from "react-icons/fi";
+import GhostFibers from "../components/ui/GhostFibers/GhostFibers";
 
 function Home() {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ function Home() {
       className="
         relative min-h-screen
         overflow-hidden
-        bg-gradient-to-br
+        bg-linear-to-br
         from-[#08040f]
         via-[#160d2b]
         to-[#0d0718]
@@ -25,6 +26,12 @@ function Home() {
         sm:px-6 sm:py-10
       "
     >
+      <GhostFibers
+  color="#8b5cf6"
+  amplitude={0.8}
+  distance={0.6}
+  enableMouseInteraction={true}
+/>
       {/* Background glows */}
       <div
         className="
@@ -69,7 +76,7 @@ function Home() {
         "
       />
 
-      <div className="relative mx-auto w-full max-w-6xl">
+      <div className="relative z-10 mx-auto w-full max-w-6xl">
 
         {/* Demo Button */}
         <div className="flex justify-center">
@@ -80,7 +87,7 @@ function Home() {
               group relative
               overflow-hidden
               rounded-xl
-              bg-gradient-to-r
+              bg-linear-to-r
               from-purple-600
               via-violet-600
               to-fuchsia-600
@@ -106,7 +113,7 @@ function Home() {
                 absolute inset-y-0 -left-full
                 w-1/2
                 skew-x-[-20deg]
-                bg-gradient-to-r
+                bg-linear-to-r
                 from-transparent
                 via-white/20
                 to-transparent
@@ -150,7 +157,7 @@ function Home() {
               items-center justify-center
               rounded-2xl
               border border-purple-400/20
-              bg-gradient-to-br
+              bg-linear-to-br
               from-purple-500/20
               via-violet-500/10
               to-fuchsia-500/10
@@ -162,7 +169,7 @@ function Home() {
               hover:-rotate-2
               sm:mb-7
               sm:h-24 sm:w-24
-              sm:rounded-[2rem]
+              sm:rounded-4xl
             "
           >
             <FiImage
@@ -186,7 +193,7 @@ function Home() {
               gap-1.5
               rounded-full
               border border-purple-500/20
-              bg-purple-500/[0.06]
+              bg-purple-500/6
               px-3 py-1.5
               text-[10px]
               font-medium
@@ -209,7 +216,7 @@ function Home() {
           {/* Main title */}
           <h1
             className="
-              bg-gradient-to-r
+              bg-linear-to-r
               from-purple-200
               via-fuchsia-300
               to-purple-300
@@ -219,7 +226,7 @@ function Home() {
               leading-[1.65]
               text-transparent
               sm:text-5xl
-              sm:leading-[1.5]
+              sm:leading-normal
               md:text-6xl
             "
           >
@@ -229,7 +236,7 @@ function Home() {
 
             <span
               className="
-                bg-gradient-to-r
+                bg-linear-to-r
                 from-fuchsia-300
                 via-purple-300
                 to-violet-200
@@ -246,7 +253,7 @@ function Home() {
             className="
               mx-auto
               mt-5
-              max-w-[340px]
+              max-w-85
               text-xs
               leading-7
               text-slate-400
@@ -282,13 +289,13 @@ function Home() {
                 group relative
                 flex
                 w-full
-                max-w-[280px]
+                max-w-70
                 items-center
                 justify-center
                 gap-2
                 overflow-hidden
                 rounded-xl
-                bg-gradient-to-r
+                bg-linear-to-r
                 from-purple-600
                 via-violet-600
                 to-fuchsia-600
@@ -316,7 +323,7 @@ function Home() {
                   absolute inset-y-0 -left-full
                   w-1/2
                   skew-x-[-20deg]
-                  bg-gradient-to-r
+                  bg-linear-to-r
                   from-transparent
                   via-white/20
                   to-transparent
@@ -347,13 +354,13 @@ function Home() {
               className="
                 flex
                 w-full
-                max-w-[280px]
+                max-w-70
                 items-center
                 justify-center
                 rounded-xl
                 border
                 border-purple-500/20
-                bg-white/[0.03]
+                bg-white/3
                 px-6 py-3.5
                 text-sm
                 font-medium
@@ -413,14 +420,14 @@ function Home() {
                 rounded-xl
                 border
                 border-purple-500/10
-                bg-white/[0.025]
+                bg-white/2.5
                 p-4
                 text-center
                 backdrop-blur-md
                 transition-all duration-300
                 hover:-translate-y-1
                 hover:border-purple-400/30
-                hover:bg-purple-500/[0.05]
+                hover:bg-purple-500/5
                 sm:rounded-2xl
                 sm:p-5
               "

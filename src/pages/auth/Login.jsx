@@ -59,7 +59,7 @@ function Login() {
       className="
         relative min-h-screen
         overflow-hidden
-        bg-gradient-to-br
+        bg-linear-to-br
         from-[#08040f]
         via-[#160d2b]
         to-[#0d0718]
@@ -120,9 +120,9 @@ function Login() {
           className="
             group relative w-full
             overflow-hidden
-            rounded-[2rem]
+            rounded-4xl
             border border-purple-500/20
-            bg-gradient-to-br
+            bg-linear-to-br
             from-[#160d2b]/95
             via-[#1d1038]/90
             to-[#0d0718]/95
@@ -137,8 +137,8 @@ function Login() {
           <div
             className="
               absolute left-0 right-0 top-0
-              h-[2px]
-              bg-gradient-to-r
+              h-0.5
+              bg-linear-to-r
               from-transparent
               via-purple-500
               to-fuchsia-500
@@ -180,7 +180,7 @@ function Login() {
                   items-center justify-center
                   rounded-3xl
                   border border-purple-400/20
-                  bg-gradient-to-br
+                  bg-linear-to-br
                   from-purple-500/20
                   via-violet-500/10
                   to-fuchsia-500/10
@@ -203,7 +203,7 @@ function Login() {
 
               <h1
                 className="
-                  bg-gradient-to-r
+                  bg-linear-to-r
                   from-purple-200
                   via-fuchsia-300
                   to-purple-300
@@ -226,7 +226,7 @@ function Login() {
                   mx-auto mt-5
                   h-1 w-16
                   rounded-full
-                  bg-gradient-to-r
+                  bg-linear-to-r
                   from-purple-500
                   to-fuchsia-500
                 "
@@ -270,7 +270,7 @@ function Login() {
                       w-full
                       rounded-2xl
                       border border-purple-500/15
-                      bg-white/[0.04]
+                      bg-white/4
                       px-12 py-4
                       text-center
                       text-sm
@@ -280,7 +280,7 @@ function Login() {
                       backdrop-blur-md
                       transition-all duration-300
                       focus:border-purple-400/60
-                      focus:bg-purple-500/[0.06]
+                      focus:bg-purple-500/6
                       focus:ring-4
                       focus:ring-purple-500/15
                       focus:shadow-lg
@@ -325,7 +325,7 @@ function Login() {
                       w-full
                       rounded-2xl
                       border border-purple-500/15
-                      bg-white/[0.04]
+                      bg-white/4
                       px-12 py-4
                       text-center
                       text-sm
@@ -335,7 +335,7 @@ function Login() {
                       backdrop-blur-md
                       transition-all duration-300
                       focus:border-fuchsia-400/60
-                      focus:bg-purple-500/[0.06]
+                      focus:bg-purple-500/6
                       focus:ring-4
                       focus:ring-purple-500/15
                       focus:shadow-lg
@@ -355,9 +355,9 @@ function Login() {
                     gap-2
                     rounded-2xl
                     border border-red-500/20
-                    bg-gradient-to-r
+                    bg-linear-to-r
                     from-red-500/10
-                    to-purple-500/[0.04]
+                    to-purple-500/4
                     px-4 py-3
                     text-center
                     text-sm
@@ -380,7 +380,7 @@ function Login() {
                   mt-3
                   overflow-hidden
                   rounded-2xl
-                  bg-gradient-to-r
+                  bg-linear-to-r
                   from-purple-600
                   via-violet-600
                   to-fuchsia-600
@@ -402,7 +402,7 @@ function Login() {
                     absolute inset-y-0 -left-full
                     w-1/2
                     skew-x-[-20deg]
-                    bg-gradient-to-r
+                    bg-linear-to-r
                     from-transparent
                     via-white/20
                     to-transparent
@@ -440,7 +440,7 @@ function Login() {
                 حساب کاربری ندارید؟{" "}
                 <Link
                   to="/register"
-                  className=" font-medium text-transparent bg-gradient-to-r from-purple-300 to-fuchsia-300 bg-clip-text transition-all duration-300 hover:from-purple-200 hover:to-fuchsia-200 "
+                  className=" font-medium text-transparent bg-linear-to-r from-purple-300 to-fuchsia-300 bg-clip-text transition-all duration-300 hover:from-purple-200 hover:to-fuchsia-200 "
                 >
                   {" "}
                   ثبت نام کنید{" "}
@@ -461,10 +461,10 @@ function Login() {
           <div
             className="
               absolute bottom-0 left-1/2
-              h-[2px] w-1/3
+              h-0.5 w-1/3
               -translate-x-1/2
               rounded-full
-              bg-gradient-to-r
+              bg-linear-to-r
               from-transparent
               via-fuchsia-500
               to-transparent

@@ -300,7 +300,7 @@ function SettingPage() {
             className="
               text-4xl font-medium
               text-transparent
-              bg-gradient-to-r
+              bg-linear-to-r
               from-purple-200
               via-fuchsia-300
               to-purple-300
@@ -373,9 +373,9 @@ function SettingPage() {
               overflow-hidden
               rounded-2xl
               border border-red-500/20
-              bg-gradient-to-br
+              bg-linear-to-br
               from-red-500/10
-              to-purple-500/[0.04]
+              to-purple-500/4
               p-4
               text-center
               shadow-xl
@@ -397,7 +397,7 @@ function SettingPage() {
       flex h-14 w-14
       items-center justify-center
       rounded-2xl
-      bg-gradient-to-br
+      bg-linear-to-br
       from-purple-500/20
       to-fuchsia-500/10
       text-2xl
@@ -413,7 +413,7 @@ function SettingPage() {
                 className="
       text-2xl font-medium
       text-transparent
-      bg-gradient-to-r
+      bg-linear-to-r
       from-purple-200
       via-fuchsia-300
       to-purple-300
@@ -430,9 +430,9 @@ function SettingPage() {
                   key={index}
                   className="
       relative overflow-hidden
-      rounded-[2rem]
+      rounded-4xl
       border border-purple-500/20
-      bg-gradient-to-br
+      bg-linear-to-br
       from-[#160d2b]/90
       via-[#1d1038]/80
       to-[#0d0718]/90
@@ -447,8 +447,8 @@ function SettingPage() {
                   <div
                     className="
         absolute left-0 right-0 top-0
-        h-[2px]
-        bg-gradient-to-r
+        h-0.5
+        bg-linear-to-r
         from-purple-500
         via-fuchsia-500
         to-purple-500
@@ -510,9 +510,9 @@ function SettingPage() {
           overflow-hidden
           rounded-2xl
           border border-purple-400/20
-          bg-gradient-to-br
-          from-purple-500/[0.05]
-          to-fuchsia-500/[0.03]
+          bg-linear-to-br
+          from-purple-500/5
+          to-fuchsia-500/3
           p-3
           shadow-lg
           shadow-purple-950/20
@@ -606,7 +606,7 @@ function SettingPage() {
                         className="
         rounded-xl
         border border-purple-500/10
-        bg-purple-500/[0.04]
+        bg-purple-500/4
         p-3
       "
                       >
@@ -626,7 +626,7 @@ function SettingPage() {
                         className="
         rounded-xl
         border border-purple-500/10
-        bg-purple-500/[0.04]
+        bg-purple-500/4
         p-3
       "
                       >
@@ -646,7 +646,7 @@ function SettingPage() {
                         className="
         rounded-xl
         border border-purple-500/10
-        bg-purple-500/[0.04]
+        bg-purple-500/4
         p-3
       "
                       >
@@ -664,7 +664,7 @@ function SettingPage() {
                         className="
         rounded-xl
         border border-purple-500/10
-        bg-purple-500/[0.04]
+        bg-purple-500/4
         p-3
       "
                       >
@@ -682,7 +682,7 @@ function SettingPage() {
                         className="
         rounded-xl
         border border-purple-500/10
-        bg-purple-500/[0.04]
+        bg-purple-500/4
         p-3
       "
                       >
@@ -703,7 +703,7 @@ function SettingPage() {
         mt-3
         rounded-xl
         border border-fuchsia-500/10
-        bg-fuchsia-500/[0.04]
+        bg-fuchsia-500/4
         p-3
       "
                       >

@@ -7,6 +7,7 @@ import { useAuth } from "../hooks/useAuth";
 import { FiSend } from "react-icons/fi";
 import StepOne from "../components/stepOne/StepOne";
 import StepTwo from "../components/twoStep/StepTwo";
+import GhostFibers from "../components/ui/GhostFibers/GhostFibers";
 
 function Demo() {
   const [phone, setPhone] = useState("");
@@ -476,6 +477,14 @@ function Demo() {
         sm:px-6
       "
     >
+      <div className="pointer-events-none absolute inset-0 z-0">
+      <GhostFibers
+        color="#8b5cf6"
+        amplitude={0.8}
+        distance={0.5}
+        enableMouseInteraction={true}
+      />
+    </div>
       {/* Background glows */}
 
       <div
@@ -516,22 +525,18 @@ function Demo() {
         {/* Card */}
 
         <div
-          className="
-            group relative w-full
-            overflow-hidden
-            rounded-[2rem]
-            border border-purple-500/20
-            bg-gradient-to-br
-            from-[#160d2b]/95
-            via-[#1d1038]/90
-            to-[#0d0718]/95
-            p-6
-            shadow-2xl
-            shadow-purple-950/40
-            backdrop-blur-2xl
-            sm:p-8
-          "
-        >
+  className="
+    group relative w-full
+    overflow-hidden
+    rounded-[2rem]
+    border border-purple-400/10
+    bg-transparent
+    p-6
+    shadow-2xl
+    shadow-purple-950/20
+    sm:p-8
+  "
+>
           {/* Top gradient */}
 
           <div
