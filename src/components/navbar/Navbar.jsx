@@ -1,4 +1,6 @@
+
 import { useContext } from "react";
+
 import { Link, useNavigate } from "react-router-dom";
 
 import {
@@ -41,7 +43,6 @@ function Navbar() {
       path: user?.role === "admin" ? "/admin" : "/dashboard",
       icon: user?.role === "admin" ? FiTool : FiGrid,
     },
-
     ...(user?.role !== "admin"
       ? [
           {
@@ -51,9 +52,8 @@ function Navbar() {
           },
         ]
       : []),
-
     {
-      title: "تنظیمات",
+      title: "تصویرساز AI",
       path: "/setting",
       icon: FiSettings,
     },
@@ -98,13 +98,14 @@ function Navbar() {
           flex
           w-full
           max-w-6xl
-          flex-wrap
+          flex-nowrap
           items-center
           justify-between
-          gap-2
+          gap-1
+          sm:gap-2
         "
       >
-        {/* Logo / Brand */}
+        {/* Logo */}
         <Link
           to="/"
           className="
@@ -112,11 +113,14 @@ function Navbar() {
             flex
             shrink-0
             items-center
-            gap-2
+            gap-1
             rounded-2xl
-            px-1.5 py-1
-            transition-all duration-300
+            px-1
+            py-1
+            transition-all
+            duration-300
             hover:-translate-y-0.5
+            sm:gap-2
             sm:px-2
           "
         >
@@ -124,14 +128,18 @@ function Navbar() {
             src="/logo.jpg"
             alt="AI Image Editor"
             className="
-              h-9 w-9
+              h-8
+              w-8
               shrink-0
-              rounded-xl
+              rounded-lg
               object-cover
-              transition-all duration-300
+              transition-all
+              duration-300
               group-hover:scale-105
               group-hover:rotate-2
-              sm:h-10 sm:w-10
+              sm:h-10
+              sm:w-10
+              sm:rounded-xl
             "
           />
 
@@ -159,11 +167,12 @@ function Navbar() {
             flex
             min-w-0
             flex-1
-            flex-wrap
+            flex-nowrap
             items-center
             justify-end
-            gap-1
-            sm:gap-2
+            gap-0
+            sm:gap-1
+            lg:gap-2
           "
         >
           {links.map((link) => {
@@ -180,13 +189,15 @@ function Navbar() {
                   shrink-0
                   items-center
                   gap-1
+                  whitespace-nowrap
                   rounded-xl
-                  px-2
+                  px-1.5
                   py-2
-                  text-xs
+                  text-[11px]
                   font-medium
                   text-slate-300
-                  transition-all duration-300
+                  transition-all
+                  duration-300
                   hover:-translate-y-0.5
                   hover:bg-gradient-to-r
                   hover:from-purple-500/10
@@ -201,17 +212,17 @@ function Navbar() {
                   lg:px-4
                 "
               >
-                {/* Icon */}
                 <Icon
                   className="
+                    shrink-0
                     text-sm
-                    transition-transform duration-300
+                    transition-transform
+                    duration-300
                     group-hover:scale-110
                     sm:text-base
                   "
                 />
 
-                {/* Title */}
                 <span>{link.title}</span>
 
                 {/* Hover underline */}
@@ -227,7 +238,8 @@ function Navbar() {
                     bg-gradient-to-r
                     from-purple-400
                     to-fuchsia-500
-                    transition-all duration-300
+                    transition-all
+                    duration-300
                     group-hover:w-2/3
                   "
                 />
@@ -247,13 +259,15 @@ function Navbar() {
                 shrink-0
                 items-center
                 gap-1
+                whitespace-nowrap
                 rounded-xl
-                px-2
+                px-1.5
                 py-2
-                text-xs
+                text-[11px]
                 font-medium
                 text-red-400
-                transition-all duration-300
+                transition-all
+                duration-300
                 hover:-translate-y-0.5
                 hover:bg-gradient-to-r
                 hover:from-red-500/10
@@ -268,11 +282,12 @@ function Navbar() {
                 lg:px-4
               "
             >
-              {/* Logout icon */}
               <FiLogOut
                 className="
+                  shrink-0
                   text-sm
-                  transition-transform duration-300
+                  transition-transform
+                  duration-300
                   group-hover:scale-110
                   group-hover:-rotate-6
                   sm:text-base
@@ -294,7 +309,8 @@ function Navbar() {
                   bg-gradient-to-r
                   from-red-400
                   to-purple-500
-                  transition-all duration-300
+                  transition-all
+                  duration-300
                   group-hover:w-2/3
                 "
               />
@@ -307,3 +323,4 @@ function Navbar() {
 }
 
 export default Navbar;
+

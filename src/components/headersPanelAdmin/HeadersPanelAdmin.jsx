@@ -8,7 +8,7 @@ function HeadersPanelAdmin() {
             relative overflow-hidden
             rounded-3xl
             border border-purple-500/20
-            bg-gradient-to-br
+            bg-linear-to-br
             from-[#160d2b]
             via-[#1d1038]
             to-[#0d0718]
@@ -22,8 +22,8 @@ function HeadersPanelAdmin() {
       <div
         className="
               absolute left-0 right-0 top-0
-              h-[2px]
-              bg-gradient-to-r
+              h-0.5
+              bg-linear-to-r
               from-purple-600
               via-fuchsia-500
               to-purple-600
@@ -46,7 +46,7 @@ function HeadersPanelAdmin() {
                     flex h-12 w-12
                     items-center justify-center
                     rounded-2xl
-                    bg-gradient-to-br
+                    bg-linear-to-br
                     from-purple-500
                     to-fuchsia-600
                     text-xl
@@ -62,7 +62,7 @@ function HeadersPanelAdmin() {
                 className="
                       text-3xl font-medium
                       text-transparent
-                      bg-gradient-to-r
+                      bg-linear-to-r
                       from-purple-200
                       via-fuchsia-300
                       to-purple-300
@@ -76,7 +76,7 @@ function HeadersPanelAdmin() {
                 className="
                       mt-1 h-1 w-20
                       rounded-full
-                      bg-gradient-to-r
+                      bg-linear-to-r
                       from-purple-500
                       to-fuchsia-500
                     "
@@ -94,7 +94,7 @@ function HeadersPanelAdmin() {
           className="
                 rounded-2xl
                 border border-purple-500/20
-                bg-gradient-to-r
+                bg-linear-to-r
                 from-purple-500/10
                 to-fuchsia-500/10
                 px-4 py-3

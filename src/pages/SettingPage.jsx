@@ -176,7 +176,7 @@ function SettingPage() {
               ...item,
 
               // URL داخلی Backend
-              after: savedHistory.afterImage,
+              after: `${API_URL}${savedHistory.afterImage}`,
             };
           }),
         );

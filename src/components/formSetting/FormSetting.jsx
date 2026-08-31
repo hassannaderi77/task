@@ -111,9 +111,9 @@ errorRef
                   mt-6
                   rounded-2xl
                   border border-red-500/20
-                  bg-gradient-to-r
+                  bg-linear-to-r
                   from-red-500/10
-                  to-purple-500/[0.04]
+                  to-purple-500/4
                   p-4
                   text-center
                   text-sm
@@ -146,9 +146,9 @@ errorRef
                   overflow-hidden
                   rounded-3xl
                   border border-purple-500/15
-                  bg-gradient-to-br
-                  from-purple-500/[0.06]
-                  to-fuchsia-500/[0.03]
+                  bg-linear-to-br
+                  from-purple-500/6
+                  to-fuchsia-500/3
                   p-5
                   shadow-xl
                   shadow-purple-950/20
@@ -161,7 +161,7 @@ errorRef
                       flex h-10 w-10
                       items-center justify-center
                       rounded-xl
-                      bg-gradient-to-br
+                      bg-linear-to-br
                       from-purple-500/20
                       to-fuchsia-500/10
                     "
@@ -242,7 +242,7 @@ errorRef
                           justify-center
                           rounded-full
                           border border-red-400/20
-                          bg-gradient-to-br
+                          bg-linear-to-br
                           from-red-500
                           to-rose-600
                           p-0
@@ -281,7 +281,7 @@ errorRef
     gap-3
     overflow-hidden
     rounded-2xl
-    bg-gradient-to-r
+    bg-linear-to-r
     from-purple-600
     via-violet-600
     to-fuchsia-600
@@ -308,7 +308,7 @@ errorRef
       -left-full
       w-1/2
       skew-x-[-20deg]
-      bg-gradient-to-r
+      bg-linear-to-r
       from-transparent
       via-white/20
       to-transparent
@@ -328,7 +328,7 @@ errorRef
           -translate-x-full
           w-1/2
           skew-x-[-20deg]
-          bg-gradient-to-r
+          bg-linear-to-r
           from-transparent
           via-white/20
           to-transparent
@@ -403,10 +403,10 @@ errorRef
           <div
             className="
               absolute bottom-0 left-1/2
-              h-[2px] w-1/3
+              h-0.5 w-1/3
               -translate-x-1/2
               rounded-full
-              bg-gradient-to-r
+              bg-linear-to-r
               from-transparent
               via-fuchsia-500
               to-transparent
