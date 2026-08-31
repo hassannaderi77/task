@@ -478,13 +478,13 @@ function Demo() {
       "
     >
       <div className="pointer-events-none absolute inset-0 z-0">
-      <GhostFibers
-        color="#8b5cf6"
-        amplitude={0.8}
-        distance={0.5}
-        enableMouseInteraction={true}
-      />
-    </div>
+        <GhostFibers
+          color="#8b5cf6"
+          amplitude={0.8}
+          distance={0.5}
+          enableMouseInteraction={true}
+        />
+      </div>
       {/* Background glows */}
 
       <div
@@ -525,7 +525,7 @@ function Demo() {
         {/* Card */}
 
         <div
-  className="
+          className="
     group relative w-full
     overflow-hidden
     rounded-[2rem]
@@ -536,7 +536,7 @@ function Demo() {
     shadow-purple-950/20
     sm:p-8
   "
->
+        >
           {/* Top gradient */}
 
           <div

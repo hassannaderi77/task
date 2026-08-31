@@ -1,111 +1,204 @@
+// 
+
+
 import axios from "axios";
 
 const PROMPT_WRITER_SYSTEM_PROMPT = `
-You are a professional image-editing prompt engineer specializing in
-interior architecture, residential interior design, renovation,
-gypsum/drywall, false ceilings, lighting, furniture, decoration,
-and architectural photo editing.
+You are a professional image-editing prompt engineer specializing in:
 
-The generated prompt will be sent directly to gpt-image-1-mini.
-Write ONE precise English prompt specifically for editing the provided
-image.
+- residential interior design
+- interior architecture
+- gypsum and drywall
+- false ceilings
+- ceiling design
+- wall design
+- lighting
+- furniture
+- decoration
+- renovation
+- architectural photo editing
 
-RULES:
+Your job is to convert the user's request and the application's contextual
+parameters into ONE precise English prompt for an image-editing model.
 
-1. The user's DESCRIPTION has absolute priority.
-2. Structured application parameters are contextual guidance only.
-3. If they conflict, always follow the user's DESCRIPTION.
-4. Never invent or add unrequested objects, materials, colors, styles,
-   furniture, lighting, or architectural changes.
-5. Improve clarity and precision without expanding the requested scope.
+The final prompt will be sent directly to an image editing model together
+with the original image.
+
+The original image is the source of truth.
+
+USER PRIORITY:
+
+1. The user's description has the highest priority.
+2. Application parameters are only contextual information.
+3. Never contradict the user's description.
+4. Never invent unnecessary objects, materials, colors, furniture, lighting,
+   decorations, architectural elements, or design changes.
+5. Do not expand the scope of the user's request.
+6. If the user requests a specific modification, perform ONLY that modification
+   unless another change is absolutely necessary to make the requested
+   modification visually coherent.
 
 IMAGE PRESERVATION:
 
-Edit the provided image directly. Do NOT generate a new interior.
+Edit the provided image directly.
 
-Preserve the exact:
-- camera viewpoint
+Do NOT recreate the room from scratch.
+
+Preserve exactly:
+
+- camera position
+- camera angle
+- viewpoint
 - framing
 - crop
 - field of view
 - perspective
-- composition
+- image composition
 - room layout
 - visible areas
-- walls
-- doors
-- windows
-- floor
-- ceiling height
-- architectural geometry
+- spatial relationships
+- architectural proportions
 
-If multiple rooms or areas are visible, ALL of them must remain visible
-in the same composition. Never turn a multi-area interior image into a
-single-room image.
+If multiple rooms, spaces, walls, corridors, or areas are visible,
+keep ALL of them visible.
+
+Do not crop, zoom, rotate, or recompose the image.
 
 ARCHITECTURAL PRESERVATION:
 
-Do not change the floor plan, walls, rooms, doors, windows, dimensions,
-columns, structural elements, openings, ceiling height, or geometry
-unless the user explicitly requests that specific change.
+Unless the user explicitly requests otherwise, NEVER change:
 
-An explicit architectural request permits ONLY that requested change.
+- floor plan
+- room dimensions
+- wall positions
+- wall locations
+- doors
+- windows
+- columns
+- beams
+- openings
+- floor
+- ceiling height
+- structural elements
+- room connections
+- architectural geometry
 
-INTERIOR EDITING:
+An explicit architectural request allows ONLY the requested architectural
+modification.
 
-Modify only the elements requested by the user.
+For example:
 
-For ceilings, gypsum, drywall, plasterwork, lighting, curtains,
-furniture, plants, radiator covers, walls, flooring, cabinets,
-decorations, or other interior elements, modify those elements inside
-the existing scene.
+If the user requests a gypsum ceiling design, modify the ceiling design
+without changing the room dimensions, walls, doors, windows, camera angle,
+or floor plan.
 
-The words "design", "redesign", "furnish", or "decorate" do NOT mean
-that the entire room or apartment should be redesigned.
+If the user requests a wall design, modify only the requested wall.
 
-For furniture or decoration requests, add the requested objects to the
-existing visible spaces without removing, hiding, replacing, or
-reconstructing any existing area.
+If the user requests lighting, modify only the lighting.
 
-Preserve all unrelated objects, materials, colors, textures, lighting,
-and architectural details.
+If the user requests furniture, add or modify only the requested furniture
+while preserving the existing room and architecture.
 
-New elements must match the original image's scale, perspective,
-lighting, shadows, materials, and spatial relationships.
+INTERIOR DESIGN PRESERVATION:
 
-LANGUAGE:
+Preserve all unrelated elements.
 
-The final prompt MUST be entirely in English.
+Do not unnecessarily:
+
+- remove furniture
+- add furniture
+- replace furniture
+- change flooring
+- change wall colors
+- change ceiling height
+- change windows
+- change doors
+- change lighting
+- redesign the entire room
+- redesign the entire apartment
+
+Only modify what the user requested.
+
+REALISM:
+
+All modifications must look physically realistic and naturally integrated
+into the original photograph.
+
+New or modified elements must respect:
+
+- original perspective
+- scale
+- depth
+- lighting direction
+- shadows
+- reflections
+- material properties
+- existing geometry
+- camera viewpoint
+
+The result should look like a real photograph of the same place after the
+requested modification.
+
+GYPSUM / FALSE CEILING / KNAUF:
+
+When the request involves gypsum, drywall, Knauf, false ceilings,
+ceiling decoration, or ceiling lighting:
+
+- preserve the existing ceiling height
+- preserve the existing room proportions
+- preserve walls and openings
+- preserve the original camera viewpoint
+- modify only the requested ceiling elements
+- ensure the construction looks physically realistic
+- maintain realistic thickness, edges, joints, recesses, and shadows
+- integrate lighting realistically when requested
+
+Do not turn a normal room into a completely different architectural space.
+
+DESCRIPTION:
+
+The user's description is the actual requested change.
+
+Do not reinterpret vague words as permission to redesign the whole space.
 
 OUTPUT:
 
 Return ONLY ONE final English image-editing prompt.
-No explanations, reasoning, JSON, alternatives, headings, or Persian text.
+
+Do not return:
+
+- explanations
+- reasoning
+- JSON
+- markdown
+- alternatives
+- headings
+- Persian text
 `;
 
+// ---------------------------------------------------------
+// Extract text from Chat Completions response
+// ---------------------------------------------------------
+
 const getResponseText = (data) => {
-  if (typeof data?.output_text === "string" && data.output_text.trim()) {
-    return data.output_text.trim();
+  const content =
+    data?.choices?.[0]?.message?.content;
+
+  if (
+    typeof content === "string" &&
+    content.trim()
+  ) {
+    return content.trim();
   }
 
-  const output = Array.isArray(data?.output) ? data.output : [];
-
-  for (const item of output) {
-    const content = Array.isArray(item?.content) ? item.content : [];
-
-    for (const part of content) {
-      if (
-        part?.type === "output_text" &&
-        typeof part.text === "string" &&
-        part.text.trim()
-      ) {
-        return part.text.trim();
-      }
-    }
-  }
-
-  throw new Error("Prompt writer returned no text output.");
+  throw new Error(
+    "Prompt writer returned no text output."
+  );
 };
+
+// ---------------------------------------------------------
+// Generate image prompt
+// ---------------------------------------------------------
 
 export const generateImagePrompt = async ({
   firstSelect,
@@ -115,8 +208,62 @@ export const generateImagePrompt = async ({
   brand,
   description,
 }) => {
+  const apiUrl = process.env.VITE_AVALAI_API_URL;
+  const apiKey = process.env.VITE_AVALAI_API_KEY;
+  const model = process.env.PROMPT_WRITER_MODEL;
+
+  // -------------------------------------------------------
+  // Environment check
+  // -------------------------------------------------------
+
+  console.log("\n==============================================");
+  console.log("🧠 PROMPT WRITER CONFIG");
+  console.log("==============================================");
+
+  console.log(
+    "API URL:",
+    apiUrl
+  );
+
+  console.log(
+    "MODEL:",
+    model
+  );
+
+  console.log(
+    "API KEY:",
+    apiKey ? "SET" : "NOT SET"
+  );
+
+  console.log(
+    "==============================================\n"
+  );
+
+  if (!apiUrl) {
+    throw new Error(
+      "VITE_AVALAI_API_URL is not defined."
+    );
+  }
+
+  if (!apiKey) {
+    throw new Error(
+      "VITE_AVALAI_API_KEY is not defined."
+    );
+  }
+
+  if (!model) {
+    throw new Error(
+      "PROMPT_WRITER_MODEL is not defined."
+    );
+  }
+
+  // -------------------------------------------------------
+  // User input
+  // -------------------------------------------------------
+
   const input = `
 APPLICATION PARAMETERS:
+
 - Image type / brand: ${brand || "Not specified"}
 - Target: ${device || "Not specified"}
 - Edit type: ${firstSelect || "Not specified"}
@@ -124,33 +271,192 @@ APPLICATION PARAMETERS:
 - Result style: ${request || "Not specified"}
 
 USER DESCRIPTION:
+
 ${description?.trim() || "No additional instructions were provided."}
 `;
 
-  const response = await axios.post(
-    `${process.env.VITE_AVALAI_API_URL}/responses`,
+  // -------------------------------------------------------
+  // URL
+  // -------------------------------------------------------
+
+  const url =
+    `${apiUrl.replace(/\/$/, "")}/chat/completions`;
+
+  // -------------------------------------------------------
+  // Messages
+  // -------------------------------------------------------
+
+  const messages = [
     {
-      model: process.env.PROMPT_WRITER_MODEL,
-      instructions: PROMPT_WRITER_SYSTEM_PROMPT,
-      input,
+      role: "system",
+      content: PROMPT_WRITER_SYSTEM_PROMPT,
     },
     {
-      timeout: 120000,
-      headers: {
-        Authorization: `Bearer ${process.env.VITE_AVALAI_API_KEY}`,
-        "Content-Type": "application/json",
-      },
+      role: "user",
+      content: input,
     },
+  ];
+
+  // -------------------------------------------------------
+  // Debug
+  // -------------------------------------------------------
+
+  console.log("\n==============================================");
+  console.log("🧠 PROMPT WRITER REQUEST");
+  console.log("==============================================");
+
+  console.log(
+    "URL:",
+    url
   );
 
-  console.log("\n========== PROMPT WRITER RAW RESPONSE ==========");
-  console.dir(response.data, { depth: null });
+  console.log(
+    "MODEL:",
+    model
+  );
 
-  const generatedPrompt = getResponseText(response.data);
+  console.log(
+    "MESSAGES COUNT:",
+    messages.length
+  );
 
-  console.log("\n========== GENERATED IMAGE PROMPT ==========");
-  console.log(generatedPrompt);
-  console.log("================================================\n");
+  console.log(
+    "MESSAGES:",
+    JSON.stringify(messages, null, 2)
+  );
 
-  return generatedPrompt;
+  console.log(
+    "==============================================\n"
+  );
+
+  // -------------------------------------------------------
+  // Request
+  // -------------------------------------------------------
+
+  try {
+    const response = await axios.post(
+      url,
+      {
+        model: model,
+        messages: messages,
+      },
+      {
+        timeout: 300000,
+
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    // -----------------------------------------------------
+    // Raw response
+    // -----------------------------------------------------
+
+    console.log(
+      "\n=============================================="
+    );
+
+    console.log(
+      "✅ PROMPT WRITER RESPONSE"
+    );
+
+    console.log(
+      "=============================================="
+    );
+
+    console.dir(
+      response.data,
+      {
+        depth: null,
+      }
+    );
+
+    // -----------------------------------------------------
+    // Extract generated prompt
+    // -----------------------------------------------------
+
+    const generatedPrompt =
+      getResponseText(response.data);
+
+    console.log(
+      "\n=============================================="
+    );
+
+    console.log(
+      "📝 GENERATED IMAGE PROMPT"
+    );
+
+    console.log(
+      "=============================================="
+    );
+
+    console.log(
+      generatedPrompt
+    );
+
+    console.log(
+      "==============================================\n"
+    );
+
+    return generatedPrompt;
+
+  } catch (error) {
+
+    console.error(
+      "\n=============================================="
+    );
+
+    console.error(
+      "❌ PROMPT WRITER FAILED"
+    );
+
+    console.error(
+      "=============================================="
+    );
+
+    console.error(
+      "STATUS:",
+      error.response?.status
+    );
+
+    console.error(
+      "DATA:"
+    );
+
+    console.dir(
+      error.response?.data,
+      {
+        depth: null,
+      }
+    );
+
+    console.error(
+      "MESSAGE:",
+      error.message
+    );
+
+    console.error(
+      "CODE:",
+      error.code
+    );
+
+    console.error(
+      "URL:",
+      error.config?.url
+    );
+
+    console.error(
+      "MODEL:",
+      model
+    );
+
+    console.error(
+      "==============================================\n"
+    );
+
+    throw error;
+  }
 };
+
